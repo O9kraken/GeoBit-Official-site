@@ -78,53 +78,91 @@ export const breadcrumbSchema = (items: { name: string; url: string }[]) => ({
   })),
 })
 
-export const articleSchema = (post: any, url: string) => ({
+export const articleSchema = (post: any, url: string, author?: { name: string; about?: string; avatar?: any }) => ({
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
   headline: post.title,
   description: post.meta?.description || stripTags(post.excerpt || ''),
   datePublished: post.publishedAt,
   dateModified: post.updatedAt,
-  author: { '@type': 'Person', name: post.authorName || 'Георгий' },
+  inLanguage: 'ru-RU',
+  author: {
+    '@type': 'Person',
+    name: author?.name || post.authorName || 'Георгий',
+    ...(author?.about ? { jobTitle: author.about } : {}),
+    ...(author?.avatar ? { image: `${SITE_URL}${mediaUrl(author.avatar, 'thumb') || mediaUrl(author.avatar)}` } : {}),
+    url: `${SITE_URL}/about/`,
+  },
   publisher: { '@id': ORG_ID },
   mainEntityOfPage: url,
   image: post.cover ? `${SITE_URL}${mediaUrl(post.cover)}` : undefined,
+  ...(post.meta?.focusKeyword ? { keywords: [post.meta.focusKeyword, ...String(post.meta.synonyms || '').split(',').map((x: string) => x.trim()).filter(Boolean)].join(', ') } : {}),
+  // фрагменты, которые голосовые помощники и ИИ могут зачитывать как ответ
+  ...(post.meta?.answer ? { speakable: { '@type': 'SpeakableSpecification', cssSelector: ['.gb-answer'] } } : {}),
 })
 
-/** Метаданные страницы: SEO-поля документа (плагин) с запасными значениями */
-export function buildMeta(opts: {
+/** Общие SEO-настройки сайта (шаблон title, картинка по умолчанию) */
+async function seoSettings(): Promise<any> {
+  try {
+    const { payload } = await import('./payload')
+    const p = await payload()
+    return await p.findGlobal({ slug: 'seo-settings' as any, depth: 1 })
+  } catch {
+    return {}
+  }
+}
+
+/**
+ * Метаданные страницы. Источник — поля вкладки «SEO и ИИ» (seo/meta),
+ * запасные значения — заголовок страницы, шаблон title и картинка по умолчанию.
+ */
+export async function buildMeta(opts: {
   path: string
+  seo?: any
   title?: string | null
+  /** Заголовок страницы — подставляется в шаблон, если title не задан */
+  pageTitle?: string | null
   description?: string | null
   image?: any
   noindex?: boolean
   type?: 'website' | 'article'
-}): Metadata {
+}): Promise<Metadata> {
+  const st = await seoSettings()
+  const seo = opts.seo || {}
+  const tpl: string = st?.titleTemplate || '%s — GeoBit'
+  const title = String(seo.title || opts.title || (opts.pageTitle ? tpl.replace('%s', stripTags(opts.pageTitle)) : '') || 'GeoBit').trim()
+  const description = seo.description || opts.description || undefined
+  const imgSrc = seo.image || opts.image || st?.defaultImage
+  const img = imgSrc ? mediaUrl(imgSrc, 'wide') || mediaUrl(imgSrc) : ''
   const url = `${SITE_URL}${opts.path}`
-  const img = opts.image ? mediaUrl(opts.image, 'wide') || mediaUrl(opts.image) : ''
+  const canonical = String(seo.canonical || '').trim() || url
+  const noindex = Boolean(seo.noindex || opts.noindex)
   return {
-    title: opts.title || 'GeoBit',
-    description: opts.description || undefined,
-    alternates: { canonical: url },
-    robots: opts.noindex ? { index: false, follow: true } : { index: true, follow: true, 'max-image-preview': 'large' },
+    title: { absolute: title },
+    description,
+    alternates: { canonical },
+    robots: noindex
+      ? { index: false, follow: !seo.nofollow }
+      : { index: true, follow: !seo.nofollow, 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 },
     openGraph: {
-      title: opts.title || 'GeoBit',
-      description: opts.description || undefined,
-      url,
+      title,
+      description,
+      url: canonical,
       type: opts.type || 'website',
       locale: 'ru_RU',
       siteName: 'GeoBit',
-      images: img ? [{ url: img }] : undefined,
+      images: img ? [{ url: img, width: 1200, height: 630 }] : undefined,
     },
+    twitter: { card: img ? 'summary_large_image' : 'summary', title, description, images: img ? [img] : undefined },
   }
 }
 
 export const docMeta = (doc: any, path: string, fallbackTitle?: string, type: 'website' | 'article' = 'website') =>
   buildMeta({
     path,
-    title: doc?.meta?.title || fallbackTitle || doc?.title,
-    description: doc?.meta?.description,
-    image: doc?.meta?.image || doc?.cover || doc?.image,
+    seo: doc?.meta,
+    pageTitle: fallbackTitle || doc?.title || doc?.name,
+    image: doc?.cover || doc?.image,
     noindex: doc?.noindex,
     type,
   })

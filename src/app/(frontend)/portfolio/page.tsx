@@ -10,7 +10,7 @@ import { buildMeta } from '@/lib/seo'
 
 export async function generateMetadata(): Promise<Metadata> {
   const g = await getGlobal<any>('portfolio-page')
-  return buildMeta({ path: '/portfolio/', title: g?.seo?.title || 'Портфолио GeoBit', description: g?.seo?.description, image: g?.seo?.image })
+  return buildMeta({ path: '/portfolio/', seo: g?.seo, title: 'Портфолио GeoBit' })
 }
 
 export default async function PortfolioPage() {

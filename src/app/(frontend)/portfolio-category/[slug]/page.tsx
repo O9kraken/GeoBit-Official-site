@@ -16,6 +16,7 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   const t = await findBySlug('portfolio-categories', decodeURIComponent(slug), 0)
   if (!t) return {}
   return buildMeta({
+    seo: t.meta,
     path: paths.portfolioCategory(t.slug),
     title: t.meta?.title || `Проекты: ${t.name} | Портфолио GeoBit`,
     description: t.meta?.description || t.description || `Реализованные проекты студии GeoBit в категории «${t.name}»`,

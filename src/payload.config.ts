@@ -4,6 +4,9 @@ import { cloudStoragePlugin } from '@payloadcms/plugin-cloud-storage'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { dbStorageAdapter } from './lib/db-storage'
 import { seoPlugin } from '@payloadcms/plugin-seo'
+import { seoInnerFields } from './fields/seo'
+import { SeoSettings } from './globals/SeoSettings'
+import { withIndexNow } from './lib/indexnow'
 import { EXPERIMENTAL_TableFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { ru } from '@payloadcms/translations/languages/ru'
 import path from 'path'
@@ -42,6 +45,9 @@ export default buildConfig({
       graphics: { Logo: '/components/admin/Logo#Logo', Icon: '/components/admin/Icon#Icon' },
       beforeDashboard: ['/components/admin/Dashboard#Dashboard'],
       beforeNavLinks: ['/components/admin/NavExtras#NavExtras'],
+      views: {
+        seoAudit: { Component: '/components/admin/SeoAudit#SeoAudit', path: '/seo' },
+      },
     },
     // Предпросмотр рядом с формой; страница обновляется после каждого «Сохранить»
     livePreview: {
@@ -63,8 +69,10 @@ export default buildConfig({
     Services, Projects, Posts, Team, Testimonials, Media,
     ServiceCategories, PortfolioCategories, Categories, Tags,
     Users,
-  ].map(polishCollection),
-  globals: [HomePage, ServicesPage, AboutPage, ContactsPage, PortfolioPage, BlogPage, FaqPage, SiteSettings, Navigation, Calculator].map(polishGlobal),
+  ]
+    .map(polishCollection)
+    .map(withIndexNow),
+  globals: [HomePage, ServicesPage, AboutPage, ContactsPage, PortfolioPage, BlogPage, FaqPage, SiteSettings, SeoSettings, Navigation, Calculator].map(polishGlobal),
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [...defaultFeatures, EXPERIMENTAL_TableFeature()],
   }),
@@ -103,8 +111,28 @@ export default buildConfig({
     seoPlugin({
       collections: ['services', 'projects', 'posts', 'pages', 'categories', 'service-categories', 'portfolio-categories'],
       uploadsCollection: 'media',
-      tabbedUI: false,
-      generateTitle: ({ doc }) => `${(doc as { title?: string; name?: string })?.title || (doc as { name?: string })?.name || ''} | GeoBit`,
+      // отдельная вкладка «SEO и ИИ» с живым анализом (src/fields/seo.ts, SeoPanel)
+      tabbedUI: true,
+      fields: () => seoInnerFields({ withFaq: true }),
+    }),
+    // вкладка плагина называется просто «SEO» — переименовываем
+    (config) => ({
+      ...config,
+      collections: (config.collections || []).map((c) => ({
+        ...c,
+        fields: c.fields.map((f: any) =>
+          f.type === 'tabs'
+            ? {
+                ...f,
+                tabs: f.tabs.map((t: any) =>
+                  t.name === 'meta' || t.fields?.some((x: any) => x.name === 'meta')
+                    ? { ...t, label: 'SEO и ИИ', fields: t.fields.map((x: any) => (x.name === 'meta' ? { ...x, label: false } : x)) }
+                    : t,
+                ),
+              }
+            : f,
+        ),
+      })),
     }),
     redirectsPlugin({
       collections: ['pages', 'posts', 'services', 'projects'],

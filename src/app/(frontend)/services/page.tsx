@@ -11,7 +11,7 @@ import { SITE_URL, lines, mediaUrl, paths } from '@/lib/util'
 
 export async function generateMetadata(): Promise<Metadata> {
   const g = await getGlobal<any>('services-page')
-  return buildMeta({ path: '/services/', title: g?.seo?.title || 'Услуги веб-студии GeoBit', description: g?.seo?.description, image: g?.seo?.image })
+  return buildMeta({ path: '/services/', seo: g?.seo, title: 'Услуги веб-студии GeoBit' })
 }
 
 const anchorOf = (s: any) => s.anchor || s.slug

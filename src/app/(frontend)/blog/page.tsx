@@ -14,7 +14,7 @@ export async function generateMetadata({ searchParams }: P): Promise<Metadata> {
   const g = await getGlobal<any>('blog-page')
   const sp = await searchParams
   return {
-    ...buildMeta({ path: '/blog/', title: g?.seo?.title || 'Блог GeoBit', description: g?.seo?.description, image: g?.seo?.image }),
+    ...(await buildMeta({ path: '/blog/', seo: g?.seo, title: 'Блог GeoBit' })),
     // фильтры и поиск не индексируем — канонической остаётся /blog/
     ...(sp.cat || sp.s || sp.paged ? { robots: { index: false, follow: true } } : {}),
   }

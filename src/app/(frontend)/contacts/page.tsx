@@ -9,7 +9,7 @@ import { telHref } from '@/lib/util'
 
 export async function generateMetadata(): Promise<Metadata> {
   const g = await getGlobal<any>('contacts-page')
-  return buildMeta({ path: '/contacts/', title: g?.seo?.title || 'Контакты GeoBit', description: g?.seo?.description, image: g?.seo?.image })
+  return buildMeta({ path: '/contacts/', seo: g?.seo, title: 'Контакты GeoBit' })
 }
 
 const selectStyle = {

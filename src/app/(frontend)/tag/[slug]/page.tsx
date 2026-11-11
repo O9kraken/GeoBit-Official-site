@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   const { slug } = await params
   const t = await findBySlug('tags', decodeURIComponent(slug), 0)
   if (!t) return {}
-  return buildMeta({ path: paths.tag(t.slug), title: t.meta?.title || `Метка: ${t.name} | Блог GeoBit`, description: t.meta?.description || t.description })
+  return buildMeta({ seo: t.meta, path: paths.tag(t.slug), title: t.meta?.title || `Метка: ${t.name} | Блог GeoBit`, description: t.meta?.description || t.description })
 }
 
 export default async function TagPage({ params }: P) {

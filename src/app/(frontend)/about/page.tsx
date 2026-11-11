@@ -12,7 +12,7 @@ import { mediaUrl } from '@/lib/util'
 
 export async function generateMetadata(): Promise<Metadata> {
   const g = await getGlobal<any>('about-page')
-  return buildMeta({ path: '/about/', title: g?.seo?.title || 'О веб-студии GeoBit', description: g?.seo?.description, image: g?.seo?.image })
+  return buildMeta({ path: '/about/', seo: g?.seo, title: 'О веб-студии GeoBit' })
 }
 
 const COLORS = ['var(--accent-cyan)', 'var(--accent-purple)', 'var(--accent-pink)', 'var(--accent-green)', 'var(--accent-cyan)', 'var(--accent-purple)']

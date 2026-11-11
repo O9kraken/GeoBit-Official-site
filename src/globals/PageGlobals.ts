@@ -1,3 +1,4 @@
+import { seoInnerFields } from '../fields/seo'
 import type { Field, GlobalConfig } from 'payload'
 import { anyone, authenticated } from '../access'
 import { faqField } from '../fields/faq'
@@ -6,13 +7,9 @@ import { ctaAction } from '../fields/link'
 const htmlNote = { description: 'Можно выделить часть градиентом: <span class="gradient-text">текст</span>' }
 const seoGroup: Field = {
   name: 'seo',
-  label: 'SEO',
+  label: 'SEO и ИИ-поиск',
   type: 'group',
-  fields: [
-    { name: 'title', label: 'Title', type: 'text' },
-    { name: 'description', label: 'Description', type: 'textarea' },
-    { name: 'image', label: 'Картинка для соцсетей (OG)', type: 'upload', relationTo: 'media' },
-  ],
+  fields: seoInnerFields(),
 }
 const headerGroup = (prefix = ''): Field[] => [
   { name: `${prefix}tag`, label: 'Метка над заголовком', type: 'text' },
@@ -152,7 +149,7 @@ export const HomePage = g('home', 'Главная', [
           { name: 'ctaButton', label: 'CTA: кнопка', type: 'text' },
         ],
       },
-      { label: 'SEO', fields: [seoGroup] },
+      { label: 'SEO и ИИ', fields: [seoGroup] },
     ],
   },
 ])

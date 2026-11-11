@@ -20,6 +20,7 @@ export async function Dashboard({ payload }: Props) {
     ['Контакты и соцсети', `${ADMIN}/globals/settings`, 'Телефон, мессенджеры, Метрика'],
     ['Отзывы', `${ADMIN}/collections/testimonials`, 'Тексты и фото клиентов'],
     ['Мой профиль', `${ADMIN}/account`, 'Имя, аватар автора, пароль'],
+    ['SEO-аудит', `${ADMIN}/seo`, 'Слабые страницы, ИИ-поиск, llms.txt'],
   ]
   const status: Record<string, string> = { new: 'Новая', progress: 'В работе', won: 'Клиент', lost: 'Отказ', spam: 'Спам' }
   const fmt = (d: string) => new Date(d).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' })

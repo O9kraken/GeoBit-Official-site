@@ -11,6 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const g = await getGlobal<any>('faq-page')
   return buildMeta({
     path: '/faq/',
+    seo: g?.seo,
     title: g?.seo?.title || 'Вопросы и ответы | GeoBit',
     description: g?.seo?.description || 'Ответы на частые вопросы о разработке сайта в студии GeoBit: стоимость, сроки, договор, поддержка.',
     image: g?.seo?.image,

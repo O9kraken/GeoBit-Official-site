@@ -1,3 +1,4 @@
+import { AnswerBox } from '@/components/sections/Aeo'
 import type { Metadata } from 'next'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { Breadcrumbs, JsonLd, faqSchema } from '@/components/Common'
@@ -34,7 +35,7 @@ export default async function ServicePage({ params }: P) {
   const features: string[] = (s.features || []).map((f: any) => f.text).filter(Boolean)
   const steps: any[] = s.steps || []
   const plans: any[] = s.plans || []
-  const faqs: any[] = (s.faq || []).filter((f: any) => f.q)
+  const faqs: any[] = [...(s.faq || []), ...(s.meta?.faq || [])].filter((f: any) => f.q)
   const ex = s.explainer || {}
   const exPoints: string[] = (ex.points || []).map((p: any) => p.text).filter(Boolean)
   const exParas = splitParas(ex.text || '')
@@ -70,6 +71,7 @@ export default async function ServicePage({ params }: P) {
               )}
               <h1 style={{ fontFamily: 'var(--font-main)', fontSize: 'clamp(2rem,4vw,3.4rem)', fontWeight: 800, lineHeight: 1.12, marginBottom: 20 }}>{s.title}</h1>
               {s.shortDesc && <p className="service-lead">{s.shortDesc}</p>}
+              <AnswerBox text={s.meta?.answer} />
               {(s.price || s.duration) && (
                 <div style={{ display: 'flex', gap: 32, marginBottom: 36, flexWrap: 'wrap' }}>
                   {s.price && (

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound, permanentRedirect } from 'next/navigation'
-import { Breadcrumbs, JsonLd } from '@/components/Common'
+import { Breadcrumbs, JsonLd, faqSchema } from '@/components/Common'
+import { AnswerBox, DocFaq } from '@/components/sections/Aeo'
 import LegacyScripts from '@/components/LegacyScripts'
 import { Newsletter, richHtml } from '@/components/sections/Pages'
 import { findBySlug, getPosts, payload, cmsRedirect, postAuthor } from '@/lib/payload'
@@ -52,7 +53,10 @@ function PageView({ page }: { page: any }) {
       </section>
       <section className="section-padding">
         <div className="container">
+          <AnswerBox text={page.meta?.answer} />
           <div className="post-body" dangerouslySetInnerHTML={{ __html: richHtml(page.content) }} />
+          <DocFaq faq={page.meta?.faq} />
+          {page.meta?.faq?.length > 0 && <JsonLd data={faqSchema(page.meta.faq)} />}
         </div>
       </section>
     </main>
@@ -101,7 +105,9 @@ async function PostView({ post }: { post: any }) {
                 </span>
               </div>
               <h1 style={{ fontFamily: 'var(--font-main)', fontSize: 'clamp(1.6rem,3.5vw,2.8rem)', fontWeight: 800, lineHeight: 1.2, marginBottom: 28 }}>{post.title}</h1>
+              <AnswerBox text={post.meta?.answer} />
               <div className="post-content" style={{ color: 'var(--white-3)', lineHeight: 1.9, fontSize: '1.05rem' }} dangerouslySetInnerHTML={{ __html: richHtml(post.content) }} />
+              <DocFaq faq={post.meta?.faq} />
 
               {post.tags?.length > 0 && (
                 <div style={{ marginTop: 40, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -185,7 +191,8 @@ async function PostView({ post }: { post: any }) {
         </div>
       </section>
       <Newsletter />
-      <JsonLd data={articleSchema(post, url)} />
+      <JsonLd data={articleSchema(post, url, author)} />
+      {post.meta?.faq?.length > 0 && <JsonLd data={faqSchema(post.meta.faq)} />}
       <JsonLd
         data={breadcrumbSchema([
           { name: 'Главная', url: `${SITE_URL}/` },

@@ -326,3 +326,17 @@
 @media (min-width:901px){.ab2-head{flex-wrap:nowrap}.ab2-head>div{min-width:0}.ab2-head>p{flex-shrink:0}}
 .gb-dock--hero:not(.is-island) .gb-dock__drop--wide{left:-24px;transform:translate(0,-8px)}
 .gb-dock--hero:not(.is-island) .gb-dock__item.has-drop:hover .gb-dock__drop--wide,.gb-dock--hero:not(.is-island) .gb-dock__item.has-drop:focus-within .gb-dock__drop--wide{transform:translate(0,0)}
+
+/* ============ «Коротко» и вопросы из вкладки «SEO и ИИ» ============ */
+.gb-answer{margin:0 0 28px;padding:20px 24px;border-radius:16px;border:1px solid rgba(0,229,255,.3);background:linear-gradient(135deg,rgba(0,229,255,.07),rgba(123,47,255,.07))}
+.gb-answer__label{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-main);font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-cyan);margin-bottom:8px}
+.gb-answer p{margin:0;color:var(--white);font-size:1.05rem;line-height:1.7}
+.service-hero-grid .gb-answer{margin:0 0 28px}
+.gb-docfaq{margin-top:48px}
+.gb-docfaq h2{font-family:var(--font-main);font-size:1.5rem;margin:0 0 20px;color:var(--white)}
+.gb-docfaq__item{border:1px solid rgba(var(--ink-rgb),.08);border-radius:14px;padding:18px 22px;margin-bottom:12px;background:rgba(var(--ink-rgb),.03)}
+.gb-docfaq__item summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;font-weight:700;color:var(--white)}
+.gb-docfaq__item summary::-webkit-details-marker{display:none}
+.gb-docfaq__item summary i{color:var(--accent-cyan);transition:transform .2s}
+.gb-docfaq__item[open] summary i{transform:rotate(180deg)}
+.gb-docfaq__item p{margin:12px 0 0;color:var(--gray-2);line-height:1.7}

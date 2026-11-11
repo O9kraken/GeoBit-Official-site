@@ -15,6 +15,9 @@ export async function NavExtras({ payload }: { payload?: Payload }) {
         <span aria-hidden>✉</span> Новые заявки
         <b>{fresh}</b>
       </a>
+      <a href="/admin/seo" className="gb-nav-extras__home">
+        <span aria-hidden>◎</span> SEO-аудит
+      </a>
       <a href="/" target="_blank" rel="noopener" className="gb-nav-extras__site">
         <span aria-hidden>↗</span> Открыть сайт
       </a>

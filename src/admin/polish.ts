@@ -34,7 +34,7 @@ const GROUP: Record<string, string> = {
   'portfolio-page': 'Страницы сайта', 'blog-page': 'Страницы сайта', 'faq-page': 'Страницы сайта',
   services: 'Контент', projects: 'Контент', posts: 'Контент', team: 'Контент', testimonials: 'Контент', media: 'Контент',
   'service-categories': 'Рубрики', 'portfolio-categories': 'Рубрики', categories: 'Рубрики', tags: 'Рубрики',
-  settings: 'Настройки', navigation: 'Настройки', calculator: 'Настройки', redirects: 'Настройки', users: 'Настройки',
+  settings: 'Настройки', 'seo-settings': 'Настройки', navigation: 'Настройки', calculator: 'Настройки', redirects: 'Настройки', users: 'Настройки',
 }
 
 /** Какую страницу сайта показывать в предпросмотре глобалов */

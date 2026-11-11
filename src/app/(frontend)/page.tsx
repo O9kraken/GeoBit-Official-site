@@ -20,7 +20,7 @@ import { buildMeta } from '@/lib/seo'
 
 export async function generateMetadata(): Promise<Metadata> {
   const h = await getGlobal<any>('home')
-  return buildMeta({ path: '/', title: h?.seo?.title, description: h?.seo?.description, image: h?.seo?.image })
+  return buildMeta({ path: '/', seo: h?.seo, title: 'Создание сайтов в Севастополе и Крыму — GeoBit' })
 }
 
 export default async function HomePage() {

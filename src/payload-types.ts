@@ -122,6 +122,7 @@ export interface Config {
     'blog-page': BlogPage;
     'faq-page': FaqPage;
     settings: Setting;
+    'seo-settings': SeoSetting;
     navigation: Navigation;
     calculator: Calculator;
   };
@@ -134,6 +135,7 @@ export interface Config {
     'blog-page': BlogPageSelect<false> | BlogPageSelect<true>;
     'faq-page': FaqPageSelect<false> | FaqPageSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
+    'seo-settings': SeoSettingsSelect<false> | SeoSettingsSelect<true>;
     navigation: NavigationSelect<false> | NavigationSelect<true>;
     calculator: CalculatorSelect<false> | CalculatorSelect<true>;
   };
@@ -240,12 +242,40 @@ export interface Page {
   slug: string;
   noindex?: boolean | null;
   meta?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
     title?: string | null;
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
      */
     image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    /**
+     * Пишите вопросы так, как их задают люди. Выводятся в конце страницы и размечаются FAQPage.
+     */
+    faq?:
+      | {
+          q: string;
+          a: string;
+          id?: string | null;
+        }[]
+      | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -378,12 +408,40 @@ export interface Service {
   category?: (number | null) | ServiceCategory;
   order?: number | null;
   meta?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
     title?: string | null;
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
      */
     image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    /**
+     * Пишите вопросы так, как их задают люди. Выводятся в конце страницы и размечаются FAQPage.
+     */
+    faq?:
+      | {
+          q: string;
+          a: string;
+          id?: string | null;
+        }[]
+      | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -401,12 +459,40 @@ export interface ServiceCategory {
   slug: string;
   description?: string | null;
   meta?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
     title?: string | null;
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
      */
     image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    /**
+     * Пишите вопросы так, как их задают люди. Выводятся в конце страницы и размечаются FAQPage.
+     */
+    faq?:
+      | {
+          q: string;
+          a: string;
+          id?: string | null;
+        }[]
+      | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -459,12 +545,40 @@ export interface Project {
   order?: number | null;
   publishedAt?: string | null;
   meta?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
     title?: string | null;
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
      */
     image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    /**
+     * Пишите вопросы так, как их задают люди. Выводятся в конце страницы и размечаются FAQPage.
+     */
+    faq?:
+      | {
+          q: string;
+          a: string;
+          id?: string | null;
+        }[]
+      | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -482,12 +596,40 @@ export interface PortfolioCategory {
   slug: string;
   description?: string | null;
   meta?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
     title?: string | null;
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
      */
     image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    /**
+     * Пишите вопросы так, как их задают люди. Выводятся в конце страницы и размечаются FAQPage.
+     */
+    faq?:
+      | {
+          q: string;
+          a: string;
+          id?: string | null;
+        }[]
+      | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -533,12 +675,40 @@ export interface Post {
    */
   readingTime?: number | null;
   meta?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
     title?: string | null;
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
      */
     image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    /**
+     * Пишите вопросы так, как их задают люди. Выводятся в конце страницы и размечаются FAQPage.
+     */
+    faq?:
+      | {
+          q: string;
+          a: string;
+          id?: string | null;
+        }[]
+      | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -595,12 +765,40 @@ export interface Category {
   slug: string;
   description?: string | null;
   meta?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
     title?: string | null;
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
      */
     image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    /**
+     * Пишите вопросы так, как их задают люди. Выводятся в конце страницы и размечаются FAQPage.
+     */
+    faq?:
+      | {
+          q: string;
+          a: string;
+          id?: string | null;
+        }[]
+      | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -862,9 +1060,22 @@ export interface PagesSelect<T extends boolean = true> {
   meta?:
     | T
     | {
+        focusKeyword?: T;
+        synonyms?: T;
         title?: T;
         description?: T;
         image?: T;
+        answer?: T;
+        faq?:
+          | T
+          | {
+              q?: T;
+              a?: T;
+              id?: T;
+            };
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -936,9 +1147,22 @@ export interface ServicesSelect<T extends boolean = true> {
   meta?:
     | T
     | {
+        focusKeyword?: T;
+        synonyms?: T;
         title?: T;
         description?: T;
         image?: T;
+        answer?: T;
+        faq?:
+          | T
+          | {
+              q?: T;
+              a?: T;
+              id?: T;
+            };
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -989,9 +1213,22 @@ export interface ProjectsSelect<T extends boolean = true> {
   meta?:
     | T
     | {
+        focusKeyword?: T;
+        synonyms?: T;
         title?: T;
         description?: T;
         image?: T;
+        answer?: T;
+        faq?:
+          | T
+          | {
+              q?: T;
+              a?: T;
+              id?: T;
+            };
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1015,9 +1252,22 @@ export interface PostsSelect<T extends boolean = true> {
   meta?:
     | T
     | {
+        focusKeyword?: T;
+        synonyms?: T;
         title?: T;
         description?: T;
         image?: T;
+        answer?: T;
+        faq?:
+          | T
+          | {
+              q?: T;
+              a?: T;
+              id?: T;
+            };
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1125,9 +1375,22 @@ export interface ServiceCategoriesSelect<T extends boolean = true> {
   meta?:
     | T
     | {
+        focusKeyword?: T;
+        synonyms?: T;
         title?: T;
         description?: T;
         image?: T;
+        answer?: T;
+        faq?:
+          | T
+          | {
+              q?: T;
+              a?: T;
+              id?: T;
+            };
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1143,9 +1406,22 @@ export interface PortfolioCategoriesSelect<T extends boolean = true> {
   meta?:
     | T
     | {
+        focusKeyword?: T;
+        synonyms?: T;
         title?: T;
         description?: T;
         image?: T;
+        answer?: T;
+        faq?:
+          | T
+          | {
+              q?: T;
+              a?: T;
+              id?: T;
+            };
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1161,9 +1437,22 @@ export interface CategoriesSelect<T extends boolean = true> {
   meta?:
     | T
     | {
+        focusKeyword?: T;
+        synonyms?: T;
         title?: T;
         description?: T;
         image?: T;
+        answer?: T;
+        faq?:
+          | T
+          | {
+              q?: T;
+              a?: T;
+              id?: T;
+            };
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1365,9 +1654,30 @@ export interface Home {
   ctaDesc?: string | null;
   ctaButton?: string | null;
   seo?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
     title?: string | null;
     description?: string | null;
+    /**
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
+     */
     image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1408,9 +1718,30 @@ export interface ServicesPage {
       }[]
     | null;
   seo?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
     title?: string | null;
     description?: string | null;
+    /**
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
+     */
     image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1504,9 +1835,30 @@ export interface AboutPage {
       }[]
     | null;
   seo?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
     title?: string | null;
     description?: string | null;
+    /**
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
+     */
     image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1537,9 +1889,30 @@ export interface ContactsPage {
       }[]
     | null;
   seo?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
     title?: string | null;
     description?: string | null;
+    /**
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
+     */
     image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1567,9 +1940,30 @@ export interface PortfolioPage {
       }[]
     | null;
   seo?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
     title?: string | null;
     description?: string | null;
+    /**
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
+     */
     image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1589,9 +1983,30 @@ export interface BlogPage {
   newsletterTitle?: string | null;
   newsletterText?: string | null;
   seo?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
     title?: string | null;
     description?: string | null;
+    /**
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
+     */
     image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1619,9 +2034,30 @@ export interface FaqPage {
       }[]
     | null;
   seo?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
     title?: string | null;
     description?: string | null;
+    /**
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
+     */
     image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1668,6 +2104,53 @@ export interface Setting {
   leadEmail?: string | null;
   consentDocLabel?: string | null;
   leadSuccessText?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Общие правила для всего сайта. Настройки отдельной страницы — во вкладке «SEO и ИИ» у самой страницы.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "seo-settings".
+ */
+export interface SeoSetting {
+  id: number;
+  /**
+   * %s заменяется заголовком страницы. Работает, когда у страницы не заполнен свой title.
+   */
+  titleTemplate?: string | null;
+  /**
+   * 1200×630, для страниц без своей картинки.
+   */
+  defaultImage?: (number | null) | Media;
+  /**
+   * ChatGPT Search, Perplexity, Claude, Яндекс Нейро — они читают страницу, когда пользователь задаёт вопрос, и дают ссылку на сайт. Рекомендуется включить.
+   */
+  aiSearch?: boolean | null;
+  /**
+   * GPTBot, ClaudeBot, Google-Extended и др. Если разрешить, модели «запомнят» студию и чаще будут упоминать её без поиска. Если запретить — тексты не попадут в обучение.
+   */
+  aiTraining?: boolean | null;
+  /**
+   * Короткая «визитка» сайта для ИИ по адресу /llms.txt: кто вы, услуги с ценами, статьи, ответы на вопросы. Собирается автоматически.
+   */
+  llmsEnabled?: boolean | null;
+  /**
+   * 2–4 предложения фактами: кто, где, что делаете, для кого, цены от. Это первое, что прочитает ИИ о компании.
+   */
+  llmsIntro?: string | null;
+  /**
+   * После публикации или изменения страница сразу отправляется на переобход — не нужно ждать неделями. Работает только на основном домене.
+   */
+  indexNow?: boolean | null;
+  /**
+   * Создаётся сам при первом сохранении.
+   */
+  indexNowKey?: string | null;
+  /**
+   * Для опытных: строки добавятся в конец robots.txt как есть.
+   */
+  robotsExtra?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1851,9 +2334,15 @@ export interface HomeSelect<T extends boolean = true> {
   seo?:
     | T
     | {
+        focusKeyword?: T;
+        synonyms?: T;
         title?: T;
         description?: T;
         image?: T;
+        answer?: T;
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1890,9 +2379,15 @@ export interface ServicesPageSelect<T extends boolean = true> {
   seo?:
     | T
     | {
+        focusKeyword?: T;
+        synonyms?: T;
         title?: T;
         description?: T;
         image?: T;
+        answer?: T;
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1973,9 +2468,15 @@ export interface AboutPageSelect<T extends boolean = true> {
   seo?:
     | T
     | {
+        focusKeyword?: T;
+        synonyms?: T;
         title?: T;
         description?: T;
         image?: T;
+        answer?: T;
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -2002,9 +2503,15 @@ export interface ContactsPageSelect<T extends boolean = true> {
   seo?:
     | T
     | {
+        focusKeyword?: T;
+        synonyms?: T;
         title?: T;
         description?: T;
         image?: T;
+        answer?: T;
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -2028,9 +2535,15 @@ export interface PortfolioPageSelect<T extends boolean = true> {
   seo?:
     | T
     | {
+        focusKeyword?: T;
+        synonyms?: T;
         title?: T;
         description?: T;
         image?: T;
+        answer?: T;
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -2049,9 +2562,15 @@ export interface BlogPageSelect<T extends boolean = true> {
   seo?:
     | T
     | {
+        focusKeyword?: T;
+        synonyms?: T;
         title?: T;
         description?: T;
         image?: T;
+        answer?: T;
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -2075,9 +2594,15 @@ export interface FaqPageSelect<T extends boolean = true> {
   seo?:
     | T
     | {
+        focusKeyword?: T;
+        synonyms?: T;
         title?: T;
         description?: T;
         image?: T;
+        answer?: T;
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -2115,6 +2640,24 @@ export interface SettingsSelect<T extends boolean = true> {
   leadEmail?: T;
   consentDocLabel?: T;
   leadSuccessText?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "seo-settings_select".
+ */
+export interface SeoSettingsSelect<T extends boolean = true> {
+  titleTemplate?: T;
+  defaultImage?: T;
+  aiSearch?: T;
+  aiTraining?: T;
+  llmsEnabled?: T;
+  llmsIntro?: T;
+  indexNow?: T;
+  indexNowKey?: T;
+  robotsExtra?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

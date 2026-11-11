@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   const t = await findBySlug('service-categories', decodeURIComponent(slug), 0)
   if (!t) return {}
   return buildMeta({
+    seo: t.meta,
     path: paths.serviceCategory(t.slug),
     title: t.meta?.title || `${t.name} — услуги и кейсы | GeoBit`,
     description: t.meta?.description || t.description || `Услуги веб-студии GeoBit в категории «${t.name}» — цены, сроки и примеры работ`,

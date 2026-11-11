@@ -1,3 +1,4 @@
+import { AnswerBox } from '@/components/sections/Aeo'
 import type { Metadata } from 'next'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { Breadcrumbs, FaqSection, JsonLd } from '@/components/Common'
@@ -56,6 +57,7 @@ export default async function ProjectPage({ params }: P) {
               {catName && <span className="section-tag pf-single-tag">{catName}</span>}
               <h1 className="pf-single-title">{p.title}</h1>
               <p className="pf-single-lead">{p.excerpt}</p>
+              <AnswerBox text={p.meta?.answer} />
               {results.length > 0 && (
                 <div className="pf-single-metrics">
                   {results.map((r, i) => (
@@ -140,7 +142,7 @@ export default async function ProjectPage({ params }: P) {
           </div>
         </div>
       </section>
-      <FaqSection faqs={faqs} />
+      <FaqSection faqs={p.meta?.faq?.length ? p.meta.faq : faqs} />
       <Cta />
       <JsonLd
         data={breadcrumbSchema([

@@ -16,6 +16,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getTerms('portfolio-categories'),
     getTerms('categories'),
   ])
+  // страницы с «Не индексировать» или чужим каноническим адресом в карту сайта не попадают
+  const open = (d: any) => !d?.meta?.noindex && !d?.meta?.canonical
   const u = (path: string, lastModified?: string, priority = 0.6): MetadataRoute.Sitemap[number] => ({
     url: `${SITE_URL}${path}`,
     lastModified: lastModified ? new Date(lastModified) : undefined,
@@ -29,12 +31,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     u('/contacts/', undefined, 0.8),
     u('/blog/', undefined, 0.7),
     u('/faq/', undefined, 0.5),
-    ...services.map((s: any) => u(paths.service(s.slug), s.updatedAt, 0.9)),
-    ...projects.map((x: any) => u(paths.project(x.slug), x.updatedAt, 0.6)),
-    ...posts.map((x: any) => u(paths.post(x.slug), x.updatedAt, 0.7)),
-    ...pages.docs.map((x: any) => u(paths.page(x.slug), x.updatedAt, 0.3)),
-    ...scats.map((x: any) => u(paths.serviceCategory(x.slug), x.updatedAt, 0.5)),
-    ...pcats.map((x: any) => u(paths.portfolioCategory(x.slug), x.updatedAt, 0.4)),
-    ...cats.map((x: any) => u(paths.category(x.slug), x.updatedAt, 0.4)),
+    ...services.filter(open).map((s: any) => u(paths.service(s.slug), s.updatedAt, 0.9)),
+    ...projects.filter(open).map((x: any) => u(paths.project(x.slug), x.updatedAt, 0.6)),
+    ...posts.filter(open).map((x: any) => u(paths.post(x.slug), x.updatedAt, 0.7)),
+    ...pages.docs.filter(open).map((x: any) => u(paths.page(x.slug), x.updatedAt, 0.3)),
+    ...scats.filter(open).map((x: any) => u(paths.serviceCategory(x.slug), x.updatedAt, 0.5)),
+    ...pcats.filter(open).map((x: any) => u(paths.portfolioCategory(x.slug), x.updatedAt, 0.4)),
+    ...cats.filter(open).map((x: any) => u(paths.category(x.slug), x.updatedAt, 0.4)),
   ]
 }
