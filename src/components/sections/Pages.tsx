@@ -194,7 +194,7 @@ export function PlanModal({ service = '' }: { service?: string }) {
 export function MessengerButtons({ s }: { s: any }) {
   const items = [
     s?.telegramUrl && { href: s.telegramUrl, cls: 'tg', icon: <i className="fab fa-telegram fa-lg"></i>, label: 'Telegram' },
-    s?.maxUrl && { href: s.maxUrl, cls: 'max', icon: <MaxIcon size={18} />, label: 'MAX' },
+    s?.maxUrl && { href: s.maxUrl, cls: 'max', icon: <MaxIcon className="fa-lg" />, label: 'MAX' },
     s?.instagramUrl && { href: s.instagramUrl, cls: 'ig', icon: <i className="fab fa-instagram fa-lg"></i>, label: 'Instagram' },
   ].filter(Boolean) as any[]
   if (!items.length) return null

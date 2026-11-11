@@ -54,8 +54,8 @@ export default async function Cta() {
                 )}
                 {max && (
                   <a href={max} className="cta2__row" target="_blank" rel="noopener">
-                    <span className="cta2__row-ico">
-                      <MaxIcon size={22} />
+                    <span className="cta2__row-ico cta2__row-ico--max">
+                      <MaxIcon />
                     </span>
                     <span className="cta2__row-text">
                       <b>MAX</b>

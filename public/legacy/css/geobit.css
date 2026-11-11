@@ -340,3 +340,11 @@
 .gb-docfaq__item summary i{color:var(--accent-cyan);transition:transform .2s}
 .gb-docfaq__item[open] summary i{transform:rotate(180deg)}
 .gb-docfaq__item p{margin:12px 0 0;color:var(--gray-2);line-height:1.7}
+
+/* ============ Логотип MAX: SVG в цвет текста, размер как у соседних иконок ============ */
+svg.max-glyph{display:inline-block;width:1em;height:1em;vertical-align:-.125em;flex-shrink:0;overflow:visible;filter:none!important}
+svg.max-glyph.fa-lg{font-size:1.25em;line-height:.05em;vertical-align:-.2em}
+.messenger-link svg.max-glyph{width:1.15rem;height:1.15rem;font-size:1.15rem}
+.nav-msg-max svg.max-glyph{width:1.2em;height:1.2em}
+.footer-socials a.social-max{font-size:1rem}
+.cta2__row-ico--max{color:#7c4dff}
