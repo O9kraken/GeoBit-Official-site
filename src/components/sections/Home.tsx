@@ -1,6 +1,7 @@
 import { FaqList, Html, JsonLd, MaxIcon, faqSchema, type FaqItem } from '@/components/Common'
 import { paths } from '@/lib/util'
-import { BlogCard, PfCard, TeamGrid, TestimonialsSlider } from './Cards'
+import { BlogCard, PfCard, TestimonialsSlider } from './Cards'
+import Founder from './Founder'
 
 const actionHref = (action?: string, custom?: string) => {
   switch (action) {
@@ -287,15 +288,7 @@ export function AboutSection({ h, team }: { h: any; team: any[] }) {
           </div>
         </div>
       </section>
-      <section className="section-padding" id="team">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Команда</span>
-            <h2 className="section-title" dangerouslySetInnerHTML={{ __html: 'Люди, которые <span class="gradient-text">делают магию</span>' }} />
-          </div>
-          <TeamGrid team={team} />
-        </div>
-      </section>
+      <Founder />
     </>
   )
 }

@@ -37,6 +37,10 @@ export default async function ServicePage({ params }: P) {
   const faqs: any[] = (s.faq || []).filter((f: any) => f.q)
   const ex = s.explainer || {}
   const exPoints: string[] = (ex.points || []).map((p: any) => p.text).filter(Boolean)
+  const exParas = splitParas(ex.text || '')
+  const exLead = exParas[0] || ''
+  const exRest = exParas.slice(1)
+  const exTitle = highlightTitle(ex.title || '')
 
   // Примеры работ: портфолио той же категории услуг, добиваем свежими до 4 (service-cases.php)
   const relId = (v: any) => (typeof v === 'object' ? v?.id : v)
@@ -53,7 +57,7 @@ export default async function ServicePage({ params }: P) {
 
   return (
     <main id="main" role="main">
-      <section className="section-padding" style={{ paddingTop: 50 }}>
+      <section className="section-padding" style={{ paddingTop: 140 }}>
         <div className="container">
           <Breadcrumbs items={[{ label: 'Услуги', href: '/services/' }, { label: s.title }]} />
 
@@ -97,30 +101,44 @@ export default async function ServicePage({ params }: P) {
           </div>
 
           {(ex.title || ex.text) && (
-            <div className="svc-explainer">
-              <div className="svc-explainer-inner">
-                <div className="svc-explainer-main">
-                  {ex.title && (
-                    <>
-                      <span className="svc-explainer-badge">
-                        <i className="fas fa-circle-info"></i> Разбираемся
-                      </span>
-                      <h2 className="svc-explainer-title">{ex.title}</h2>
-                    </>
-                  )}
-                  {ex.text && <div className="svc-explainer-text" dangerouslySetInnerHTML={{ __html: ex.text }} />}
+            <div className="svc-explainer-v2">
+              <div className="svc-ex2-top">
+                <div className="svc-ex2-head">
+                  <span className="section-tag">
+                    <i className="fas fa-circle-info"></i> Разбираемся
+                  </span>
+                  {ex.title && <h2 className="svc-ex2-title">{exTitle}</h2>}
                 </div>
-                {exPoints.length > 0 && (
-                  <ul className="svc-explainer-points">
-                    {exPoints.map((pt, i) => (
-                      <li key={i}>
-                        <i className="fas fa-check"></i>
-                        <span>{pt}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                {exLead && <div className="svc-ex2-lead" dangerouslySetInnerHTML={{ __html: exLead }} />}
               </div>
+              {(exRest.length > 0 || exPoints.length > 0) && (
+                <div className="svc-ex2-grid">
+                  {exRest.map((html, i) => (
+                    <div className="svc-ex2-card" key={i}>
+                      <span className={`svc-ex2-ico gb-tone-${EX_TONES[i % EX_TONES.length]}`}>
+                        <i className={`fas ${EX_ICONS[i % EX_ICONS.length]}`}></i>
+                      </span>
+                      <div className="svc-ex2-text" dangerouslySetInnerHTML={{ __html: html }} />
+                    </div>
+                  ))}
+                  {exPoints.length > 0 && (
+                    <div className="svc-ex2-card svc-ex2-card--accent">
+                      <span className="svc-ex2-ico gb-tone-cyan">
+                        <i className="fas fa-bolt"></i>
+                      </span>
+                      <h3>Коротко</h3>
+                      <ul>
+                        {exPoints.map((pt, i) => (
+                          <li key={i}>
+                            <i className="fas fa-check"></i>
+                            <span>{pt}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
@@ -336,5 +354,30 @@ export default async function ServicePage({ params }: P) {
       />
       <LegacyScripts src={['/legacy/js/inline-plan-modal-0.js', '/legacy/js/inline-service-related-0.js']} />
     </main>
+  )
+}
+
+const EX_ICONS = ['fa-route', 'fa-bullhorn', 'fa-lightbulb', 'fa-gem']
+const EX_TONES = ['pink', 'purple', 'pink', 'purple']
+
+/** Делит HTML-текст пояснения на абзацы: первый — лид, остальные — карточки. */
+function splitParas(html: string): string[] {
+  const ps = [...html.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)].map((m) => m[1].trim()).filter(Boolean)
+  if (ps.length) return ps
+  return html
+    .split(/\n\s*\n/)
+    .map((t) => t.trim())
+    .filter(Boolean)
+}
+
+/** «Что такое landing-page?» → предмет вопроса выделяется градиентом. */
+function highlightTitle(t: string) {
+  const m = t.match(/^(Что такое|Кому нужен|Кому нужна|Кому нужно|Зачем нужен|Зачем нужна|Зачем нужно)\s+(.+?)(\??)$/i)
+  if (!m) return t
+  return (
+    <>
+      {m[1]} <span className="gradient-text">{m[2]}</span>
+      {m[3]}
+    </>
   )
 }

@@ -128,14 +128,6 @@ export default async function Header() {
             </div>
           </li>
         </ul>
-        <button type="button" className="theme-toggle nav-theme-toggle" id="themeToggle" role="switch" aria-checked="false" aria-label="Переключить светлую или тёмную тему" title="Светлая / тёмная тема">
-          <span className="theme-toggle-ico theme-toggle-ico--sun" aria-hidden="true">
-            <i className="fas fa-sun"></i>
-          </span>
-          <span className="theme-toggle-ico theme-toggle-ico--moon" aria-hidden="true">
-            <i className="fas fa-moon"></i>
-          </span>
-        </button>
         <a href="/contacts/" className="btn btn-primary nav-cta">
           Заказать сайт
         </a>

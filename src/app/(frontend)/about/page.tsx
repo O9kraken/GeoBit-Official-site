@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { FaqSection, Html } from '@/components/Common'
 import LegacyScripts from '@/components/LegacyScripts'
-import { TeamGrid } from '@/components/sections/Cards'
+import Founder from '@/components/sections/Founder'
 import Cta from '@/components/sections/Cta'
 import { PortfolioSection, TestimonialsSection } from '@/components/sections/Home'
 import { Newsletter, PageHero, pageFaqs } from '@/components/sections/Pages'
@@ -135,16 +135,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="section-padding" id="team">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Команда</span>
-            <h2 className="section-title" dangerouslySetInnerHTML={{ __html: 'Люди, которые <span class="gradient-text">делают магию</span>' }} />
-            <p className="section-desc">Небольшая команда, которая берёт на себя весь цикл работы над проектом</p>
-          </div>
-          <TeamGrid team={team} />
-        </div>
-      </section>
+      <Founder />
 
       <section className="section-padding bg-dark-2" id="values">
         <div className="container">

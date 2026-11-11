@@ -1040,6 +1040,10 @@ console.log('%cWebsite built with passion ❤️', 'color: #00e5ff; font-size: 1
     'use strict';
     var KEY = 'adelf-theme';
     var root = document.documentElement;
+    // Светлая тема отключена: сайт всегда тёмный.
+    root.setAttribute('data-theme', 'dark');
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    if (true) return;
 
     function currentTheme() {
         return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';

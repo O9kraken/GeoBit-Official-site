@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import React from 'react'
 
 import Footer from '@/components/Footer'
+import Dock from '@/components/sections/Dock'
 import Header from '@/components/Header'
 import { LeadModal } from '@/components/LeadForm'
 import PreviewRefresh from '@/components/PreviewRefresh'
@@ -31,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-const THEME_INIT = `(function(){try{var s=localStorage.getItem('adelf-theme');var t=(s==='light'||s==='dark')?s:((window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`
+const THEME_INIT = `(function(){document.documentElement.setAttribute('data-theme','dark');try{localStorage.removeItem('adelf-theme')}catch(e){}})();`
 
 const COMMON_SCRIPTS = [
   '/legacy/js/main.js',
@@ -81,6 +82,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </div>
         </div>
         <Header />
+        <Dock variant="top" />
         <LegacyScripts src={COMMON_SCRIPTS} />
         {children}
         <Footer />
