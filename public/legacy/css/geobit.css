@@ -32,7 +32,7 @@
   body:has(.gb-dock--hero) .hero{padding-top:24px;padding-bottom:104px}
   body:has(.gb-dock--hero) .hero .scroll-hint{display:none}
   .gb-dock{display:flex;justify-content:center;padding:0 24px;pointer-events:none;z-index:1000}
-  .gb-dock--hero{position:sticky;top:14px;height:72px;margin:-120px 0 48px}
+  .gb-dock--hero{position:sticky;top:14px;bottom:22px;height:72px;margin:-100px 0 48px}
   .gb-dock--top{position:fixed;top:14px;left:0;right:0;height:56px}
   /* блог: панель поиска/рубрик больше не липнет — с островком она смотрелась как баг */
   .blog-filters-section{position:relative;top:auto}
@@ -128,3 +128,44 @@
 .gb-proc-dur{color:color-mix(in srgb,var(--accent-cyan) calc(var(--g) * 100%),var(--accent-purple));border-color:rgba(0,229,255,calc(.2 + .3 * var(--g)))}
 .gb-proc-ring{display:none}
 .gb-proc-step.is-active .gb-proc-node,.gb-proc-step.is-done .gb-proc-node{background:var(--dark-3)}
+
+/* ============ Меню: шрифт Unbounded ============ */
+.gb-dock__link{font-family:var(--font-main);font-size:.8rem;font-weight:600;letter-spacing:.01em}
+.gb-dock.is-island .gb-dock__link{font-size:.74rem;padding:8px 11px}
+.gb-dock.is-island .gb-dock__bar{max-width:900px}
+.gb-dock.is-island .gb-dock__bar:hover{max-width:960px}
+
+/* ============ Первый экран: верхняя строка с логотипом и контактами ============ */
+.gb-herotop{display:none}
+@media (min-width:901px){
+  .gb-herotop{position:absolute;top:26px;left:0;right:0;z-index:6;display:flex;align-items:center;justify-content:space-between;max-width:1280px;margin:0 auto;width:calc(100% - 48px)}
+  .gb-herotop__logo{display:flex;color:var(--white)}
+  .gb-herotop__logo svg{height:60px;width:auto}
+  .gb-herotop__right{display:flex;align-items:center;gap:28px}
+  .gb-herotop__phone{font-family:var(--font-main);font-weight:700;font-size:1.02rem;color:var(--white);text-decoration:none}
+  .gb-herotop__mail{color:var(--gray-2);text-decoration:none;font-size:.95rem}
+  .gb-herotop__phone:hover,.gb-herotop__mail:hover{color:var(--accent-cyan)}
+  .gb-herotop__soc{display:flex;gap:10px}
+  .gb-herotop__soc a{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(var(--ink-rgb),.06);border:1px solid rgba(var(--ink-rgb),.1);color:var(--white);font-size:1.1rem;text-decoration:none;transition:background .2s,color .2s}
+  .gb-herotop__soc a:hover{background:rgba(0,229,255,.14);color:var(--accent-cyan)}
+  body:has(.gb-dock--hero) .hero{padding-top:96px;padding-bottom:104px}
+  /* логотип живёт вверху экрана и «переезжает» в островок при прокрутке */
+  .gb-dock__logo{width:118px;overflow:hidden;transition:width .55s cubic-bezier(.2,.9,.2,1),opacity .35s,margin .55s}
+  .gb-dock.is-island .gb-dock__logo{width:104px}
+  .gb-dock--hero:not(.is-island) .gb-dock__logo{width:0;opacity:0;margin-right:-24px}
+  .gb-dock--hero:not(.is-island) .gb-dock__links{margin:0 auto 0 -8px}
+  .gb-dock--hero:not(.is-island) .gb-dock__link{font-size:.86rem;padding:10px 18px}
+}
+/* невысокие экраны (ноутбуки): первый экран компактнее, чтобы меню внизу не закрывало кнопки */
+@media (min-width:901px) and (max-height:840px){
+  body:has(.gb-dock--hero) .hero{padding-top:78px;padding-bottom:96px}
+  body:has(.gb-dock--hero) .hero .hero-badge{display:none}
+  body:has(.gb-dock--hero) .hero .hero-title{font-size:clamp(2rem,3.5vw,2.9rem)!important;margin-bottom:16px}
+  body:has(.gb-dock--hero) .hero .hero-subtitle{margin-bottom:22px;font-size:1rem}
+  body:has(.gb-dock--hero) .hero .hero-actions{margin-bottom:26px}
+  body:has(.gb-dock--hero) .hero .stat-num{font-size:2rem}
+  .gb-herotop{top:16px}
+  .gb-herotop__logo svg{height:48px}
+  .gb-dock--hero{height:64px}
+  .gb-dock--hero:not(.is-island) .gb-dock__bar{height:64px}
+}

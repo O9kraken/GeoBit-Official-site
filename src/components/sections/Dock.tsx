@@ -22,6 +22,38 @@ export default async function Dock({ variant = 'hero' }: { variant?: 'hero' | 't
         { label: 'Контакты', url: '/contacts/' },
       ]
   return (
+    <>
+      {variant === 'hero' && (
+        <div className="gb-herotop">
+          <a href="/" className="gb-herotop__logo" aria-label="GeoBit — на главную">
+            <LogoInner />
+          </a>
+          <div className="gb-herotop__right">
+            {s?.phone && (
+              <a href={telHref(s.phone)} className="gb-herotop__phone">
+                {s.phone}
+              </a>
+            )}
+            {s?.email && (
+              <a href={`mailto:${s.email}`} className="gb-herotop__mail">
+                {s.email}
+              </a>
+            )}
+            <span className="gb-herotop__soc">
+              {s?.telegramUrl && (
+                <a href={s.telegramUrl} target="_blank" rel="noopener" aria-label="Telegram">
+                  <i className="fab fa-telegram"></i>
+                </a>
+              )}
+              {s?.whatsappUrl && (
+                <a href={s.whatsappUrl} target="_blank" rel="noopener" aria-label="WhatsApp">
+                  <i className="fab fa-whatsapp"></i>
+                </a>
+              )}
+            </span>
+          </div>
+        </div>
+      )}
     <div className={`gb-dock gb-dock--${variant}` + (variant === 'top' ? ' is-island' : '')} id={variant === 'hero' ? 'gbDock' : undefined}>
       <nav className="gb-dock__bar" aria-label="Основное меню">
         <a href="/" className="gb-dock__logo" aria-label="GeoBit — на главную">
@@ -52,5 +84,6 @@ export default async function Dock({ variant = 'hero' }: { variant?: 'hero' | 't
       </nav>
       <DockScroll variant={variant} />
     </div>
+    </>
   )
 }
