@@ -129,7 +129,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; }
 body {
-	cursor:none;
+	cursor:auto;
     font-family: var(--font-body);
     font-weight: 400;
     background: var(--black);
@@ -141,7 +141,7 @@ body {
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; text-decoration: none; transition: var(--transition); }
 ul { list-style: none; }
-button { cursor:none; border: none; background: none; font-family: inherit; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
 input, textarea, select { font-family: inherit; }
 
 /* ---- Selection ---- */
@@ -235,7 +235,7 @@ input, textarea, select { font-family: inherit; }
     font-weight: 600;
     font-size: 0.95rem;
     letter-spacing: 0.3px;
-    cursor:none;
+    cursor: pointer;
     transition: var(--transition);
     position: relative;
     overflow: hidden;
@@ -381,7 +381,7 @@ img.custom-logo {
     margin-left: auto;
 }
 .nav-link {
-	cursor:none;
+	cursor: pointer;
     font-size: 0.9rem;
     font-weight: 500;
     color: var(--white-3);
@@ -809,7 +809,7 @@ img.custom-logo {
 }
 .service-features li i { color: var(--accent-green); font-size: 0.75rem; }
 .service-link {
-	cursor:none;
+	cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -1613,7 +1613,7 @@ img.custom-logo {
     height: 8px;
     border-radius: 50%;
     background: rgba(var(--ink-rgb),0.2);
-    cursor:none;
+    cursor: pointer;
     transition: var(--transition);
     border: none;
     padding: 0;
@@ -2379,7 +2379,7 @@ img.custom-logo {
     font-weight: 500;
     color: var(--gray-2);
     background: transparent;
-    cursor:none;
+    cursor: pointer;
     transition: var(--transition);
 }
 .cat-filter-btn:hover,
@@ -2979,7 +2979,7 @@ img.custom-logo {
     padding: 14px 32px;
     border-radius: 100px;
     font-weight: 600;
-    cursor:none;
+    cursor: pointer;
     transition: var(--transition);
 }
 #respond .submit:hover { background: var(--accent-pink); }
@@ -3581,7 +3581,7 @@ h1, h2, .hero-title, .section-title { word-break: keep-all; }
 .faq-list { margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
 .faq-item { background: rgba(var(--ink-rgb),0.03); border: 1px solid rgba(var(--ink-rgb),0.08); border-radius: 16px; overflow: hidden; transition: border-color .25s; }
 .faq-item.is-open { border-color: rgba(0,229,255,0.35); }
-.faq-question { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 26px; background: none; border: none; cursor: none; text-align: left; font-family: 'Unbounded'; font-size: 1.05rem; font-weight: 600; color: var(--white); }
+.faq-question { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 26px; background: none; border: none; cursor: pointer; text-align: left; font-family: 'Unbounded'; font-size: 1.05rem; font-weight: 600; color: var(--white); }
 .faq-question i { flex-shrink: 0; transition: transform .3s; color: var(--accent-cyan, #00e5ff); font-size: .9rem; }
 .faq-item.is-open .faq-question i { transform: rotate(180deg); }
 .faq-answer { max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .35s ease; padding: 0 26px; }
@@ -3595,8 +3595,8 @@ h1, h2, .hero-title, .section-title { word-break: keep-all; }
 .seo-text-body strong { color: var(--white-3); font-weight: 600; }
 
 /* ============ Чекбокс согласия на обработку ПД ============ */
-.form-consent { display: flex; align-items: flex-start; gap: 10px; margin: 6px 0 16px; cursor: none; font-size: 0.85rem; line-height: 1.5; color: var(--gray-2); }
-.form-consent input[type="checkbox"] { flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px; cursor: none; accent-color: var(--accent-cyan, #00e5ff); }
+.form-consent { display: flex; align-items: flex-start; gap: 10px; margin: 6px 0 16px; cursor: pointer; font-size: 0.85rem; line-height: 1.5; color: var(--gray-2); }
+.form-consent input[type="checkbox"] { flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px; cursor: pointer; accent-color: var(--accent-cyan, #00e5ff); }
 .form-consent a { text-decoration: underline; }
 .form-consent span { user-select: none; }
 
@@ -5552,7 +5552,7 @@ h1, h2, .hero-title, .section-title { word-break: keep-all; }
     height: var(--tt-h);
     padding: 0 calc(var(--tt-pad) + 5px);
     border-radius: 100px;
-    cursor: none;
+    cursor: pointer;
     border: 1px solid rgba(var(--ink-rgb), 0.14);
     background:
         linear-gradient(135deg, rgba(124, 0, 255, 0.20), rgba(0, 229, 255, 0.12)),

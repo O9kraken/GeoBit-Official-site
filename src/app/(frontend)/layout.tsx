@@ -36,7 +36,6 @@ const THEME_INIT = `(function(){document.documentElement.setAttribute('data-them
 
 const COMMON_SCRIPTS = [
   '/legacy/js/main.js',
-  '/legacy/js/cursor.js',
   '/legacy/js/inline-footer-0.js',
   '/legacy/js/inline-footer-1.js',
   '/legacy/js/metrika.js',
@@ -57,20 +56,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="stylesheet" href="/legacy/css/fonts.css" />
         <link rel="stylesheet" href="/legacy/vendor/fa/css/all.min.css" />
         <link rel="stylesheet" href="/legacy/css/style.css" />
-        <link rel="stylesheet" href="/legacy/css/cursor.css" />
         <link rel="stylesheet" href="/legacy/css/geobit.css" />
       </head>
       <body suppressHydrationWarning>
         <PreviewRefresh />
-        <div className="gb-cursor" aria-hidden="true">
-          <div className="gb-cursor-frame">
-            <span className="gb-corner tl"></span>
-            <span className="gb-corner tr"></span>
-            <span className="gb-corner bl"></span>
-            <span className="gb-corner br"></span>
-          </div>
-        </div>
-        <div className="gb-cursor-dot" aria-hidden="true"></div>
         <div id="preloader">
           <div className="preloader-inner">
             <div className="preloader-logo logo--svg">

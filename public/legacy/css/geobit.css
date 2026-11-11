@@ -34,12 +34,14 @@
   .gb-dock{display:flex;justify-content:center;padding:0 24px;pointer-events:none;z-index:1000}
   .gb-dock--hero{position:sticky;top:14px;height:72px;margin:-120px 0 48px}
   .gb-dock--top{position:fixed;top:14px;left:0;right:0;height:56px}
+  /* блог: панель поиска/рубрик больше не липнет — с островком она смотрелась как баг */
+  .blog-filters-section{position:relative;top:auto}
   .gb-in-preview .gb-dock--top{position:absolute}
 }
 .gb-dock__bar{pointer-events:auto;width:100%;max-width:1200px;height:72px;box-sizing:border-box;display:flex;align-items:center;gap:24px;padding:0 12px 0 28px;border-radius:20px;background:rgba(18,14,31,.55);border:1px solid rgba(var(--ink-rgb),.10);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);box-shadow:0 20px 60px rgba(0,0,0,.35);transition:max-width .55s cubic-bezier(.2,.9,.2,1),height .55s cubic-bezier(.2,.9,.2,1),border-radius .55s cubic-bezier(.2,.9,.2,1),padding .55s cubic-bezier(.2,.9,.2,1),background .4s,box-shadow .4s}
 [data-theme="light"] .gb-dock__bar{background:rgba(255,255,255,.72);box-shadow:0 20px 60px rgba(18,24,48,.12)}
 .gb-dock__logo{display:flex;align-items:center;flex-shrink:0;color:var(--white)}
-.gb-dock__logo svg{height:34px;width:auto;transition:height .55s cubic-bezier(.2,.9,.2,1)}
+.gb-dock__logo svg{height:46px;width:auto;transition:height .55s cubic-bezier(.2,.9,.2,1)}
 .gb-dock__links{display:flex;gap:4px;margin:0 auto}
 .gb-dock__link{padding:10px 16px;border-radius:999px;color:var(--gray-2);text-decoration:none;font-size:.95rem;font-weight:600;white-space:nowrap;transition:color .2s,background .2s,padding .55s}
 .gb-dock__link:hover{color:var(--white);background:rgba(var(--ink-rgb),.06)}
@@ -50,7 +52,7 @@
 .gb-dock__cta{padding:12px 22px!important;white-space:nowrap}
 .gb-dock.is-island .gb-dock__bar{max-width:820px;height:56px;border-radius:999px;padding:0 8px 0 20px;gap:12px;background:rgba(8,6,14,.82);box-shadow:0 12px 40px rgba(0,0,0,.55),0 0 0 1px rgba(123,47,255,.25),0 0 32px rgba(123,47,255,.18)}
 [data-theme="light"] .gb-dock.is-island .gb-dock__bar{background:rgba(255,255,255,.88);box-shadow:0 12px 40px rgba(18,24,48,.16),0 0 0 1px rgba(123,47,255,.25)}
-.gb-dock.is-island .gb-dock__logo svg{height:24px}
+.gb-dock.is-island .gb-dock__logo svg{height:36px}
 .gb-dock.is-island .gb-dock__link{padding:8px 12px;font-size:.88rem}
 .gb-dock.is-island .gb-dock__icon{width:0;opacity:0;overflow:hidden;margin-left:-8px;pointer-events:none}
 .gb-dock.is-island .gb-dock__cta{padding:9px 18px!important;font-size:.88rem}
@@ -111,3 +113,18 @@
 .svc-ex2-card li{display:flex;gap:12px;align-items:flex-start;color:var(--white);line-height:1.5}
 .svc-ex2-card li i{color:var(--accent-cyan);margin-top:5px}
 @media (max-width:900px){.svc-explainer-v2{padding:28px 20px;margin-top:64px;gap:28px}.svc-ex2-top{grid-template-columns:1fr;gap:16px}}
+
+/* ============ Процесс работы: плавный световой луч (как контурная подсветка салона) ============ */
+.gb-proc-wire-current{display:none}
+.gb-proc-beam,.gb-proc-beam-glow{fill:none;stroke-linecap:round;opacity:var(--beam-a,1);transition:opacity .6s ease}
+.gb-proc-beam{stroke-width:3.5}
+.gb-proc-beam-glow{stroke-width:16;filter:url(#gbProcBlur)}
+.gb-proc-wire-base{stroke:rgba(124,0,255,.22);stroke-width:2}
+.gb-proc-step{--g:0}
+.gb-proc-node{transform:scale(calc(1 + .08 * var(--g)));border-color:rgba(0,229,255,calc(.18 + .82 * var(--g)));box-shadow:0 0 calc(34px * var(--g)) rgba(0,229,255,calc(.55 * var(--g))),0 0 calc(70px * var(--g)) rgba(123,47,255,calc(.35 * var(--g)));transition:none}
+.gb-proc-node::before{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,var(--accent-purple),var(--accent-cyan));opacity:calc(var(--g) * .9)}
+.gb-proc-num{position:relative;z-index:1;color:color-mix(in srgb,#ffffff calc(var(--g) * 100%),var(--accent-purple));transition:none}
+.gb-proc-card h3{color:color-mix(in srgb,var(--accent-cyan) calc(var(--g) * 100%),var(--white));text-shadow:0 0 calc(18px * var(--g)) rgba(0,229,255,calc(.45 * var(--g)));transition:none}
+.gb-proc-dur{color:color-mix(in srgb,var(--accent-cyan) calc(var(--g) * 100%),var(--accent-purple));border-color:rgba(0,229,255,calc(.2 + .3 * var(--g)))}
+.gb-proc-ring{display:none}
+.gb-proc-step.is-active .gb-proc-node,.gb-proc-step.is-done .gb-proc-node{background:var(--dark-3)}
