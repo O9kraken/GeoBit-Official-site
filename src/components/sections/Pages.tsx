@@ -57,51 +57,62 @@ export async function pageFaqs(own?: FaqItem[] | null): Promise<FaqItem[]> {
 }
 
 /** template-parts/newsletter.php */
-export function Newsletter() {
+export function Newsletter({ title, text }: { title?: string; text?: string } = {}) {
   return (
-    <section className="section-padding" style={{ background: 'var(--dark-2)' }}>
+    <section className="nl2 section-padding">
       <div className="container">
-        <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
-          <span className="section-tag">Рассылка</span>
-          <h2 className="section-title" style={{ marginTop: 16 }} dangerouslySetInnerHTML={{ __html: 'Полезные статьи <span class="gradient-text">на почту</span>' }} />
-          <p style={{ color: 'var(--gray-2)', marginBottom: 36 }}>Присылаем письмо, когда выходит новая статья. Без спама — только контент.</p>
-          <form className="gb-newsletter-form" noValidate>
+        <div className="nl2__panel">
+          <div className="nl2__info">
+            <span className="nl2__ico" aria-hidden="true">
+              <i className="fas fa-envelope-open-text"></i>
+            </span>
+            <span className="section-tag">Рассылка</span>
+            <h2 className="nl2__title" dangerouslySetInnerHTML={{ __html: title || 'Полезные статьи <span class="gradient-text">на почту</span>' }} />
+            <p className="nl2__text">{text || 'Присылаем письмо, когда выходит новая статья. Без спама — только контент.'}</p>
+            <ul className="nl2__points">
+              <li>
+                <i className="fas fa-check"></i> Только новые статьи
+              </li>
+              <li>
+                <i className="fas fa-check"></i> Отписка в один клик
+              </li>
+            </ul>
+          </div>
+          <form className="gb-newsletter-form nl2__form" noValidate>
             <div aria-hidden="true" style={{ position: 'absolute', left: -9999, top: -9999, width: 1, height: 1, overflow: 'hidden' }}>
               <label>
                 Не заполняйте это поле
                 <input type="text" name="website" tabIndex={-1} autoComplete="off" />
               </label>
             </div>
-            <div className="gb-newsletter-row">
-              <input
-                type="email"
-                name="email"
-                placeholder="Ваш email"
-                required
-                style={{ flex: 1, background: 'var(--dark-3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, padding: '14px 18px', color: 'var(--white)', fontSize: '0.95rem', outline: 'none', fontFamily: 'inherit', minWidth: 0 }}
-              />
+            <label className="nl2__label" htmlFor="nl2Email">
+              Ваш email
+            </label>
+            <div className="nl2__field">
+              <i className="far fa-envelope" aria-hidden="true"></i>
+              <input id="nl2Email" type="email" name="email" placeholder="you@mail.ru" autoComplete="email" required />
               <button type="submit" className="btn btn-primary">
-                Подписаться
+                <span>Подписаться</span>
               </button>
             </div>
-            <label className="form-consent" style={{ justifyContent: 'center', marginTop: 14, textAlign: 'left' }}>
+            <label className="nl2__consent">
               <input type="checkbox" name="consent" value="1" required />
-              <span style={{ fontSize: '0.8rem' }}>
+              <span>
                 Даю{' '}
-                <a href="/soglasie-pd/" target="_blank" rel="noopener" style={{ color: 'var(--accent-cyan)' }}>
+                <a href="/soglasie-pd/" target="_blank" rel="noopener">
                   согласие на обработку персональных данных
                 </a>{' '}
                 в соответствии с{' '}
-                <a href="/privacy-policy/" target="_blank" rel="noopener" style={{ color: 'var(--accent-cyan)' }}>
+                <a href="/privacy-policy/" target="_blank" rel="noopener">
                   политикой конфиденциальности
                 </a>
               </span>
             </label>
-            <label className="form-consent" style={{ justifyContent: 'center', marginTop: 8, textAlign: 'left' }}>
+            <label className="nl2__consent">
               <input type="checkbox" name="consent_mailing" value="1" required />
-              <span style={{ fontSize: '0.8rem' }}>
+              <span>
                 Даю{' '}
-                <a href="/soglasie-rassylka/" target="_blank" rel="noopener" style={{ color: 'var(--accent-cyan)' }}>
+                <a href="/soglasie-rassylka/" target="_blank" rel="noopener">
                   согласие на получение рассылки
                 </a>{' '}
                 (можно отписаться в любом письме)
@@ -183,7 +194,6 @@ export function PlanModal({ service = '' }: { service?: string }) {
 export function MessengerButtons({ s }: { s: any }) {
   const items = [
     s?.telegramUrl && { href: s.telegramUrl, cls: 'tg', icon: <i className="fab fa-telegram fa-lg"></i>, label: 'Telegram' },
-    s?.whatsappUrl && { href: s.whatsappUrl, cls: 'wa', icon: <i className="fab fa-whatsapp fa-lg"></i>, label: 'WhatsApp' },
     s?.maxUrl && { href: s.maxUrl, cls: 'max', icon: <MaxIcon size={18} />, label: 'MAX' },
     s?.instagramUrl && { href: s.instagramUrl, cls: 'ig', icon: <i className="fab fa-instagram fa-lg"></i>, label: 'Instagram' },
   ].filter(Boolean) as any[]

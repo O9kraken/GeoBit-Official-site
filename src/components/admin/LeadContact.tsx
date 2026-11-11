@@ -24,7 +24,6 @@ export function LeadContact() {
           <>
             <a className="gb-btn" href={`tel:+${intl}`}>📞 Позвонить</a>
             <a className="gb-btn" href={`https://t.me/+${intl}`} target="_blank" rel="noopener">✈️ Telegram</a>
-            <a className="gb-btn" href={`https://wa.me/${intl}`} target="_blank" rel="noopener">💬 WhatsApp</a>
             <button
               type="button"
               className="gb-btn"

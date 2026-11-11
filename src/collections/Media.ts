@@ -14,7 +14,8 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     staticDir: process.env.MEDIA_DIR || 'media',
-    mimeTypes: ['image/*', 'video/mp4', 'video/webm', 'application/pdf'],
+    // только нужные типы; SVG отдаётся с запретом скриптов (см. заголовки в next.config.ts)
+    mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif', 'image/svg+xml', 'video/mp4', 'video/webm', 'application/pdf'],
     imageSizes: [
       { name: 'thumb', width: 400, height: 400, position: 'centre', formatOptions: { format: 'webp', options: { quality: 80 } } },
       { name: 'card', width: 800, formatOptions: { format: 'webp', options: { quality: 80 } } },

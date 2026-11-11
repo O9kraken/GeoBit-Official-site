@@ -30,7 +30,7 @@ export function organizationSchema(s: any) {
     ],
     address,
     serviceType: ['Создание сайтов', 'Разработка сайтов', 'Дизайн сайтов', 'Разработка логотипа', 'SEO-продвижение'],
-    sameAs: [s?.telegramUrl, s?.vkUrl, s?.instagramUrl, s?.whatsappUrl, s?.maxUrl].filter(Boolean),
+    sameAs: [s?.telegramUrl, s?.vkUrl, s?.instagramUrl, s?.maxUrl].filter(Boolean),
     openingHoursSpecification: {
       '@type': 'OpeningHoursSpecification',
       dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],

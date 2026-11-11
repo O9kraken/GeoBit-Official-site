@@ -49,13 +49,13 @@ export default async function ServicesPage() {
           <section key={s.id} className="service-detail" id={anchorOf(s)}>
             <div className="container">
               <div className={`service-detail-grid ${index % 2 ? 'reverse' : ''}`}>
-                {img ? (
+                {s.contentHtml ? (
+                  <div className="service-detail-wysiwyg svc-mock">
+                    <div className="wysiwyg-content" dangerouslySetInnerHTML={{ __html: s.contentHtml }} />
+                  </div>
+                ) : img ? (
                   <div className="service-detail-img">
                     <img src={img} alt={s.image?.alt || s.title} width={600} height={500} loading="lazy" />
-                  </div>
-                ) : s.contentHtml ? (
-                  <div className="service-detail-wysiwyg">
-                    <div className="wysiwyg-content" dangerouslySetInnerHTML={{ __html: s.contentHtml }} />
                   </div>
                 ) : null}
                 <div className="service-detail-content">

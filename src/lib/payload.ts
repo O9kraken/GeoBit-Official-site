@@ -68,3 +68,19 @@ export async function cmsRedirect(path: string): Promise<string | null> {
   }
   return null
 }
+
+/** Авторы блога: только имя, подпись и аватар (email и прочее наружу не отдаём). */
+export const getAuthors = cache(async () => {
+  const p = await payload()
+  const r = await p.find({ collection: 'users', limit: 50, depth: 1 })
+  const map = new Map<string, { name: string; about?: string; avatar?: any }>()
+  for (const u of r.docs as any[]) map.set(String(u.id), { name: u.name || '', about: u.about || undefined, avatar: u.avatar && typeof u.avatar === 'object' ? u.avatar : undefined })
+  return map
+})
+
+/** Автор статьи: из профиля пользователя, иначе — из текстового поля. */
+export async function postAuthor(post: any): Promise<{ name: string; about?: string; avatar?: any }> {
+  const id = post?.author && typeof post.author === 'object' ? post.author.id : post?.author
+  const a = id != null ? (await getAuthors()).get(String(id)) : undefined
+  return { name: a?.name || post?.authorName || 'Георгий', about: a?.about, avatar: a?.avatar }
+}

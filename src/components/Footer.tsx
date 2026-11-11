@@ -25,7 +25,6 @@ export default async function Footer() {
       ]
   const socials: [string | undefined, string, React.ReactNode][] = [
     [s?.telegramUrl, 'Telegram', <i key="tg" className="fab fa-telegram"></i>],
-    [s?.whatsappUrl, 'WhatsApp', <i key="wa" className="fab fa-whatsapp"></i>],
     [s?.maxUrl, 'MAX', <MaxIcon key="max" size={16} />],
     [s?.vkUrl, 'VKontakte', <i key="vk" className="fab fa-vk"></i>],
     [s?.instagramUrl, 'Instagram', <i key="ig" className="fab fa-instagram"></i>],

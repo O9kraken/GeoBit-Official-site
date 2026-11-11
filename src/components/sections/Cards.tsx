@@ -1,3 +1,4 @@
+import { postAuthor } from '@/lib/payload'
 import { formatDateRu, mediaUrl, paths } from '@/lib/util'
 
 export function PfCard({ p }: { p: any }) {
@@ -62,12 +63,14 @@ export function PfCard({ p }: { p: any }) {
   )
 }
 
-export function BlogCard({ post, headingTag = 'h2', featured = false }: { post: any; headingTag?: 'h2' | 'h3'; featured?: boolean }) {
+export async function BlogCard({ post, headingTag = 'h2', featured = false }: { post: any; headingTag?: 'h2' | 'h3'; featured?: boolean }) {
   const H = headingTag
   const cat = post.categories?.[0]
   const thumb = mediaUrl(post.cover, 'card') || mediaUrl(post.cover)
   const excerpt = (post.excerpt || '').split(/\s+/).slice(0, 22).join(' ')
   const url = paths.post(post.slug)
+  const author = await postAuthor(post)
+  const authorImg = mediaUrl(author.avatar, 'thumb') || mediaUrl(author.avatar)
   return (
     <article className={`blog-card${featured ? ' blog-card--featured' : ''}`} id={`post-${post.id}`}>
       {thumb ? (
@@ -108,10 +111,14 @@ export function BlogCard({ post, headingTag = 'h2', featured = false }: { post: 
         <p className="blog-card__excerpt">{excerpt}{excerpt && (post.excerpt || '').split(/\s+/).length > 22 ? '...' : ''}</p>
         <div className="blog-card__footer">
           <div className="blog-card__author">
-            <span className="author-avatar" aria-hidden="true">
-              <i className="fas fa-user"></i>
-            </span>
-            <span>{post.authorName || 'Георгий'}</span>
+            {authorImg ? (
+              <img src={authorImg} alt="" className="author-avatar" width={32} height={32} loading="lazy" />
+            ) : (
+              <span className="author-avatar" aria-hidden="true">
+                <i className="fas fa-user"></i>
+              </span>
+            )}
+            <span>{author.name}</span>
           </div>
           <a href={url} className="blog-card__read-more">
             Читать <i className="fas fa-arrow-right"></i>
@@ -224,9 +231,7 @@ export function TestimonialsSlider({ items }: { items: any[] }) {
                 {photo ? (
                   <img src={photo} alt={t.name} width={60} height={60} loading="lazy" />
                 ) : (
-                  <span className="testimonial-initials" aria-hidden="true">
-                    {t.name.slice(0, 2)}
-                  </span>
+                  <AvatarArt name={t.name} size={60} />
                 )}
                 <div>
                   <strong>{t.name}</strong>
@@ -247,5 +252,49 @@ export function TestimonialsSlider({ items }: { items: any[] }) {
         </button>
       </div>
     </div>
+  )
+}
+
+const AV_BG = [
+  ['#ff3399', '#7b2fff'],
+  ['#7b2fff', '#00e5ff'],
+  ['#00e5ff', '#00c27a'],
+  ['#ff8a3d', '#ff3399'],
+  ['#5b6cff', '#b14bff'],
+  ['#00b3cc', '#5b6cff'],
+]
+const AV_SKIN = ['#f6d3b8', '#eec3a2', '#d9a47e', '#f9dcc6']
+const AV_HAIR = ['#2b1d16', '#4a2f1d', '#1a1a22', '#7a4a26', '#c9a26a']
+
+/** Рисованный аватар-заглушка: пока у отзыва нет фото. Вид зависит от имени. */
+export function AvatarArt({ name, size = 60 }: { name: string; size?: number }) {
+  let h = 0
+  for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0
+  const bg = AV_BG[h % AV_BG.length]
+  const skin = AV_SKIN[(h >> 3) % AV_SKIN.length]
+  const hair = AV_HAIR[(h >> 5) % AV_HAIR.length]
+  const style = (h >> 8) % 3
+  const id = 'av' + h.toString(36)
+  return (
+    <svg className="gb-avatar-art" width={size} height={size} viewBox="0 0 64 64" role="img" aria-label={name}>
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor={bg[0]} />
+          <stop offset="1" stopColor={bg[1]} />
+        </linearGradient>
+        <clipPath id={id + 'c'}>
+          <circle cx="32" cy="32" r="32" />
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#${id}c)`}>
+        <rect width="64" height="64" fill={`url(#${id})`} />
+        <path d="M8 70c0-15 10-24 24-24s24 9 24 24z" fill="rgba(10,8,18,.82)" />
+        <rect x="27" y="38" width="10" height="10" rx="4" fill={skin} />
+        <circle cx="32" cy="28" r="12" fill={skin} />
+        {style === 0 && <path d="M19 28c-1-11 5-17 13-17s14 6 13 17c-2-6-5-9-13-9s-11 3-13 9z" fill={hair} />}
+        {style === 1 && <path d="M18 31c-3-14 5-21 14-21s17 7 14 21c-1-7-3-11-6-13-4 3-13 4-17 2-3 2-4 6-5 11z" fill={hair} />}
+        {style === 2 && <path d="M17 40c-4-18 4-30 15-30s19 12 15 30c-1-9-2-16-5-20-5 3-15 3-20 0-3 4-4 11-5 20z" fill={hair} />}
+      </g>
+    </svg>
   )
 }

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { FaqSection } from '@/components/Common'
 import LegacyScripts from '@/components/LegacyScripts'
 import { BlogCard } from '@/components/sections/Cards'
-import { PageHero, pageFaqs } from '@/components/sections/Pages'
+import { Newsletter, PageHero, pageFaqs } from '@/components/sections/Pages'
 import { getGlobal, getTerms, payload } from '@/lib/payload'
 import { buildMeta } from '@/lib/seo'
 
@@ -137,53 +137,9 @@ export default async function BlogPage({ searchParams }: P) {
         </div>
       </section>
 
-      <section className="newsletter-section section-padding">
-        <div className="container">
-          <div className="newsletter-box">
-            <div className="newsletter-content">
-              <div className="newsletter-icon">
-                <i className="fas fa-envelope-open-text"></i>
-              </div>
-              <div className="newsletter-text">
-                <h3>{g?.newsletterTitle || 'Подпишитесь на обновления'}</h3>
-                <p>{g?.newsletterText || 'Получайте новые статьи первым'}</p>
-              </div>
-              <form className="newsletter-form" id="newsletterForm" noValidate>
-                <div className="newsletter-input-wrap">
-                  <input type="email" name="email" className="newsletter-input" placeholder="Ваш email" required />
-                  <button type="submit" className="btn btn-primary newsletter-submit">
-                    <span>Подписаться</span>
-                    <i className="fas fa-paper-plane"></i>
-                  </button>
-                </div>
-                <div aria-hidden="true" style={{ position: 'absolute', left: -9999, top: -9999, width: 1, height: 1, overflow: 'hidden' }}>
-                  <input type="text" name="website" tabIndex={-1} autoComplete="off" />
-                </div>
-                <label className="newsletter-notice" style={{ display: 'flex', gap: 8, alignItems: 'flex-start', cursor: 'pointer' }}>
-                  <input type="checkbox" name="consent_mailing" value="1" required style={{ marginTop: 3 }} />
-                  <span>
-                    Согласен на{' '}
-                    <a href="/soglasie-rassylka/" target="_blank" rel="noopener" style={{ color: 'var(--accent-cyan)' }}>
-                      получение рассылки
-                    </a>{' '}
-                    и{' '}
-                    <a href="/soglasie-pd/" target="_blank" rel="noopener" style={{ color: 'var(--accent-cyan)' }}>
-                      обработку email
-                    </a>
-                    . Без спама, отписаться можно в любой момент.
-                  </span>
-                </label>
-                <div className="newsletter-success" style={{ display: 'none' }}>
-                  <i className="fas fa-check-circle"></i>
-                  <span>Вы подписались! Спасибо.</span>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Newsletter title={g?.newsletterTitle || undefined} text={g?.newsletterText || undefined} />
       <FaqSection faqs={faqs} />
-      <LegacyScripts src={['/legacy/js/inline-blog-0.js']} />
+      <LegacyScripts src={['/legacy/js/inline-blog-0.js', '/legacy/js/newsletter.js']} />
     </main>
   )
 }

@@ -8,47 +8,75 @@ export default async function Cta() {
   const [h, s, services] = await Promise.all([getGlobal<any>('home'), getGlobal<any>('settings'), getServices()])
   const tg = s?.telegramUrl
   const max = s?.maxUrl
-  const wa = s?.whatsappUrl
   return (
     <>
-      <section className="cta-section" id="cta">
-        <div className="cta-bg">
-          <canvas id="ctaCanvas"></canvas>
-        </div>
+      <section className="cta2 section-padding" id="cta">
         <div className="container">
-          <div className="cta-content">
-            <span className="section-tag">{h?.ctaTag || 'Начнём?'}</span>
-            <Html as="h2" html={h?.ctaTitle || 'Готовы создать <span class="gradient-text">крутой сайт</span>?'} />
-            <p>{h?.ctaDesc || 'Оставьте заявку — обсудим ваш проект и предложим оптимальное решение бесплатно'}</p>
-            <div className="cta-actions">
-              <button type="button" className="btn btn-primary btn-lg" id="ctaLeadOpen" aria-haspopup="dialog" aria-controls="ctaLeadModal">
+          <div className="cta2__panel">
+            <div className="cta-bg cta2__bg" aria-hidden="true">
+              <canvas id="ctaCanvas"></canvas>
+            </div>
+            <div className="cta2__main">
+              <span className="section-tag">{h?.ctaTag || 'Начнём?'}</span>
+              <Html as="h2" className="cta2__title" html={h?.ctaTitle || 'Готовы создать <span class="gradient-text">крутой сайт</span>?'} />
+              <p className="cta2__desc">{h?.ctaDesc || 'Оставьте заявку — обсудим ваш проект и предложим оптимальное решение бесплатно'}</p>
+              <ul className="cta2__points">
+                <li>
+                  <i className="fas fa-bolt"></i> Ответим в течение дня
+                </li>
+                <li>
+                  <i className="fas fa-file-signature"></i> Цена и сроки в договоре
+                </li>
+                <li>
+                  <i className="fas fa-life-ring"></i> Первый месяц поддержки бесплатно
+                </li>
+              </ul>
+            </div>
+            <div className="cta2__card">
+              <div className="cta2__card-title">Как удобнее связаться?</div>
+              <button type="button" className="btn btn-primary btn-lg cta2__btn" id="ctaLeadOpen" aria-haspopup="dialog" aria-controls="ctaLeadModal">
                 <i className="fas fa-paper-plane"></i>
                 <span>{h?.ctaButton || 'Оставить заявку'}</span>
               </button>
-              {s?.phone && (
-                <a href={telHref(s.phone)} className="btn btn-outline btn-lg">
-                  <i className="fas fa-phone"></i>
-                  <span>Позвонить</span>
-                </a>
-              )}
-            </div>
-            <div className="cta-messengers">
-              <span>Или напишите:</span>
-              {tg && (
-                <a href={tg} className="messenger-link" target="_blank" rel="noopener">
-                  <i className="fab fa-telegram"></i> Telegram
-                </a>
-              )}
-              {max && (
-                <a href={max} className="messenger-link" target="_blank" rel="noopener">
-                  <MaxIcon size={20} /> MAX
-                </a>
-              )}
-              {wa && (
-                <a href={wa} className="messenger-link" target="_blank" rel="noopener">
-                  <i className="fab fa-whatsapp"></i> WhatsApp
-                </a>
-              )}
+              <div className="cta2__or">или напишите напрямую</div>
+              <div className="cta2__rows">
+                {tg && (
+                  <a href={tg} className="cta2__row" target="_blank" rel="noopener">
+                    <span className="cta2__row-ico cta2__row-ico--tg">
+                      <i className="fab fa-telegram"></i>
+                    </span>
+                    <span className="cta2__row-text">
+                      <b>Telegram</b>
+                      <small>Самый быстрый способ</small>
+                    </span>
+                    <i className="fas fa-arrow-right cta2__row-arrow"></i>
+                  </a>
+                )}
+                {max && (
+                  <a href={max} className="cta2__row" target="_blank" rel="noopener">
+                    <span className="cta2__row-ico">
+                      <MaxIcon size={22} />
+                    </span>
+                    <span className="cta2__row-text">
+                      <b>MAX</b>
+                      <small>Написать в мессенджер</small>
+                    </span>
+                    <i className="fas fa-arrow-right cta2__row-arrow"></i>
+                  </a>
+                )}
+                {s?.phone && (
+                  <a href={telHref(s.phone)} className="cta2__row">
+                    <span className="cta2__row-ico cta2__row-ico--tel">
+                      <i className="fas fa-phone"></i>
+                    </span>
+                    <span className="cta2__row-text">
+                      <b>{s.phone}</b>
+                      <small>Позвонить</small>
+                    </span>
+                    <i className="fas fa-arrow-right cta2__row-arrow"></i>
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>

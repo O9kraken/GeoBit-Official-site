@@ -32,8 +32,8 @@
     "payload": "3.92.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "sharp": "^0.34.5",
-    "zod": "^3.25.76"
+    "sharp": "^0.35.5",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
@@ -45,5 +45,9 @@
   },
   "engines": {
     "node": ">=22"
+  },
+  "overrides": {
+    "dompurify": "^3.4.17",
+    "happy-dom": "^21.0.4"
   }
 }

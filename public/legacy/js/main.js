@@ -628,7 +628,7 @@ function initCursorTrail() {
         requestAnimationFrame(animateTrail);
     }
 }
-document.addEventListener('DOMContentLoaded', initCursorTrail);
+// «Хвост» за курсором отключён вместе с кастомным курсором.
 
 // ---- Number Counter on Scroll ----
 function initScrollCounters() {

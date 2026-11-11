@@ -53,7 +53,7 @@ export default buildConfig({
     },
     dateFormat: 'dd.MM.yyyy HH:mm',
     // без Gravatar: админка не ходит на внешние сервисы
-    avatar: 'default',
+    avatar: { Component: '/components/admin/Avatar#Avatar' },
   },
   i18n: { supportedLanguages: { ru }, fallbackLanguage: 'ru' },
   // порядок здесь = порядок групп в меню админки: заявки — первыми
@@ -69,6 +69,8 @@ export default buildConfig({
     features: ({ defaultFeatures }) => [...defaultFeatures, EXPERIMENTAL_TableFeature()],
   }),
   secret: process.env.PAYLOAD_SECRET || '',
+  // GraphQL сайтом не используется — выключен, чтобы не держать лишнюю точку входа
+  graphQL: { disable: true },
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URI || '', max: 10 },

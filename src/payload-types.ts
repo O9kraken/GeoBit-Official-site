@@ -166,8 +166,6 @@ export interface UserAuthOperations {
   };
 }
 /**
- * Все заявки с форм сайта. Новые — со статусом «Новая»; поменяйте статус, когда свяжетесь с клиентом.
- *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "leads".
  */
@@ -523,6 +521,10 @@ export interface Post {
    */
   slug: string;
   publishedAt?: string | null;
+  /**
+   * Имя и аватар берутся из профиля пользователя
+   */
+  author?: (number | null) | User;
   authorName?: string | null;
   categories?: (number | Category)[] | null;
   tags?: (number | Tag)[] | null;
@@ -541,6 +543,44 @@ export interface Post {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  /**
+   * Показывается как автор статей в блоге
+   */
+  name?: string | null;
+  /**
+   * Квадратное фото. Показывается у автора в блоге и в шапке админки.
+   */
+  avatar?: (number | null) | Media;
+  /**
+   * Например: «Основатель GeoBit, дизайнер и разработчик»
+   */
+  about?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -615,33 +655,6 @@ export interface Testimonial {
   order?: number | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  name?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  resetPasswordRequestedAt?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -994,6 +1007,7 @@ export interface PostsSelect<T extends boolean = true> {
   content?: T;
   slug?: T;
   publishedAt?: T;
+  author?: T;
   authorName?: T;
   categories?: T;
   tags?: T;
@@ -1170,6 +1184,8 @@ export interface TagsSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  avatar?: T;
+  about?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;

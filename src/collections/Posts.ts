@@ -28,7 +28,8 @@ export const Posts: CollectionConfig = {
     { name: 'content', label: 'Текст статьи', type: 'richText', required: true },
     slugField(),
     { name: 'publishedAt', label: 'Дата публикации', type: 'date', admin: { position: 'sidebar' } },
-    { name: 'authorName', label: 'Автор', type: 'text', defaultValue: 'Георгий', admin: { position: 'sidebar' } },
+    { name: 'author', label: 'Автор', type: 'relationship', relationTo: 'users', admin: { position: 'sidebar', description: 'Имя и аватар берутся из профиля пользователя' } },
+    { name: 'authorName', label: 'Автор (если не выбран выше)', type: 'text', defaultValue: 'Георгий', admin: { position: 'sidebar' } },
     { name: 'categories', label: 'Рубрики', type: 'relationship', relationTo: 'categories', hasMany: true, admin: { position: 'sidebar' } },
     { name: 'tags', label: 'Теги', type: 'relationship', relationTo: 'tags', hasMany: true, admin: { position: 'sidebar' } },
     {

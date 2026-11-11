@@ -3,7 +3,7 @@ import { notFound, permanentRedirect } from 'next/navigation'
 import { Breadcrumbs, JsonLd } from '@/components/Common'
 import LegacyScripts from '@/components/LegacyScripts'
 import { Newsletter, richHtml } from '@/components/sections/Pages'
-import { findBySlug, getPosts, payload, cmsRedirect } from '@/lib/payload'
+import { findBySlug, getPosts, payload, cmsRedirect, postAuthor } from '@/lib/payload'
 import { articleSchema, breadcrumbSchema, docMeta } from '@/lib/seo'
 import { SITE_URL, formatDateLong, formatDateRu, mediaUrl, paths } from '@/lib/util'
 
@@ -68,6 +68,8 @@ async function PostView({ post }: { post: any }) {
   const related = all.filter((x: any) => x.id !== post.id && x.categories?.some((c: any) => catIds.includes(c.id))).slice(0, 3)
   const recent = all.filter((x: any) => x.id !== post.id).slice(0, 5)
   const cover = mediaUrl(post.cover, 'wide') || mediaUrl(post.cover)
+  const author = await postAuthor(post)
+  const authorImg = mediaUrl(author.avatar, 'thumb') || mediaUrl(author.avatar)
   const meta = { fontSize: '0.82rem', color: 'var(--gray)' }
   return (
     <main id="main" role="main">
@@ -95,7 +97,7 @@ async function PostView({ post }: { post: any }) {
                   <i className="far fa-clock"></i> {post.readingTime || 1} мин
                 </span>
                 <span style={meta}>
-                  <i className="far fa-user"></i> {post.authorName || 'Георгий'}
+                  <i className="far fa-user"></i> {author.name}
                 </span>
               </div>
               <h1 style={{ fontFamily: 'var(--font-main)', fontSize: 'clamp(1.6rem,3.5vw,2.8rem)', fontWeight: 800, lineHeight: 1.2, marginBottom: 28 }}>{post.title}</h1>
@@ -124,12 +126,16 @@ async function PostView({ post }: { post: any }) {
               </div>
 
               <div style={{ marginTop: 48, background: 'var(--dark-3)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: 28, display: 'flex', gap: 24, alignItems: 'flex-start' }}>
-                <span className="testimonial-initials" style={{ width: 80, height: 80, fontSize: '1.6rem', border: '2px solid rgba(124,0,255,0.4)', flexShrink: 0 }} aria-hidden="true">
-                  {(post.authorName || 'Георгий').slice(0, 1)}
-                </span>
+                {authorImg ? (
+                  <img src={authorImg} alt={author.name} width={80} height={80} loading="lazy" style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(124,0,255,0.4)', flexShrink: 0 }} />
+                ) : (
+                  <span className="testimonial-initials" style={{ width: 80, height: 80, fontSize: '1.6rem', border: '2px solid rgba(124,0,255,0.4)', flexShrink: 0 }} aria-hidden="true">
+                    {author.name.slice(0, 1)}
+                  </span>
+                )}
                 <div>
-                  <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: 4 }}>{post.authorName || 'Георгий'}</h4>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--gray-2)', lineHeight: 1.6 }}>Автор блога GeoBit</p>
+                  <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: 4 }}>{author.name}</h4>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--gray-2)', lineHeight: 1.6 }}>{author.about || 'Автор блога GeoBit'}</p>
                 </div>
               </div>
 

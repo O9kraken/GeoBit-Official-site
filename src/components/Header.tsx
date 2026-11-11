@@ -111,11 +111,6 @@ export default async function Header() {
                     <i className="fab fa-telegram"></i>
                   </a>
                 )}
-                {s?.whatsappUrl && (
-                  <a href={s.whatsappUrl} target="_blank" rel="noopener" aria-label="WhatsApp">
-                    <i className="fab fa-whatsapp"></i>
-                  </a>
-                )}
                 {s?.maxUrl && (
                   <a href={s.maxUrl} target="_blank" rel="noopener" aria-label="MAX" className="nav-msg-max">
                     <MaxIcon size={22} />

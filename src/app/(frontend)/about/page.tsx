@@ -68,65 +68,73 @@ export default async function AboutPage() {
 
       <section className="section-padding bg-dark-2">
         <div className="container">
-          <div className="about-story-grid">
-            <div>
+          <div className="ab2-story">
+            <div className="ab2-story__text">
               <span className="section-tag">Наша история</span>
-              <Html as="h2" className="section-title about-story-title" html={g?.storyTitle || 'Кто такие <span class="gradient-text">GeoBit</span>'} />
-              <p className="about-story-p">{g?.storyText1 || 'GeoBit — студия веб-разработки и дизайна, основанная с одной целью: помогать бизнесу расти в цифровом пространстве.'}</p>
-              {g?.storyText2 && <p className="about-story-p">{g.storyText2}</p>}
-              <div className="about-stats" style={{ ['--about-stats-cols' as any]: 1 }}>
-                {stats.map((st: any, i: number) => (
-                  <div key={i} className="about-stat" style={{ ['--stat-color' as any]: st.color }}>
-                    {st.icon && <i className={fa(st.icon, 'fa-star')}></i>}
-                    <div className="about-stat-val">{st.val}</div>
-                    <div className="about-stat-lbl">{st.lbl}</div>
-                  </div>
-                ))}
-              </div>
+              <Html as="h2" className="section-title ab2-left" html={g?.storyTitle || 'Кто такие <span class="gradient-text">GeoBit</span>'} />
+              <p>{g?.storyText1 || 'GeoBit — студия веб-разработки и дизайна, основанная с одной целью: помогать бизнесу расти в цифровом пространстве.'}</p>
+              {g?.storyText2 && <p>{g.storyText2}</p>}
             </div>
-            <div>
+            <div className="ab2-story__media">
               {storyImg ? (
-                <img src={storyImg} alt={g?.storyImage?.alt || 'Студия GeoBit'} width={600} height={600} className="about-story-img" loading="lazy" />
+                <img src={storyImg} alt={g?.storyImage?.alt || 'Студия GeoBit'} width={600} height={600} loading="lazy" />
               ) : (
-                <div className="about-story-img gb-img-placeholder" aria-hidden="true"></div>
+                <div className="gb-img-placeholder" aria-hidden="true"></div>
               )}
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="about-mission section-padding">
-        <div className="container">
-          <div className="about-mission-inner">
-            <span className="about-mission-quote" aria-hidden="true">
-              “
-            </span>
-            <span className="section-tag">Наша миссия</span>
-            <p className="about-mission-text">
-              {g?.missionText ||
-                'Мы верим, что хороший сайт — это не про красивую картинку, а про рабочий инструмент, который приводит клиентов и приносит прибыль. Каждый проект для нас — это партнёрство, где успех клиента становится нашим успехом.'}
-            </p>
-            <div className="about-mission-author">
-              <span className="about-mission-line"></span>
-              {g?.missionAuthor || 'Команда GeoBit'}
+            <div className="ab2-stats">
+              {stats.map((st: any, i: number) => (
+                <div key={i} className="ab2-stat">
+                  <span className="ab2-stat__ico" style={{ color: st.color }}>
+                    {st.icon && <i className={fa(st.icon, 'fa-star')}></i>}
+                  </span>
+                  <div>
+                    <div className="ab2-stat__val">{st.val}</div>
+                    <div className="ab2-stat__lbl">{st.lbl}</div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      <section className="section-padding bg-dark-2" id="why">
+      <Founder />
+
+      <section className="section-padding bg-dark-2">
         <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Почему мы</span>
-            <Html as="h2" className="section-title" html={g?.whyTitle || 'Почему выбирают <span class="gradient-text">GeoBit</span>'} />
-            <p className="section-desc">Шесть причин доверить нам ваш проект</p>
+          <figure className="ab2-mission">
+            <span className="ab2-mission__mark" aria-hidden="true">
+              <i className="fas fa-quote-left"></i>
+            </span>
+            <div>
+              <span className="section-tag">Миссия</span>
+              <blockquote>
+                {g?.missionText ||
+                  'Хороший сайт — это не про красивую картинку, а про рабочий инструмент, который приводит клиентов и приносит прибыль. Каждый проект — это партнёрство, где успех клиента становится общим успехом.'}
+              </blockquote>
+              <figcaption>{g?.missionAuthor || 'Георгий Каляков, GeoBit'}</figcaption>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <section className="section-padding" id="why">
+        <div className="container">
+          <div className="ab2-head">
+            <div>
+              <span className="section-tag">Почему GeoBit</span>
+              <Html as="h2" className="section-title ab2-left" html={g?.whyTitle || 'Почему выбирают <span class="gradient-text">GeoBit</span>'} />
+            </div>
+            <p>Что вы получаете, когда заказываете сайт здесь</p>
           </div>
-          <div className="about-why-grid">
+          <div className="ab2-why">
             {why.map((w: any, i: number) => (
-              <div key={i} className="about-why-card" data-aos="fade-up">
-                <div className="about-why-icon">
+              <div key={i} className={'ab2-why__card' + (i < 2 ? ' is-big' : '')} data-aos="fade-up">
+                <span className="ab2-why__num">{String(i + 1).padStart(2, '0')}</span>
+                <span className="ab2-why__ico">
                   <i className={fa(w.icon)}></i>
-                </div>
+                </span>
                 <h3>{w.title}</h3>
                 <p>{w.text}</p>
               </div>
@@ -135,22 +143,25 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <Founder />
-
       <section className="section-padding bg-dark-2" id="values">
         <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Ценности</span>
-            <Html as="h2" className="section-title" html={g?.valuesTitle || 'Наш <span class="gradient-text">подход</span>'} />
-          </div>
-          <div className="values-grid">
-            {values.map((v: any, i: number) => (
-              <div key={i} className="value-card" data-aos="fade-up">
-                <div className="value-num">{String(i + 1).padStart(2, '0')}</div>
-                <h3>{v.title}</h3>
-                <p>{v.text}</p>
-              </div>
-            ))}
+          <div className="ab2-split">
+            <div className="ab2-split__aside">
+              <span className="section-tag">Ценности</span>
+              <Html as="h2" className="section-title ab2-left" html={g?.valuesTitle || 'Мой <span class="gradient-text">подход</span>'} />
+              <p>Принципы, по которым идёт работа над каждым проектом.</p>
+            </div>
+            <ol className="ab2-values">
+              {values.map((v: any, i: number) => (
+                <li key={i}>
+                  <span className="ab2-values__num">{String(i + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h3>{v.title}</h3>
+                    <p>{v.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </section>
@@ -158,21 +169,18 @@ export default async function AboutPage() {
       {tech.length > 0 && (
         <section className="section-padding" id="tech">
           <div className="container">
-            <div className="section-header">
-              <span className="section-tag">Стек</span>
-              <h2 className="section-title">{g?.techTitle || 'Технологии которые мы используем'}</h2>
+            <div className="ab2-head">
+              <div>
+                <span className="section-tag">Стек</span>
+                <h2 className="section-title ab2-left">{g?.techTitle || 'Технологии'}</h2>
+              </div>
+              <p>Инструменты, на которых собираются проекты</p>
             </div>
-            <div className="about-tech-grid">
+            <div className="ab2-tech">
               {tech.map((t, i) => (
-                <div key={i} className="about-tech-card">
-                  <div className="about-tech-head">
-                    <i className={t.icon || 'fab fa-wordpress'}></i>
-                    <span className="about-tech-label">{t.label}</span>
-                    <span className="about-tech-level">{t.level ?? 80}%</span>
-                  </div>
-                  <div className="about-tech-track">
-                    <div className="metric-fill about-tech-fill" data-width={t.level ?? 80}></div>
-                  </div>
+                <div key={i} className="ab2-tech__chip">
+                  <i className={t.icon || 'fas fa-code'}></i>
+                  <span>{t.label}</span>
                 </div>
               ))}
             </div>
@@ -183,44 +191,43 @@ export default async function AboutPage() {
       {timeline.length > 0 && (
         <section className="section-padding bg-dark-2" id="timeline">
           <div className="container">
-            <div className="section-header">
-              <span className="section-tag">Хронология</span>
-              <h2 className="section-title" dangerouslySetInnerHTML={{ __html: 'Наш <span class="gradient-text">путь</span>' }} />
+            <div className="ab2-head">
+              <div>
+                <span className="section-tag">Хронология</span>
+                <h2 className="section-title ab2-left" dangerouslySetInnerHTML={{ __html: 'Мой <span class="gradient-text">путь</span>' }} />
+              </div>
             </div>
-            <div className="about-timeline">
-              <div className="about-timeline-line"></div>
+            <ol className="ab2-tl" style={{ ['--n' as any]: timeline.length }}>
               {timeline.map((tl, idx) => (
-                <div key={idx} className={`about-tl-row ${idx % 2 === 0 ? 'tl-left' : 'tl-right'}`}>
-                  <div className="about-tl-card">
-                    {tl.year && <div className="about-tl-year">{tl.year}</div>}
-                    <h3 className="about-tl-title">{tl.title}</h3>
-                    {tl.text && <p className="about-tl-text">{tl.text}</p>}
-                  </div>
-                  <div className="about-tl-dot"></div>
-                </div>
+                <li key={idx}>
+                  <span className="ab2-tl__dot" aria-hidden="true"></span>
+                  {tl.year && <div className="ab2-tl__year">{tl.year}</div>}
+                  <h3>{tl.title}</h3>
+                  {tl.text && <p>{tl.text}</p>}
+                </li>
               ))}
-            </div>
+            </ol>
           </div>
         </section>
       )}
 
       <section className="section-padding" id="guarantees">
         <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Гарантии</span>
-            <h2 className="section-title" dangerouslySetInnerHTML={{ __html: 'Работаем <span class="gradient-text">честно и открыто</span>' }} />
-            <p className="section-desc">Что мы гарантируем каждому клиенту</p>
+          <div className="ab2-head">
+            <div>
+              <span className="section-tag">Гарантии</span>
+              <h2 className="section-title ab2-left" dangerouslySetInnerHTML={{ __html: 'Работаю <span class="gradient-text">честно и открыто</span>' }} />
+            </div>
+            <p>Что гарантировано каждому клиенту</p>
           </div>
-          <div className="about-guarantee-grid">
+          <div className="ab2-guar">
             {guarantees.map((gg: any, i: number) => (
-              <div key={i} className="about-guarantee-card" data-aos="fade-up">
-                <div className="about-guarantee-icon">
+              <div key={i} className="ab2-guar__card" data-aos="fade-up">
+                <span className="ab2-guar__ico">
                   <i className={fa(gg.icon, 'fa-shield-halved')}></i>
-                </div>
-                <div>
-                  <h3>{gg.title}</h3>
-                  <p>{gg.text}</p>
-                </div>
+                </span>
+                <h3>{gg.title}</h3>
+                <p>{gg.text}</p>
               </div>
             ))}
           </div>

@@ -71,6 +71,8 @@ function utmFrom(req: Request) {
 }
 
 export async function POST(req: Request) {
+  // формы маленькие: всё, что больше 64 КБ, не разбираем
+  if (Number(req.headers.get('content-length') || 0) > 64 * 1024) return fail('Слишком большой запрос', 413)
   let fd: FormData
   try {
     fd = await req.formData()
