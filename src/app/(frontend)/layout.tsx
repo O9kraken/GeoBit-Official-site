@@ -40,6 +40,7 @@ const COMMON_SCRIPTS = [
   '/legacy/js/inline-footer-0.js',
   '/legacy/js/inline-footer-1.js',
   '/legacy/js/metrika.js',
+  '/legacy/js/typo.js',
 ]
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

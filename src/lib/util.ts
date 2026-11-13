@@ -66,3 +66,11 @@ export const paths = {
   category: (slug: string) => `/category/${slug}/`,
   tag: (slug: string) => `/tag/${slug}/`,
 }
+
+/** Неразрывные пробелы после коротких предлогов и союзов («в», «и», «на»…) и в числах — для заголовков, рендерящихся на сервере */
+export const typo = (s?: string | null) =>
+  String(s ?? '')
+    .replace(/(^|[\s(«"—–-])([а-яёА-ЯЁ]{1,2})\s+(?=\S)/g, '$1$2\u00A0')
+    .replace(/(^|[\s(«"—–-])([а-яёА-ЯЁ]{1,2})\s+(?=\S)/g, '$1$2\u00A0')
+    .replace(/(\d)\s(?=\d{3}(?!\d))/g, '$1\u00A0')
+    .replace(/(\d)\s(?=₽)/g, '$1\u00A0')

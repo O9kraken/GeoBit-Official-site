@@ -1,5 +1,5 @@
 import { FaqList, Html, JsonLd, MaxIcon, faqSchema, type FaqItem } from '@/components/Common'
-import { paths } from '@/lib/util'
+import { paths, typo } from '@/lib/util'
 import { BlogCard, PfCard, TestimonialsSlider } from './Cards'
 import Founder from './Founder'
 
@@ -66,8 +66,8 @@ export function Hero({ h, landingPrice }: { h: any; landingPrice?: string }) {
             <span>{h?.heroBadge || 'Севастополь, Крым и вся Россия'}</span>
           </div>
           <h1 className={`hero-title${(t1 + t2).length > 22 ? ' hero-title--long' : ''}`}>
-            <span className="line">{t1}</span>
-            <span className="line gradient-text">{t2}</span>
+            <span className="line">{typo(t1)}</span>
+            <span className="line gradient-text">{typo(t2)}</span>
           </h1>
           <p className="hero-subtitle">
             {h?.heroSubtitle ||
