@@ -85,6 +85,21 @@ export default buildConfig({
   },
   // Защита от CSRF: cookie админки принимаются только с запросов с этого сайта
   csrf: [...new Set(['https://getgeobit.ru', (process.env.SERVER_URL || process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000').replace(/\/$/, '')])],
+  // 152-ФЗ: заявки хранятся не дольше 3 лет с последнего обновления (см. Политику, п. 7.1) — удаляем раз в сутки
+  onInit: async (payload) => {
+    if (process.env.NODE_ENV !== 'production' || process.env.NEXT_PHASE === 'phase-production-build') return
+    const purge = async () => {
+      try {
+        const before = new Date(Date.now() - 3 * 365 * 24 * 3600 * 1000).toISOString()
+        const r = await payload.delete({ collection: 'leads', where: { updatedAt: { less_than: before } }, overrideAccess: true })
+        if (r.docs?.length) payload.logger.info(`152-ФЗ: удалено старых заявок: ${r.docs.length}`)
+      } catch (e) {
+        payload.logger.warn(`152-ФЗ: очистка заявок не удалась: ${String(e)}`)
+      }
+    }
+    setTimeout(purge, 60_000)
+    setInterval(purge, 24 * 3600 * 1000).unref?.()
+  },
   secret: process.env.PAYLOAD_SECRET || '',
   // GraphQL сайтом не используется — выключен, чтобы не держать лишнюю точку входа
   graphQL: { disable: true },

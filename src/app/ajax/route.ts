@@ -97,6 +97,8 @@ export async function POST(req: Request) {
     const email = z.string().trim().email().max(150).safeParse(data.email)
     if (!email.success) return fail('Проверьте email.')
     if (data.consent !== '1') return fail('Необходимо согласие на обработку персональных данных.')
+    // согласие на рекламную рассылку (38-ФЗ «О рекламе») — отдельной галочкой
+    if (data.consent_mailing !== '1') return fail('Необходимо согласие на получение рассылки.')
     const exists = await payload.find({ collection: 'subscribers', where: { email: { equals: email.data.toLowerCase() } }, limit: 1, overrideAccess: true })
     if (!exists.docs.length) {
       await payload.create({

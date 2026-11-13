@@ -64,7 +64,6 @@ export function emailLayout(l: Layout): { html: string; text: string } {
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark"><meta name="supported-color-schemes" content="light dark">
 <title>${esc(l.title)}</title>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:light dark;supported-color-schemes:light dark}
 @media (prefers-color-scheme: dark){

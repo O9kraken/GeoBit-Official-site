@@ -11,6 +11,7 @@ import * as migration_20261113_131000_services_geo_meta from './20261113_131000_
 import * as migration_20261113_140000_seo_fill from './20261113_140000_seo_fill';
 import * as migration_20261113_150000_blog_posts from './20261113_150000_blog_posts';
 import * as migration_20261113_160000_schedule_posts from './20261113_160000_schedule_posts';
+import * as migration_20261113_170000_pd_compliance from './20261113_170000_pd_compliance';
 
 export const migrations = [
   {
@@ -77,5 +78,10 @@ export const migrations = [
     up: migration_20261113_160000_schedule_posts.up,
     down: migration_20261113_160000_schedule_posts.down,
     name: '20261113_160000_schedule_posts',
+  },
+  {
+    up: migration_20261113_170000_pd_compliance.up,
+    down: migration_20261113_170000_pd_compliance.down,
+    name: '20261113_170000_pd_compliance',
   },
 ];
