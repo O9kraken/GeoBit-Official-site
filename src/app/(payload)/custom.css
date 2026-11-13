@@ -1,8 +1,4 @@
 /* Оформление админки в цветах GeoBit */
-:root {
-  --gb-grad: linear-gradient(135deg, #ff0066, #7c00ff 55%, #00d4ff);
-  --gb-accent: #7c00ff;
-}
 
 /* вход */
 .gb-admin-logo { display: flex; flex-direction: column; align-items: center; gap: 10px; }
@@ -52,50 +48,110 @@
 .gb-dash__quick span { opacity: .65; font-size: 13px; }
 
 /* ===== Боковая панель ===== */
-.gb-nav-extras { display: flex; flex-direction: column; gap: 6px; margin: 4px 0 18px; }
-.gb-nav-extras a {
-  display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px;
-  text-decoration: none; color: var(--theme-text); background: var(--theme-elevation-50);
-  border: 1px solid var(--theme-elevation-100); font-weight: 500; transition: border-color .2s, background .2s;
+/* Иконки меню — линейные SVG (как у Lucide), красятся в цвет текста */
+:root{
+  --gbi-inbox:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='22 12 16 12 14 15 10 15 8 12 2 12'/%3E%3Cpath d='M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z'/%3E%3C/svg%3E");
+  --gbi-mail:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='20' height='16' x='2' y='4' rx='2'/%3E%3Cpath d='m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7'/%3E%3C/svg%3E");
+  --gbi-file:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' x2='8' y1='13' y2='13'/%3E%3Cline x1='16' x2='8' y1='17' y2='17'/%3E%3C/svg%3E");
+  --gbi-home:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E");
+  --gbi-layout:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='M3 9h18'/%3E%3Cpath d='M9 21V9'/%3E%3C/svg%3E");
+  --gbi-briefcase:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='20' height='14' x='2' y='7' rx='2'/%3E%3Cpath d='M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/%3E%3C/svg%3E");
+  --gbi-pin:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3C/svg%3E");
+  --gbi-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Ccircle cx='9' cy='9' r='2'/%3E%3Cpath d='m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21'/%3E%3C/svg%3E");
+  --gbi-pen:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'/%3E%3Cpath d='M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z'/%3E%3C/svg%3E");
+  --gbi-users:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M22 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E");
+  --gbi-star:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E");
+  --gbi-images:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 22H4a2 2 0 0 1-2-2V6'/%3E%3Cpath d='m22 13-1.3-1.3a2 2 0 0 0-2.8 0L12 18'/%3E%3Ccircle cx='12' cy='8' r='2'/%3E%3Crect width='16' height='16' x='6' y='2' rx='2'/%3E%3C/svg%3E");
+  --gbi-tag:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z'/%3E%3Cpath d='M7 7h.01'/%3E%3C/svg%3E");
+  --gbi-gear:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z'/%3E%3C/svg%3E");
+  --gbi-search:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
+  --gbi-menu:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='4' x2='20' y1='12' y2='12'/%3E%3Cline x1='4' x2='20' y1='6' y2='6'/%3E%3Cline x1='4' x2='20' y1='18' y2='18'/%3E%3C/svg%3E");
+  --gbi-calc:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='16' height='20' x='4' y='2' rx='2'/%3E%3Cline x1='8' x2='16' y1='6' y2='6'/%3E%3Cline x1='16' x2='16' y1='14' y2='18'/%3E%3Cpath d='M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01'/%3E%3C/svg%3E");
+  --gbi-redirect:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='15 14 20 9 15 4'/%3E%3Cpath d='M4 20v-7a4 4 0 0 1 4-4h12'/%3E%3C/svg%3E");
+  --gbi-shield:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E");
+  --gbi-grid:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='7' height='9' x='3' y='3' rx='1'/%3E%3Crect width='7' height='5' x='14' y='3' rx='1'/%3E%3Crect width='7' height='9' x='14' y='12' rx='1'/%3E%3Crect width='7' height='5' x='3' y='16' rx='1'/%3E%3C/svg%3E");
+  --gbi-external:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 3h6v6'/%3E%3Cpath d='M10 14 21 3'/%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/%3E%3C/svg%3E");
+  --gbi-palette:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='13.5' cy='6.5' r='.5'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5'/%3E%3Cpath d='M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.65-.75 1.65-1.69 0-.44-.18-.84-.44-1.13-.29-.29-.44-.65-.44-1.13a1.64 1.64 0 0 1 1.67-1.67h2c3.05 0 5.56-2.5 5.56-5.55C21.97 6.01 17.46 2 12 2z'/%3E%3C/svg%3E");
+  --gbi-globe:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20'/%3E%3Cpath d='M2 12h20'/%3E%3C/svg%3E");
 }
-.gb-nav-extras a:hover { border-color: var(--gb-accent); }
-.gb-nav-extras a span { width: 18px; text-align: center; opacity: .8; }
-.gb-nav-extras__leads b { margin-left: auto; min-width: 22px; padding: 1px 7px; border-radius: 20px; text-align: center; font-size: 12px; background: var(--theme-elevation-150); }
-.gb-nav-extras__leads.is-hot { background: var(--gb-grad); color: #fff !important; border-color: transparent; }
-.gb-nav-extras__leads.is-hot b { background: rgba(255,255,255,.25); }
 
-/* заголовки групп и пункты меню */
-.nav-group__toggle { font-size: 11px !important; letter-spacing: .08em; text-transform: uppercase; opacity: .55; margin-top: 6px; }
-.nav__link { border-radius: 8px; padding: 6px 10px !important; margin: 1px 0; transition: background .15s; }
-.nav__link:hover { background: var(--theme-elevation-100); }
-.nav__link.active, .nav__link[aria-current='page'] { background: var(--theme-elevation-100); font-weight: 600; }
-.nav__link .nav__link-label::before { display: inline-block; width: 22px; opacity: .85; }
-#nav-leads .nav__link-label::before { content: '✉'; }
-#nav-subscribers .nav__link-label::before { content: '☍'; }
-#nav-pages .nav__link-label::before { content: '§'; }
-#nav-global-home .nav__link-label::before { content: '⌂'; }
-#nav-global-services-page .nav__link-label::before,
-#nav-global-about-page .nav__link-label::before,
-#nav-global-contacts-page .nav__link-label::before,
-#nav-global-portfolio-page .nav__link-label::before,
-#nav-global-blog-page .nav__link-label::before,
-#nav-global-faq-page .nav__link-label::before { content: '▭'; }
-#nav-services .nav__link-label::before { content: '₽'; }
-#nav-landings .nav__link-label::before { content: '⌖'; }
-#nav-projects .nav__link-label::before { content: '◧'; }
-#nav-posts .nav__link-label::before { content: '✎'; }
-#nav-team .nav__link-label::before { content: '☺'; }
-#nav-testimonials .nav__link-label::before { content: '★'; }
-#nav-media .nav__link-label::before { content: '▣'; }
-#nav-service-categories .nav__link-label::before,
-#nav-portfolio-categories .nav__link-label::before,
-#nav-categories .nav__link-label::before,
-#nav-tags .nav__link-label::before { content: '#'; }
-#nav-global-settings .nav__link-label::before { content: '⚙'; }
-#nav-global-navigation .nav__link-label::before { content: '☰'; }
-#nav-global-calculator .nav__link-label::before { content: '∑'; }
-#nav-redirects .nav__link-label::before { content: '↪'; }
-#nav-users .nav__link-label::before { content: '⚿'; }
+/* Личные настройки (Аккаунт → Оформление админки): цвет, плотность, размер текста, иконки */
+:root, html[data-gb-accent='geobit'] { --gb-accent: #7c00ff; --gb-accent-soft: rgba(124,0,255,.14); --gb-grad: linear-gradient(135deg, #ff0066, #7c00ff 55%, #00d4ff); }
+html[data-gb-accent='pink'] { --gb-accent: #e6176f; --gb-accent-soft: rgba(230,23,111,.14); --gb-grad: linear-gradient(135deg, #ff3d8b, #c3125c); }
+html[data-gb-accent='blue'] { --gb-accent: #2f6bff; --gb-accent-soft: rgba(47,107,255,.15); --gb-grad: linear-gradient(135deg, #4f8cff, #2147d6); }
+html[data-gb-accent='cyan'] { --gb-accent: #0aa5c8; --gb-accent-soft: rgba(10,165,200,.15); --gb-grad: linear-gradient(135deg, #12c2e9, #0a7fa8); }
+html[data-gb-accent='green'] { --gb-accent: #16a34a; --gb-accent-soft: rgba(22,163,74,.15); --gb-grad: linear-gradient(135deg, #22c55e, #128a3e); }
+html[data-gb-accent='orange'] { --gb-accent: #ea6a0c; --gb-accent-soft: rgba(234,106,12,.15); --gb-grad: linear-gradient(135deg, #fb923c, #d9480f); }
+:root { --gb-nav-fs: 14px; --gb-nav-py: 8px; --gb-nav-gap: 2px; }
+html[data-gb-font='s'] { --gb-nav-fs: 13px; }
+html[data-gb-font='l'] { --gb-nav-fs: 15.5px; }
+html[data-gb-density='compact'] { --gb-nav-py: 5px; --gb-nav-gap: 0px; }
+html[data-gb-density='comfy'] { --gb-nav-py: 11px; --gb-nav-gap: 4px; }
+
+/* быстрые ссылки вверху */
+.gb-nav-extras { display: flex; flex-direction: column; gap: 6px; margin: 4px 0 20px; }
+.gb-nav-extras a {
+  display: flex; align-items: center; gap: 10px; padding: var(--gb-nav-py) 12px; border-radius: 10px;
+  text-decoration: none; color: var(--theme-text); background: var(--theme-elevation-50);
+  border: 1px solid var(--theme-elevation-100); font-weight: 600; font-size: var(--gb-nav-fs); transition: border-color .15s, background .15s;
+}
+.gb-nav-extras a:hover { border-color: var(--gb-accent); background: var(--gb-accent-soft); }
+.gb-nav-extras a i { flex: none; width: 18px; height: 18px; background: currentColor; -webkit-mask: var(--gbi) center / contain no-repeat; mask: var(--gbi) center / contain no-repeat; opacity: .85; }
+.gb-nav-extras__leads b { margin-left: auto; min-width: 24px; padding: 1px 8px; border-radius: 20px; text-align: center; font-size: 12px; background: var(--theme-elevation-150); }
+.gb-nav-extras__leads.is-hot { background: var(--gb-grad); color: #fff !important; border-color: transparent; }
+.gb-nav-extras__leads.is-hot b { background: rgba(255,255,255,.28); }
+.gb-nav-extras__row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.gb-nav-extras__row a { justify-content: center; padding-left: 8px; padding-right: 8px; font-weight: 500; }
+
+/* заголовки групп: крупнее, контрастнее, с разделителем */
+.nav-group { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--theme-elevation-100); }
+.nav-group__toggle { font-size: 11.5px !important; font-weight: 700 !important; letter-spacing: .09em; text-transform: uppercase; color: var(--theme-elevation-600) !important; opacity: 1 !important; padding: 4px 10px !important; margin: 0 0 4px; }
+.nav-group__toggle:hover { color: var(--theme-text) !important; }
+
+/* пункты меню: читаемый размер, полная контрастность, понятный активный пункт */
+.nav__link {
+  position: relative; display: flex !important; align-items: center; border-radius: 9px; margin: var(--gb-nav-gap) 0;
+  padding: var(--gb-nav-py) 10px !important; font-size: var(--gb-nav-fs) !important; line-height: 1.3; font-weight: 500;
+  color: var(--theme-elevation-800) !important; transition: background .15s, color .15s;
+}
+.nav__link:hover { background: var(--theme-elevation-100); color: var(--theme-text) !important; }
+.nav__link.active, .nav__link[aria-current='page'], .nav__link:has(.nav__link-indicator) { background: var(--gb-accent-soft); color: var(--theme-text) !important; font-weight: 650; }
+.nav__link-indicator { left: 0 !important; top: 22% !important; bottom: 22% !important; height: auto !important; width: 3px !important; border-radius: 3px; background: var(--gb-grad) !important; }
+.nav__link .nav__link-label { display: flex; align-items: center; gap: 11px; }
+.nav__link .nav__link-label::before {
+  content: ''; flex: none; width: 18px; height: 18px; background: currentColor; opacity: .75;
+  -webkit-mask: var(--gbi, var(--gbi-file)) center / contain no-repeat; mask: var(--gbi, var(--gbi-file)) center / contain no-repeat;
+}
+.nav__link.active .nav__link-label::before, .nav__link:has(.nav__link-indicator) .nav__link-label::before { background: var(--gb-accent); opacity: 1; }
+html[data-gb-icons='off'] .nav__link .nav__link-label::before, html[data-gb-icons='off'] .gb-nav-extras a i { display: none; }
+#nav-leads .nav__link-label::before{--gbi:var(--gbi-inbox)}
+#nav-subscribers .nav__link-label::before{--gbi:var(--gbi-mail)}
+#nav-pages .nav__link-label::before{--gbi:var(--gbi-file)}
+#nav-global-home .nav__link-label::before{--gbi:var(--gbi-home)}
+#nav-global-services-page .nav__link-label::before{--gbi:var(--gbi-layout)}
+#nav-global-about-page .nav__link-label::before{--gbi:var(--gbi-layout)}
+#nav-global-contacts-page .nav__link-label::before{--gbi:var(--gbi-layout)}
+#nav-global-portfolio-page .nav__link-label::before{--gbi:var(--gbi-layout)}
+#nav-global-blog-page .nav__link-label::before{--gbi:var(--gbi-layout)}
+#nav-global-faq-page .nav__link-label::before{--gbi:var(--gbi-layout)}
+#nav-services .nav__link-label::before{--gbi:var(--gbi-briefcase)}
+#nav-landings .nav__link-label::before{--gbi:var(--gbi-pin)}
+#nav-projects .nav__link-label::before{--gbi:var(--gbi-image)}
+#nav-posts .nav__link-label::before{--gbi:var(--gbi-pen)}
+#nav-team .nav__link-label::before{--gbi:var(--gbi-users)}
+#nav-testimonials .nav__link-label::before{--gbi:var(--gbi-star)}
+#nav-media .nav__link-label::before{--gbi:var(--gbi-images)}
+#nav-service-categories .nav__link-label::before{--gbi:var(--gbi-tag)}
+#nav-portfolio-categories .nav__link-label::before{--gbi:var(--gbi-tag)}
+#nav-categories .nav__link-label::before{--gbi:var(--gbi-tag)}
+#nav-tags .nav__link-label::before{--gbi:var(--gbi-tag)}
+#nav-global-settings .nav__link-label::before{--gbi:var(--gbi-gear)}
+#nav-global-seo-settings .nav__link-label::before{--gbi:var(--gbi-search)}
+#nav-global-navigation .nav__link-label::before{--gbi:var(--gbi-menu)}
+#nav-global-calculator .nav__link-label::before{--gbi:var(--gbi-calc)}
+#nav-redirects .nav__link-label::before{--gbi:var(--gbi-redirect)}
+#nav-users .nav__link-label::before{--gbi:var(--gbi-shield)}
+#nav-payload-jobs .nav__link-label::before{--gbi:var(--gbi-grid)}
 
 /* ===== Карточка заявки ===== */
 .gb-lead-actions { padding: 16px 18px; border-radius: 14px; border: 1px solid var(--theme-elevation-150); background: var(--theme-elevation-50); margin-bottom: 24px; display: flex; flex-direction: column; gap: 12px; }

@@ -14,6 +14,7 @@ import * as migration_20261113_160000_schedule_posts from './20261113_160000_sch
 import * as migration_20261113_170000_pd_compliance from './20261113_170000_pd_compliance';
 import * as migration_20261113_180000_settings_profile_links from './20261113_180000_settings_profile_links';
 import * as migration_20261113_181000_blog_posts_dec from './20261113_181000_blog_posts_dec';
+import * as migration_20261113_190000_users_admin_look from './20261113_190000_users_admin_look';
 
 export const migrations = [
   {
@@ -95,5 +96,10 @@ export const migrations = [
     up: migration_20261113_181000_blog_posts_dec.up,
     down: migration_20261113_181000_blog_posts_dec.down,
     name: '20261113_181000_blog_posts_dec',
+  },
+  {
+    up: migration_20261113_190000_users_admin_look.up,
+    down: migration_20261113_190000_users_admin_look.down,
+    name: '20261113_190000_users_admin_look',
   },
 ];

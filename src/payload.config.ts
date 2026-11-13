@@ -46,6 +46,8 @@ export default buildConfig({
       graphics: { Logo: '/components/admin/Logo#Logo', Icon: '/components/admin/Icon#Icon' },
       beforeDashboard: ['/components/admin/Dashboard#Dashboard'],
       beforeNavLinks: ['/components/admin/NavExtras#NavExtras'],
+      // личное оформление админки (цвет, плотность и размер меню) — из профиля пользователя
+      providers: ['/components/admin/AdminLook#AdminLook'],
       views: {
         seoAudit: { Component: '/components/admin/SeoAudit#SeoAudit', path: '/seo' },
       },

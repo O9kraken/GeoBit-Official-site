@@ -858,6 +858,10 @@ export interface User {
    * Например: «Основатель GeoBit, дизайнер и разработчик»
    */
   about?: string | null;
+  uiAccent?: ('geobit' | 'pink' | 'blue' | 'cyan' | 'green' | 'orange') | null;
+  uiDensity?: ('compact' | 'normal' | 'comfy') | null;
+  uiFontSize?: ('s' | 'm' | 'l') | null;
+  uiIcons?: boolean | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -1776,6 +1780,10 @@ export interface UsersSelect<T extends boolean = true> {
   name?: T;
   avatar?: T;
   about?: T;
+  uiAccent?: T;
+  uiDensity?: T;
+  uiFontSize?: T;
+  uiIcons?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;

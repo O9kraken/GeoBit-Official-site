@@ -85,5 +85,57 @@ export const Users: CollectionConfig = {
       admin: { description: 'Квадратное фото. Показывается у автора в блоге и в шапке админки.' },
     },
     { name: 'about', label: 'Подпись под именем', type: 'text', admin: { description: 'Например: «Основатель GeoBit, дизайнер и разработчик»' } },
+    {
+      type: 'collapsible',
+      label: 'Оформление админки',
+      admin: { initCollapsed: false, description: 'Личные настройки: видны только вам, на сайт не влияют. Применяются после «Сохранить» — если меню не обновилось, обновите страницу.' },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'uiAccent',
+              label: 'Акцентный цвет',
+              type: 'select',
+              defaultValue: 'geobit',
+              options: [
+                { label: 'GeoBit (фиолетовый градиент)', value: 'geobit' },
+                { label: 'Розовый', value: 'pink' },
+                { label: 'Синий', value: 'blue' },
+                { label: 'Бирюзовый', value: 'cyan' },
+                { label: 'Зелёный', value: 'green' },
+                { label: 'Оранжевый', value: 'orange' },
+              ],
+              admin: { width: '33%' },
+            },
+            {
+              name: 'uiDensity',
+              label: 'Плотность меню',
+              type: 'select',
+              defaultValue: 'normal',
+              options: [
+                { label: 'Компактно', value: 'compact' },
+                { label: 'Обычно', value: 'normal' },
+                { label: 'Просторно', value: 'comfy' },
+              ],
+              admin: { width: '33%' },
+            },
+            {
+              name: 'uiFontSize',
+              label: 'Размер текста в меню',
+              type: 'select',
+              defaultValue: 'm',
+              options: [
+                { label: 'Мелкий', value: 's' },
+                { label: 'Средний', value: 'm' },
+                { label: 'Крупный', value: 'l' },
+              ],
+              admin: { width: '33%' },
+            },
+          ],
+        },
+        { name: 'uiIcons', label: 'Иконки в меню', type: 'checkbox', defaultValue: true },
+      ],
+    },
   ],
 }

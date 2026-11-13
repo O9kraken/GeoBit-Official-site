@@ -31,6 +31,7 @@ import { Icon as Icon_dfe4008080d895d460898c3a6155e9ba } from '../../../componen
 import { Logo as Logo_91a09b539d3c86b0aebf520e7564ce08 } from '../../../components/admin/Logo'
 import { Dashboard as Dashboard_16b88e9b8c48e393fa86591406efd08f } from '../../../components/admin/Dashboard'
 import { NavExtras as NavExtras_fd61ce14885ed107a3ad7877f371f5d6 } from '../../../components/admin/NavExtras'
+import { AdminLook as AdminLook_13159b6ee258a69a1a07dc316af10022 } from '../../../components/admin/AdminLook'
 import { SeoAudit as SeoAudit_c33c77a78ab917a008d1d46c7cf6f38c } from '../../../components/admin/SeoAudit'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -69,6 +70,7 @@ export const importMap = {
   "/components/admin/Logo#Logo": Logo_91a09b539d3c86b0aebf520e7564ce08,
   "/components/admin/Dashboard#Dashboard": Dashboard_16b88e9b8c48e393fa86591406efd08f,
   "/components/admin/NavExtras#NavExtras": NavExtras_fd61ce14885ed107a3ad7877f371f5d6,
+  "/components/admin/AdminLook#AdminLook": AdminLook_13159b6ee258a69a1a07dc316af10022,
   "/components/admin/SeoAudit#SeoAudit": SeoAudit_c33c77a78ab917a008d1d46c7cf6f38c,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
