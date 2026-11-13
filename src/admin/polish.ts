@@ -32,7 +32,7 @@ const GROUP: Record<string, string> = {
   pages: 'Страницы сайта',
   home: 'Страницы сайта', 'services-page': 'Страницы сайта', 'about-page': 'Страницы сайта', 'contacts-page': 'Страницы сайта',
   'portfolio-page': 'Страницы сайта', 'blog-page': 'Страницы сайта', 'faq-page': 'Страницы сайта',
-  services: 'Контент', projects: 'Контент', posts: 'Контент', team: 'Контент', testimonials: 'Контент', media: 'Контент',
+  services: 'Контент', landings: 'Контент', projects: 'Контент', posts: 'Контент', team: 'Контент', testimonials: 'Контент', media: 'Контент',
   'service-categories': 'Рубрики', 'portfolio-categories': 'Рубрики', categories: 'Рубрики', tags: 'Рубрики',
   settings: 'Настройки', 'seo-settings': 'Настройки', navigation: 'Настройки', calculator: 'Настройки', redirects: 'Настройки', users: 'Настройки',
 }
@@ -45,6 +45,7 @@ const GLOBAL_URL: Record<string, string> = {
 
 const PREVIEW: Record<string, (slug: string) => string> = {
   services: paths.service,
+  landings: paths.landing,
   projects: paths.project,
   posts: paths.post,
   pages: paths.page,

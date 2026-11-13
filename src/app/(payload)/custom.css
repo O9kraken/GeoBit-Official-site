@@ -81,6 +81,7 @@
 #nav-global-blog-page .nav__link-label::before,
 #nav-global-faq-page .nav__link-label::before { content: '▭'; }
 #nav-services .nav__link-label::before { content: '₽'; }
+#nav-landings .nav__link-label::before { content: '⌖'; }
 #nav-projects .nav__link-label::before { content: '◧'; }
 #nav-posts .nav__link-label::before { content: '✎'; }
 #nav-team .nav__link-label::before { content: '☺'; }
