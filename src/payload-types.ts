@@ -2299,6 +2299,14 @@ export interface Setting {
   yandexVerification?: string | null;
   googleVerification?: string | null;
   /**
+   * Для бейджа с рейтингом в подвале и ссылки «Оставить отзыв». Номер — из адреса карточки в Яндекс Бизнесе (yandex.ru/sprav/<номер>/…). Пусто — бейдж скрыт.
+   */
+  yandexOrgId?: string | null;
+  /**
+   * Включайте, когда появятся первые отзывы: без них бейдж пустой. Грузится после согласия на «Аналитику».
+   */
+  yandexBadge?: boolean | null;
+  /**
    * Грузится только после согласия на «Персонализацию».
    */
   chatWidgetSrc?: string | null;
@@ -2834,6 +2842,8 @@ export interface SettingsSelect<T extends boolean = true> {
   metrikaId?: T;
   yandexVerification?: T;
   googleVerification?: T;
+  yandexOrgId?: T;
+  yandexBadge?: T;
   chatWidgetSrc?: T;
   leadEmail?: T;
   consentDocLabel?: T;

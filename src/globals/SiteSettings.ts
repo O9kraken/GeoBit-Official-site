@@ -65,6 +65,13 @@ export const SiteSettings: GlobalConfig = {
             { name: 'metrikaId', label: 'Яндекс Метрика: ID счётчика', type: 'text', admin: { description: 'Грузится только после согласия на «Аналитику».' } },
             { name: 'yandexVerification', label: 'Подтверждение Яндекс Вебмастер (content)', type: 'text' },
             { name: 'googleVerification', label: 'Подтверждение Google Search Console (content)', type: 'text' },
+            {
+              name: 'yandexOrgId',
+              label: 'Яндекс Бизнес: номер организации',
+              type: 'text',
+              admin: { description: 'Для бейджа с рейтингом в подвале и ссылки «Оставить отзыв». Номер — из адреса карточки в Яндекс Бизнесе (yandex.ru/sprav/<номер>/…). Пусто — бейдж скрыт.' },
+            },
+            { name: 'yandexBadge', label: 'Показывать бейдж рейтинга Яндекса в подвале', type: 'checkbox', defaultValue: false, admin: { description: 'Включайте, когда появятся первые отзывы: без них бейдж пустой. Грузится после согласия на «Аналитику».' } },
             { name: 'chatWidgetSrc', label: 'Скрипт онлайн-чата (URL)', type: 'text', admin: { description: 'Грузится только после согласия на «Персонализацию».' } },
           ],
         },

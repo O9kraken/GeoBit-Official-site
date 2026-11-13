@@ -47,6 +47,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const cfg = {
     metrikaId: s?.metrikaId || '',
     chatSrc: s?.chatWidgetSrc || '',
+    yaBadge: s?.yandexBadge && /^\d+$/.test(String(s?.yandexOrgId || '').trim()) ? String(s.yandexOrgId).trim() : '',
   }
   const boot = `try{if(window.self!==window.top)document.documentElement.classList.add('gb-in-preview')}catch(e){}${THEME_INIT}window.GEOBIT_CFG=${JSON.stringify(cfg)};window.adelfAjax={ajaxUrl:'/ajax/',nonce:'geobit'};window.adelfSubNonce='geobit';window.adelfCube={three:'/legacy/vendor/three.min.js'};`
 

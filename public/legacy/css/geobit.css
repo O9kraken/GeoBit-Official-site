@@ -494,3 +494,7 @@ html,body{overflow-x:clip}
   .gb-land-links{padding:24px 18px}
   .gb-land-cta{padding:40px 20px!important}
 }
+.ya-badge{display:inline-flex;align-items:center;gap:8px;margin:4px 0 16px;padding:8px 14px;border-radius:12px;border:1px solid rgba(var(--ink-rgb),.12);color:var(--white-3);font-size:.85rem;text-decoration:none}
+.ya-badge i{color:#ffcc00}
+.ya-badge:hover{border-color:rgba(255,204,0,.5);color:var(--white)}
+.ya-badge-frame{display:block;margin:4px 0 16px;border:0;border-radius:10px}

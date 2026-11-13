@@ -28,3 +28,26 @@
     else if (/wa\.me\//.test(h)) window.geobitGoal('click_whatsapp');
   });
 })();
+
+/* Бейдж рейтинга Яндекс Бизнеса в подвале: до согласия — обычная ссылка, после — живой бейдж (iframe Яндекса ставит свои cookie) */
+(function () {
+  var id = window.GEOBIT_CFG && window.GEOBIT_CFG.yaBadge;
+  if (!id) return;
+  function show() {
+    var a = document.querySelector('.ya-badge');
+    if (!a || a.getAttribute('data-done')) return;
+    a.setAttribute('data-done', '1');
+    var f = document.createElement('iframe');
+    f.src = 'https://yandex.ru/sprav/widget/rating-badge/' + encodeURIComponent(id) + '?type=rating&theme=dark';
+    f.width = '150'; f.height = '50'; f.setAttribute('frameborder', '0'); f.title = 'Рейтинг GeoBit на Яндекс Картах';
+    f.loading = 'lazy'; f.className = 'ya-badge-frame';
+    a.parentNode.insertBefore(f, a.nextSibling);
+    a.style.display = 'none';
+  }
+  function check(c) { if (c && c.analytics) show(); }
+  function init() {
+    try { check(JSON.parse(localStorage.getItem('cb_consent') || 'null')); } catch (e) {}
+    document.addEventListener('cb:consent', function (e) { check(e.detail); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();

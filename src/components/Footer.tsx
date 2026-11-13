@@ -46,6 +46,11 @@ export default async function Footer() {
                 <LogoInner />
               </a>
               <p>{s?.footerDescription || 'Студия веб-разработки и дизайна. Создаём сайты, которые работают на ваш бизнес.'}</p>
+              {s?.yandexBadge && /^\d+$/.test(String(s?.yandexOrgId || '').trim()) && (
+                <a className="ya-badge" href={`https://yandex.ru/maps/org/${String(s.yandexOrgId).trim()}/reviews/`} target="_blank" rel="noopener">
+                  <i className="fas fa-star"></i> Отзывы на Яндекс Картах
+                </a>
+              )}
               <div className="footer-socials">
                 {socials.map(([url, label, icon]) =>
                   url ? (
