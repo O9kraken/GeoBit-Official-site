@@ -51,8 +51,13 @@ export function plural(n: number, forms: [string, string, string]) {
   return forms[2]
 }
 
+/** slug общей страницы «Создание сайтов в Крыму» (коллекция landings) */
+export const LANDING_HUB = 'krym'
+
 export const paths = {
   service: (slug: string) => `/services/${slug}/`,
+  /** Города и отрасли; slug «krym» — общая страница региона */
+  landing: (slug: string) => (slug === LANDING_HUB ? '/sozdanie-sajtov/' : `/sozdanie-sajtov/${slug}/`),
   project: (slug: string) => `/project/${slug}/`,
   post: (slug: string) => `/${slug}/`,
   page: (slug: string) => `/${slug}/`,

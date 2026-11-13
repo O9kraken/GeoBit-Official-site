@@ -22,6 +22,7 @@ import { Team, Testimonials } from './collections/People'
 import { Posts } from './collections/Posts'
 import { Projects } from './collections/Projects'
 import { Services } from './collections/Services'
+import { Landings } from './collections/Landings'
 import { Categories, PortfolioCategories, ServiceCategories, Tags } from './collections/Taxonomies'
 import { Users } from './collections/Users'
 import { Calculator } from './globals/Calculator'
@@ -66,7 +67,7 @@ export default buildConfig({
   collections: [
     Leads, Subscribers,
     Pages,
-    Services, Projects, Posts, Team, Testimonials, Media,
+    Services, Landings, Projects, Posts, Team, Testimonials, Media,
     ServiceCategories, PortfolioCategories, Categories, Tags,
     Users,
   ]
@@ -109,7 +110,7 @@ export default buildConfig({
       collections: { media: { adapter: dbStorageAdapter, disableLocalStorage: true } },
     }),
     seoPlugin({
-      collections: ['services', 'projects', 'posts', 'pages', 'categories', 'service-categories', 'portfolio-categories'],
+      collections: ['services', 'landings', 'projects', 'posts', 'pages', 'categories', 'service-categories', 'portfolio-categories'],
       uploadsCollection: 'media',
       // отдельная вкладка «SEO и ИИ» с живым анализом (src/fields/seo.ts, SeoPanel)
       tabbedUI: true,
@@ -135,7 +136,7 @@ export default buildConfig({
       })),
     }),
     redirectsPlugin({
-      collections: ['pages', 'posts', 'services', 'projects'],
+      collections: ['pages', 'posts', 'services', 'landings', 'projects'],
       overrides: {
         labels: { singular: 'Редирект', plural: 'Редиректы' },
         admin: { group: 'Настройки' },

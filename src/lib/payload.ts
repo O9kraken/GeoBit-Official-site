@@ -15,6 +15,12 @@ export const getServices = cache(async () => {
   return r.docs
 })
 
+export const getLandings = cache(async () => {
+  const p = await payload()
+  const r = await p.find({ collection: 'landings' as any, sort: 'order', limit: 100, depth: 1 })
+  return r.docs as any[]
+})
+
 export const getProjects = cache(async () => {
   const p = await payload()
   const r = await p.find({ collection: 'projects', sort: 'order', limit: 100, depth: 1 })
@@ -63,7 +69,7 @@ export async function cmsRedirect(path: string): Promise<string | null> {
   if (to.type === 'custom' && to.url) return to.url
   const ref = to.reference
   if (ref?.value?.slug) {
-    const base: Record<string, string> = { services: '/services/', projects: '/project/', posts: '/', pages: '/' }
+    const base: Record<string, string> = { services: '/services/', landings: '/sozdanie-sajtov/', projects: '/project/', posts: '/', pages: '/' }
     return `${base[ref.relationTo] ?? '/'}${ref.value.slug}/`
   }
   return null

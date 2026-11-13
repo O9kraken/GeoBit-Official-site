@@ -5,6 +5,7 @@ import { analyze, scoreColor, type Kind } from '@/lib/seo-analysis'
 
 const COLS: { slug: string; label: string; kind: Kind; path: (s: string) => string }[] = [
   { slug: 'services', label: 'Услуга', kind: 'service', path: (s) => `/services/${s}/` },
+  { slug: 'landings', label: 'Город/отрасль', kind: 'service', path: (s) => (s === 'krym' ? '/sozdanie-sajtov/' : `/sozdanie-sajtov/${s}/`) },
   { slug: 'posts', label: 'Статья', kind: 'post', path: (s) => `/${s}/` },
   { slug: 'projects', label: 'Кейс', kind: 'project', path: (s) => `/project/${s}/` },
   { slug: 'pages', label: 'Документ', kind: 'page', path: (s) => `/${s}/` },

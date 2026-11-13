@@ -71,6 +71,7 @@ export interface Config {
     subscribers: Subscriber;
     pages: Page;
     services: Service;
+    landings: Landing;
     projects: Project;
     posts: Post;
     team: Team;
@@ -93,6 +94,7 @@ export interface Config {
     subscribers: SubscribersSelect<false> | SubscribersSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
+    landings: LandingsSelect<false> | LandingsSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     team: TeamSelect<false> | TeamSelect<true>;
@@ -458,6 +460,122 @@ export interface ServiceCategory {
    */
   slug: string;
   description?: string | null;
+  meta?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
+    title?: string | null;
+    description?: string | null;
+    /**
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
+     */
+    image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    /**
+     * Пишите вопросы так, как их задают люди. Выводятся в конце страницы и размечаются FAQPage.
+     */
+    faq?:
+      | {
+          q: string;
+          a: string;
+          id?: string | null;
+        }[]
+      | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Страницы «Создание сайтов в Симферополе», «Сайт для гостиницы» и т. п. Адрес: /sozdanie-sajtov/<slug>/
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "landings".
+ */
+export interface Landing {
+  id: number;
+  title: string;
+  /**
+   * Коротко: «Симферополь», «Гостиницы и гостевые дома»
+   */
+  cardTitle?: string | null;
+  shortDesc?: string | null;
+  /**
+   * Например: 29 900 ₽
+   */
+  price?: string | null;
+  /**
+   * Например: 7 дней
+   */
+  duration?: string | null;
+  icon?: string | null;
+  image?: (number | null) | Media;
+  explainer?: {
+    title?: string | null;
+    text?: string | null;
+    points?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  features?:
+    | {
+        title: string;
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  featuresTitle?: string | null;
+  /**
+   * Карточки с ценами. Пусто — лендинг, корпоративный сайт и магазин.
+   */
+  services?: (number | Service)[] | null;
+  /**
+   * Пусто — свежие работы из портфолио.
+   */
+  cases?: (number | Project)[] | null;
+  steps?:
+    | {
+        title: string;
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Выводится аккордеоном и размечается FAQPage для поисковиков.
+   */
+  faq?:
+    | {
+        q: string;
+        a: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Часть URL. Латиница, цифры и дефис. Не меняйте у опубликованных страниц без редиректа.
+   */
+  slug: string;
+  kind: 'city' | 'industry' | 'region';
+  /**
+   * Именительный падеж: «Симферополь». Для отраслей — пусто.
+   */
+  place?: string | null;
+  order?: number | null;
   meta?: {
     /**
      * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
@@ -877,6 +995,10 @@ export interface Redirect {
           value: number | Service;
         } | null)
       | ({
+          relationTo: 'landings';
+          value: number | Landing;
+        } | null)
+      | ({
           relationTo: 'projects';
           value: number | Project;
         } | null);
@@ -924,6 +1046,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'services';
         value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'landings';
+        value: number | Landing;
       } | null)
     | ({
         relationTo: 'projects';
@@ -1143,6 +1269,81 @@ export interface ServicesSelect<T extends boolean = true> {
   casesTitle?: T;
   slug?: T;
   category?: T;
+  order?: T;
+  meta?:
+    | T
+    | {
+        focusKeyword?: T;
+        synonyms?: T;
+        title?: T;
+        description?: T;
+        image?: T;
+        answer?: T;
+        faq?:
+          | T
+          | {
+              q?: T;
+              a?: T;
+              id?: T;
+            };
+        noindex?: T;
+        nofollow?: T;
+        canonical?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "landings_select".
+ */
+export interface LandingsSelect<T extends boolean = true> {
+  title?: T;
+  cardTitle?: T;
+  shortDesc?: T;
+  price?: T;
+  duration?: T;
+  icon?: T;
+  image?: T;
+  explainer?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        points?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+      };
+  features?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  featuresTitle?: T;
+  services?: T;
+  cases?: T;
+  steps?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  faq?:
+    | T
+    | {
+        q?: T;
+        a?: T;
+        id?: T;
+      };
+  slug?: T;
+  kind?: T;
+  place?: T;
   order?: T;
   meta?:
     | T
@@ -2119,9 +2320,6 @@ export interface SeoSetting {
    * %s заменяется заголовком страницы. Работает, когда у страницы не заполнен свой title.
    */
   titleTemplate?: string | null;
-  /**
-   * 1200×630, для страниц без своей картинки.
-   */
   defaultImage?: (number | null) | Media;
   /**
    * ChatGPT Search, Perplexity, Claude, Яндекс Нейро — они читают страницу, когда пользователь задаёт вопрос, и дают ссылку на сайт. Рекомендуется включить.

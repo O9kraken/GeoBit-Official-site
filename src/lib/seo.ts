@@ -70,7 +70,8 @@ export const serviceSchema = (svc: any, url: string) => ({
 export const breadcrumbSchema = (items: { name: string; url: string }[]) => ({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
-  itemListElement: [{ name: 'Главная', url: `${SITE_URL}/` }, ...items].map((it, i) => ({
+  // «Главная» добавляется здесь — если её передали ещё раз, не дублируем
+  itemListElement: [{ name: 'Главная', url: `${SITE_URL}/` }, ...items.filter((it) => it.url !== `${SITE_URL}/` && it.url !== '/')].map((it, i) => ({
     '@type': 'ListItem',
     position: i + 1,
     name: it.name,
@@ -118,6 +119,7 @@ function ogKind(path: string, type?: string): string {
   if (type === 'article' || /^\/(blog|category|tag)\//.test(path)) return 'Блог'
   if (/^\/services\/[^/]+\/$/.test(path)) return 'Услуга'
   if (/^\/(services|service-category)\//.test(path)) return 'Услуги'
+  if (/^\/sozdanie-sajtov\//.test(path)) return 'Создание сайтов'
   if (/^\/project\//.test(path)) return 'Кейс'
   if (/^\/(portfolio|portfolio-category)\//.test(path)) return 'Портфолио'
   if (path === '/about/') return 'О студии'

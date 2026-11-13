@@ -119,7 +119,7 @@ export function SeoPanel(props: any) {
   useEffect(() => {
     clearTimeout(timer.current)
     timer.current = setTimeout(async () => {
-      const cols = ['posts', 'services', 'projects', 'pages']
+      const cols = ['posts', 'services', 'landings', 'projects', 'pages']
       const count = async (field: string, value: string) => {
         if (!value) return 0
         let n = 0

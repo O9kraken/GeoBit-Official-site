@@ -5,6 +5,7 @@ const PATHS: Record<string, (slug: string) => string> = {
   posts: paths.post,
   pages: paths.page,
   services: paths.service,
+  landings: paths.landing,
   projects: paths.project,
 }
 

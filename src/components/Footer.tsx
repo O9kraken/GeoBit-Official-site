@@ -1,10 +1,12 @@
-import { getGlobal, getServices } from '@/lib/payload'
-import { paths, telHref } from '@/lib/util'
+import { getGlobal, getLandings, getServices } from '@/lib/payload'
+import { LANDING_HUB, paths, telHref } from '@/lib/util'
 import { LogoInner, MaxIcon } from './Common'
 import { COOKIE_BANNER_HTML } from './cookie-banner-html'
 
 export default async function Footer() {
-  const [s, nav, services] = await Promise.all([getGlobal<any>('settings'), getGlobal<any>('navigation'), getServices()])
+  const [s, nav, services, landings] = await Promise.all([getGlobal<any>('settings'), getGlobal<any>('navigation'), getServices(), getLandings().catch(() => [] as any[])])
+  const hub = landings.find((l: any) => l.slug === LANDING_HUB)
+  const geo = landings.filter((l: any) => l.slug !== LANDING_HUB)
   const footerNav: { label: string; url: string }[] = nav?.footerNav?.length
     ? nav.footerNav
     : [
@@ -105,6 +107,16 @@ export default async function Footer() {
               </ul>
             </div>
           </div>
+          {landings.length > 0 && (
+            <nav className="footer-geo" aria-label="Города и отрасли">
+              {hub && <a href={paths.landing(LANDING_HUB)}>{hub.cardTitle || 'Сайты в Крыму'}</a>}
+              {geo.map((l: any) => (
+                <a key={l.id} href={paths.landing(l.slug)}>
+                  {l.kind === 'city' ? `Сайты — ${l.cardTitle || l.title}` : l.cardTitle || l.title}
+                </a>
+              ))}
+            </nav>
+          )}
           <div className="footer-bottom">
             <div className="footer-legal-info">
               <p className="footer-legal">
