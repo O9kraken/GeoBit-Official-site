@@ -3,6 +3,23 @@ import { SITE_URL, mediaUrl, stripTags } from './util'
 
 const ORG_ID = `${SITE_URL}/#organization`
 
+/** Где работаем — для разметки организации и услуг */
+const AREA_SERVED = [
+  ...['Севастополь', 'Симферополь', 'Ялта', 'Евпатория', 'Феодосия', 'Керчь', 'Алушта'].map((name) => ({ '@type': 'City', name })),
+  { '@type': 'AdministrativeArea', name: 'Республика Крым' },
+  { '@type': 'Country', name: 'Россия' },
+]
+
+/** Все внешние профили компании: соцсети, Яндекс Карты, площадки из настроек (по одной ссылке в строке) */
+export function profileLinks(s: any): string[] {
+  const extra = String(s?.profileLinks || '')
+    .split(/\s+/)
+    .map((x) => x.trim())
+    .filter((x) => /^https?:\/\//.test(x))
+  const maps = s?.yandexOrgId ? [`https://yandex.ru/maps/org/${String(s.yandexOrgId).trim()}/`] : []
+  return [...new Set([s?.telegramUrl, s?.vkUrl, s?.instagramUrl, s?.maxUrl, ...maps, ...extra].filter(Boolean))]
+}
+
 export function organizationSchema(s: any) {
   const address: Record<string, string> = {
     '@type': 'PostalAddress',
@@ -23,14 +40,18 @@ export function organizationSchema(s: any) {
     priceRange: s?.priceRange || '₽₽',
     image: `${SITE_URL}/logo.svg`,
     logo: `${SITE_URL}/logo.svg`,
-    areaServed: [
-      { '@type': 'City', name: 'Севастополь' },
-      { '@type': 'AdministrativeArea', name: 'Крым' },
-      { '@type': 'Country', name: 'Россия' },
-    ],
+    areaServed: AREA_SERVED,
     address,
     serviceType: ['Создание сайтов', 'Разработка сайтов', 'Дизайн сайтов', 'Разработка логотипа', 'SEO-продвижение'],
-    sameAs: [s?.telegramUrl, s?.vkUrl, s?.instagramUrl, s?.maxUrl].filter(Boolean),
+    knowsAbout: ['создание сайтов', 'лендинги', 'интернет-магазины', 'веб-дизайн', 'SEO под Яндекс', 'оптимизация под ИИ-поиск', 'Payload CMS', 'Next.js', 'WordPress'],
+    founder: {
+      '@type': 'Person',
+      name: 'Георгий Каляков',
+      jobTitle: 'Основатель, дизайнер и разработчик',
+      url: `${SITE_URL}/about/`,
+      sameAs: [s?.telegramUrl, s?.vkUrl, 'https://github.com/O9kraken'].filter(Boolean),
+    },
+    sameAs: profileLinks(s),
     openingHoursSpecification: {
       '@type': 'OpeningHoursSpecification',
       dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
@@ -57,10 +78,7 @@ export const serviceSchema = (svc: any, url: string) => ({
   name: svc.title,
   description: stripTags(svc.shortDesc || svc.excerpt || ''),
   provider: { '@id': ORG_ID },
-  areaServed: [
-    { '@type': 'City', name: 'Севастополь' },
-    { '@type': 'Country', name: 'Россия' },
-  ],
+  areaServed: AREA_SERVED,
   url,
   ...(svc.price
     ? { offers: { '@type': 'Offer', priceCurrency: 'RUB', price: String(svc.price).replace(/[^\d]/g, ''), priceSpecification: { '@type': 'PriceSpecification', priceCurrency: 'RUB', minPrice: String(svc.price).replace(/[^\d]/g, '') } } }

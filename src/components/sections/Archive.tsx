@@ -46,14 +46,14 @@ export function PostArchive({
                       <a href={paths.post(post.slug)}>
                         <img src={mediaUrl(post.cover, 'card') || mediaUrl(post.cover)} alt={post.title} width={600} height={360} loading="lazy" />
                       </a>
-                      {cat && (
-                        <a href={paths.category(cat.slug)} className="blog-tag">
-                          {cat.name}
-                        </a>
-                      )}
                     </div>
                     <div className="blog-content">
                       <div className="blog-meta">
+                        {cat && (
+                          <a href={paths.category(cat.slug)} className="blog-tag blog-tag--meta">
+                            {cat.name}
+                          </a>
+                        )}
                         <span>
                           <i className="far fa-calendar"></i> {formatDateLong(post.publishedAt)}
                         </span>

@@ -2434,6 +2434,10 @@ export interface Setting {
    */
   yandexOrgId?: string | null;
   /**
+   * По одной ссылке в строке: Profi.ru, Авито, каталоги. Попадают в sameAs разметки организации и в llms.txt — так поисковики и ИИ-ассистенты связывают сайт с этими профилями. Яндекс Карты добавляются сами по номеру организации.
+   */
+  profileLinks?: string | null;
+  /**
    * Включайте, когда появятся первые отзывы: без них бейдж пустой. Грузится после согласия на «Аналитику».
    */
   yandexBadge?: boolean | null;
@@ -2974,6 +2978,7 @@ export interface SettingsSelect<T extends boolean = true> {
   yandexVerification?: T;
   googleVerification?: T;
   yandexOrgId?: T;
+  profileLinks?: T;
   yandexBadge?: T;
   chatWidgetSrc?: T;
   leadEmail?: T;

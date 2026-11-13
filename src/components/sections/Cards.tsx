@@ -78,11 +78,6 @@ export async function BlogCard({ post, headingTag = 'h2', featured = false }: { 
           <a href={url} tabIndex={-1} aria-hidden="true">
             <img src={thumb} className="blog-card__img" alt={post.title} loading="lazy" />
           </a>
-          {cat && (
-            <a href={paths.category(cat.slug)} className="blog-card__cat">
-              {cat.name}
-            </a>
-          )}
         </div>
       ) : (
         <div className="blog-card__thumb blog-card__thumb--no-img">
@@ -98,6 +93,11 @@ export async function BlogCard({ post, headingTag = 'h2', featured = false }: { 
       )}
       <div className="blog-card__body">
         <div className="blog-card__meta">
+          {thumb && cat && (
+            <a href={paths.category(cat.slug)} className="blog-card__cat blog-card__cat--meta">
+              {cat.name}
+            </a>
+          )}
           <span className="blog-card__date">
             <i className="far fa-calendar-alt"></i> {formatDateRu(post.publishedAt)}
           </span>

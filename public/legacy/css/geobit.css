@@ -504,3 +504,14 @@ html,body{overflow-x:clip}
   .gb-founder__soc{flex:1 1 0;width:auto}
 }
 p,li,.hero-subtitle{text-wrap:pretty}
+
+/* Обложки статей в карточках: формат обложки 16:9 — показываем целиком, без обрезки; рубрика — в строке с датой, а не поверх обложки */
+.blog-card__thumb{aspect-ratio:16/9;background:#07060c}
+.blog-card--featured .blog-card__img{object-position:left center}
+.blog-card__meta{flex-wrap:wrap;row-gap:8px}
+.blog-card__cat--meta{position:static;padding:3px 11px;font-size:.72rem;line-height:1.5}
+.blog-card__cat--meta:hover{color:var(--on-accent);opacity:.9}
+.blog-img{position:relative;overflow:hidden;border-radius:inherit;aspect-ratio:16/9;background:#07060c}
+.blog-img img{width:100%;height:100%;object-fit:cover;display:block}
+.blog-tag--meta{display:inline-block;background:var(--accent-purple);color:var(--on-accent);font-size:.72rem;font-weight:600;padding:3px 11px;border-radius:100px}
+@media (max-width:1024px){.blog-card--featured .blog-card__thumb{min-height:0;height:auto;aspect-ratio:16/9}}

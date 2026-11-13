@@ -1,6 +1,7 @@
 import config from '@payload-config'
 import { getPayload } from 'payload'
 import { SITE_URL, paths, stripTags } from '@/lib/util'
+import { profileLinks } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,13 +15,14 @@ export async function GET() {
   const p = await getPayload({ config })
   const s: any = await p.findGlobal({ slug: 'seo-settings', depth: 0 }).catch(() => ({}))
   if (s?.llmsEnabled === false) return new Response('Not found', { status: 404 })
-  const [site, home, faqPage, services, projects, posts]: any[] = await Promise.all([
+  const [site, home, faqPage, services, projects, posts, landings]: any[] = await Promise.all([
     p.findGlobal({ slug: 'settings', depth: 0 }).catch(() => ({})),
     p.findGlobal({ slug: 'home', depth: 0 }).catch(() => ({})),
     p.findGlobal({ slug: 'faq-page', depth: 0 }).catch(() => ({})),
     p.find({ collection: 'services', limit: 50, depth: 0, sort: 'order' }).then((r) => r.docs),
     p.find({ collection: 'projects', limit: 50, depth: 0, sort: 'order' }).then((r) => r.docs),
     p.find({ collection: 'posts', limit: 100, depth: 0, sort: '-publishedAt', where: { _status: { equals: 'published' } } }).then((r) => r.docs),
+    p.find({ collection: 'landings' as any, limit: 100, depth: 0, sort: 'order' }).then((r) => r.docs).catch(() => []),
   ])
   const visible = (d: any) => !d?.meta?.noindex
   const u = (path: string) => `${SITE_URL}${path}`
@@ -31,6 +33,18 @@ export async function GET() {
   const contacts = [site?.phone && `телефон ${site.phone}`, site?.email && `email ${site.email}`, site?.telegramUrl && `Telegram ${site.telegramUrl}`, site?.address && `адрес: ${site.address}`].filter(Boolean)
   if (contacts.length) out.push(`Контакты: ${contacts.join(', ')}.`, '')
 
+  out.push(
+    '## О студии',
+    '',
+    '- Основатель — Георгий Каляков, дизайнер и разработчик; делает сайты для бизнеса 5 лет.',
+    '- Город: Севастополь. Работаем с бизнесом по всему Крыму (Симферополь, Ялта, Евпатория, Феодосия, Керчь) и удалённо по России.',
+    '- Формат работы: договор с фиксированной ценой и сроком, дизайн с нуля без шаблонов, админка для самостоятельного редактирования, базовое SEO под Яндекс, первый месяц поддержки бесплатно.',
+    '- Часы работы: пн–пт, 10:00–19:00 по Москве.',
+    '',
+  )
+  const profiles = profileLinks(site)
+  if (profiles.length) out.push('Профили компании: ' + profiles.join(', ') + '.', '')
+
   out.push('## Услуги', '')
   for (const sv of services.filter(visible)) {
     const facts = [sv.price && `от ${sv.price}`, sv.duration && `срок от ${sv.duration}`].filter(Boolean).join(', ')
@@ -38,6 +52,17 @@ export async function GET() {
     out.push(`- [${sv.title}](${u(paths.service(sv.slug))})${facts ? ` (${facts})` : ''}: ${about}`)
   }
   out.push('')
+
+  const land = landings.filter(visible)
+  if (land.length) {
+    out.push('## Города и отрасли', '')
+    for (const l of land) {
+      const facts = [l.price && `от ${l.price}`, l.duration && `срок от ${l.duration}`].filter(Boolean).join(', ')
+      const about = clean(l.meta?.answer) || clean(l.meta?.description) || clean(l.shortDesc)
+      out.push(`- [${clean(l.cardTitle) || clean(l.title)}](${u(paths.landing(l.slug))})${facts ? ` (${facts})` : ''}: ${about}`)
+    }
+    out.push('')
+  }
 
   if (projects.length) {
     out.push('## Портфолио', '')

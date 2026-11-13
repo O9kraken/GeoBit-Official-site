@@ -63,9 +63,6 @@ export function Newsletter({ title, text }: { title?: string; text?: string } = 
       <div className="container">
         <div className="nl2__panel">
           <div className="nl2__info">
-            <span className="nl2__ico" aria-hidden="true">
-              <i className="fas fa-envelope-open-text"></i>
-            </span>
             <span className="section-tag">Рассылка</span>
             <h2 className="nl2__title" dangerouslySetInnerHTML={{ __html: title || 'Полезные статьи <span class="gradient-text">на почту</span>' }} />
             <p className="nl2__text">{text || 'Присылаем письмо, когда выходит новая статья. Без спама — только контент.'}</p>
