@@ -1,0 +1,62 @@
+# Разовый перенос контента из Neon на свой сервер.
+# Запуск вручную: Actions → migrate-content → Run workflow.
+# База на сервере ЗАМЕНЯЕТСЯ контентом из Neon (без заявок и подписчиков).
+name: migrate-content
+
+on:
+  workflow_dispatch:
+
+concurrency: deploy
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Выгрузить базу из Neon
+        env:
+          NEON: ${{ secrets.NEON_DATABASE_URL }}
+        run: |
+          if [ -z "$NEON" ]; then echo "::error::Нет секрета NEON_DATABASE_URL"; exit 1; fi
+          # pg_dump лучше работает через прямое подключение, без пулера
+          export URL=$(echo "$NEON" | sed 's/-pooler\././')
+          docker run --rm -e URL -v "$PWD":/w postgres:18-alpine sh -c 'pg_dump "$URL" -Fc --no-owner --no-acl \
+            --exclude-table-data=leads --exclude-table-data=subscribers \
+            --exclude-table-data=payload_locked_documents --exclude-table-data=payload_locked_documents_rels \
+            -f /w/geobit.dump'
+          ls -lh geobit.dump
+          test -s geobit.dump
+
+      - name: Отправить дамп на сервер
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: geobit.dump
+          target: /tmp
+
+      - name: Загрузить в базу сервера
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            set -e
+            cd /opt/geobit
+            docker compose up -d db
+            sleep 5
+            docker compose stop app || true
+            PW=$(grep ^POSTGRES_PASSWORD= .env | cut -d= -f2)
+            docker run --rm --network geobit_default -e PGPASSWORD="$PW" postgres:18-alpine \
+              psql -h db -U geobit -d geobit -v ON_ERROR_STOP=1 -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+            docker run --rm --network geobit_default -v /tmp:/t -e PGPASSWORD="$PW" postgres:18-alpine \
+              pg_restore -h db -U geobit -d geobit --no-owner --no-acl /t/geobit.dump || echo "pg_restore завершился с предупреждениями"
+            docker run --rm --network geobit_default -e PGPASSWORD="$PW" postgres:18-alpine \
+              psql -h db -U geobit -d geobit -c "SELECT (SELECT count(*) FROM posts) AS posts, (SELECT count(*) FROM services) AS services, (SELECT count(*) FROM projects) AS projects, (SELECT count(*) FROM media) AS media, (SELECT count(*) FROM users) AS users;"
+            rm -f /tmp/geobit.dump
+            docker compose up -d
+            sleep 10
+            docker compose ps
