@@ -8,6 +8,7 @@
  */
 import type { Payload } from 'payload'
 import { emailLayout, esc, SITE } from './email-layout'
+import { overLimit } from './rate-limit'
 
 
 type Lead = { id: number | string; name?: string; phone?: string; email?: string; method?: string; service?: string; budget?: string; message?: string; page?: string }
@@ -106,7 +107,12 @@ async function confirmClient(payload: Payload, lead: Lead, c: Contacts): Promise
   if (process.env.LEAD_CONFIRM !== 'on' || !process.env.SMTP_HOST) return 'skip'
   const to = String(lead.email || '').trim()
   if (!/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(to)) return 'skip'
-  const name = lead.name ? String(lead.name).trim().split(/\s+/)[0] : ''
+  // Письмо уходит на адрес, который ввёл посетитель, — защищаемся от рассылки спама через форму:
+  // не больше 30 подтверждений в час на весь сайт и 2 в сутки на один адрес,
+  // имя в обращении — только если это похоже на имя (без ссылок и прочего текста)
+  if (overLimit('confirm:all', 30, 3600_000) || overLimit(`confirm:${to.toLowerCase()}`, 2, 24 * 3600_000)) return 'skip: limit'
+  const first = lead.name ? String(lead.name).trim().split(/\s+/)[0] : ''
+  const name = /^[A-Za-zА-Яа-яЁё][A-Za-zА-Яа-яЁё-]{1,29}$/.test(first) ? first : ''
   const contacts = [
     c.phone && `Телефон: [${c.phone}](tel:${c.phone.replace(/[^\d+]/g, '')})`,
     c.telegramUrl && `Telegram: [написать](${c.telegramUrl})`,

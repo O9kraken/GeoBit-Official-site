@@ -7,6 +7,7 @@ import config from '@payload-config'
 import { getPayload } from 'payload'
 import { z } from 'zod'
 import { notifyLead } from '@/lib/notify'
+import { clientIpFrom } from '@/lib/rate-limit'
 
 export const dynamic = 'force-dynamic'
 
@@ -55,10 +56,8 @@ const LeadSchema = z.object({
   page: str(300),
 })
 
-function clientIp(req: Request) {
-  const h = req.headers
-  return (h.get('x-real-ip') || h.get('x-forwarded-for')?.split(',')[0] || '').trim() || 'unknown'
-}
+// IP — из X-Real-IP, который выставляет Caddy (клиент его подделать не может)
+const clientIp = (req: Request) => clientIpFrom(req.headers)
 
 function utmFrom(req: Request) {
   try {

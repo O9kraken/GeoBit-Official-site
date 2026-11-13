@@ -83,6 +83,8 @@ export default buildConfig({
     shouldAutoRun: () => process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE !== 'phase-production-build',
     deleteJobOnComplete: true,
   },
+  // Защита от CSRF: cookie админки принимаются только с запросов с этого сайта
+  csrf: [...new Set(['https://getgeobit.ru', (process.env.SERVER_URL || process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000').replace(/\/$/, '')])],
   secret: process.env.PAYLOAD_SECRET || '',
   // GraphQL сайтом не используется — выключен, чтобы не держать лишнюю точку входа
   graphQL: { disable: true },

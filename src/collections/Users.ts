@@ -1,6 +1,15 @@
 import { APIError, type CollectionConfig } from 'payload'
 import { emailLayout, SITE } from '../lib/email-layout'
 import { authenticated } from '../access'
+import { clientIpFrom, overLimit } from '../lib/rate-limit'
+
+// Ограничения с одного IP: подбор пароля и рассылка писем сброса
+const AUTH_LIMITS: Record<string, [number, number]> = {
+  login: [10, 10 * 60_000],
+  forgotPassword: [3, 15 * 60_000],
+  resetPassword: [10, 15 * 60_000],
+  unlock: [3, 15 * 60_000],
+}
 
 const MIN_PASSWORD = 10
 
@@ -43,6 +52,18 @@ export const Users: CollectionConfig = {
     admin: ({ req }) => Boolean(req.user),
   },
   hooks: {
+    beforeOperation: [
+      ({ operation, req, args }) => {
+        const lim = AUTH_LIMITS[operation as string]
+        if (lim && req) {
+          const ip = clientIpFrom(req.headers)
+          if (overLimit(`${operation}:${ip}`, lim[0], lim[1])) {
+            throw new APIError('Слишком много попыток. Подождите 15 минут и попробуйте снова.', 429, undefined, true)
+          }
+        }
+        return args
+      },
+    ],
     beforeValidate: [
       ({ data }) => {
         const pw = (data as any)?.password

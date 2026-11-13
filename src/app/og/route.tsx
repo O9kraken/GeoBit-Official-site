@@ -8,6 +8,7 @@ import { ImageResponse } from 'next/og'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
+import { clientIpFrom, overLimit } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -61,6 +62,9 @@ export async function GET(req: Request) {
   const hit = cache.get(key)
   const headers = { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=604800, stale-while-revalidate=86400' }
   if (hit) return new Response(new Uint8Array(hit), { headers })
+
+  // рисование картинки нагружает процессор: новых картинок — не больше 40 в минуту с одного IP
+  if (overLimit(`og:${clientIpFrom(req.headers)}`, 40, 60_000)) return new Response('Too many requests', { status: 429, headers: { 'Retry-After': '60' } })
 
   const [img, logoSrc, fontList] = await Promise.all([cover(u.searchParams.get('img')), logo(), fonts()])
   const title = clip(u.searchParams.get('t'), 80) || 'GeoBit'
