@@ -14,7 +14,21 @@ export const Posts: CollectionConfig = {
   labels: { singular: 'Статья', plural: 'Блог' },
   admin: { useAsTitle: 'title', group: 'Контент', defaultColumns: ['title', 'publishedAt', '_status'] },
   defaultSort: '-publishedAt',
-  versions: { drafts: true },
+  // «Запланировать публикацию» в админке: статья опубликуется сама в выбранное время (очередь задач — payload.config.ts → jobs)
+  versions: { drafts: { schedulePublish: true } },
+  hooks: {
+    beforeChange: [
+      // Дата публикации = момент первой публикации (вручную или по расписанию), если раньше не задали дату позже
+      ({ data, originalDoc }) => {
+        const becomesPublished = data?._status === 'published' && originalDoc?._status !== 'published'
+        if (becomesPublished) {
+          const cur = data.publishedAt ? new Date(data.publishedAt).getTime() : 0
+          if (!cur || cur < Date.now()) data.publishedAt = new Date().toISOString()
+        }
+        return data
+      },
+    ],
+  },
   access: {
     read: ({ req }) => (req.user ? true : { _status: { equals: 'published' } }),
     create: authenticated,

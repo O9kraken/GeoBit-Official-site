@@ -77,6 +77,12 @@ export default buildConfig({
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [...defaultFeatures, EXPERIMENTAL_TableFeature()],
   }),
+  // Очередь задач: запланированные публикации статей. Проверка — каждые 5 минут, только на работающем сервере
+  jobs: {
+    autoRun: [{ allQueues: true, cron: '0 */5 * * * *', limit: 20 }],
+    shouldAutoRun: () => process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE !== 'phase-production-build',
+    deleteJobOnComplete: true,
+  },
   secret: process.env.PAYLOAD_SECRET || '',
   // GraphQL сайтом не используется — выключен, чтобы не держать лишнюю точку входа
   graphQL: { disable: true },

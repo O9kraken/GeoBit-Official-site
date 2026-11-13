@@ -5,10 +5,12 @@ import * as migration_20261113_065500_home_og_image from './20261113_065500_home
 import * as migration_20261113_111432_landings from './20261113_111432_landings';
 import * as migration_20261113_114831_settings_ya_badge from './20261113_114831_settings_ya_badge';
 import * as migration_20261113_120000_home_og_image_2 from './20261113_120000_home_og_image_2';
+import * as migration_20261113_120814_schedule_publish from './20261113_120814_schedule_publish';
 import * as migration_20261113_130000_landings_content from './20261113_130000_landings_content';
 import * as migration_20261113_131000_services_geo_meta from './20261113_131000_services_geo_meta';
 import * as migration_20261113_140000_seo_fill from './20261113_140000_seo_fill';
 import * as migration_20261113_150000_blog_posts from './20261113_150000_blog_posts';
+import * as migration_20261113_160000_schedule_posts from './20261113_160000_schedule_posts';
 
 export const migrations = [
   {
@@ -47,6 +49,11 @@ export const migrations = [
     name: '20261113_120000_home_og_image_2',
   },
   {
+    up: migration_20261113_120814_schedule_publish.up,
+    down: migration_20261113_120814_schedule_publish.down,
+    name: '20261113_120814_schedule_publish',
+  },
+  {
     up: migration_20261113_130000_landings_content.up,
     down: migration_20261113_130000_landings_content.down,
     name: '20261113_130000_landings_content',
@@ -59,11 +66,16 @@ export const migrations = [
   {
     up: migration_20261113_140000_seo_fill.up,
     down: migration_20261113_140000_seo_fill.down,
-    name: '20261113_140000_seo_fill'
+    name: '20261113_140000_seo_fill',
   },
   {
     up: migration_20261113_150000_blog_posts.up,
     down: migration_20261113_150000_blog_posts.down,
-    name: '20261113_150000_blog_posts',
+    name: '20261113_150000_blog_posts'
+  },
+  {
+    up: migration_20261113_160000_schedule_posts.up,
+    down: migration_20261113_160000_schedule_posts.down,
+    name: '20261113_160000_schedule_posts',
   },
 ];
