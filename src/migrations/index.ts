@@ -8,6 +8,7 @@ import * as migration_20261113_120000_home_og_image_2 from './20261113_120000_ho
 import * as migration_20261113_130000_landings_content from './20261113_130000_landings_content';
 import * as migration_20261113_131000_services_geo_meta from './20261113_131000_services_geo_meta';
 import * as migration_20261113_140000_seo_fill from './20261113_140000_seo_fill';
+import * as migration_20261113_150000_blog_posts from './20261113_150000_blog_posts';
 
 export const migrations = [
   {
@@ -59,5 +60,10 @@ export const migrations = [
     up: migration_20261113_140000_seo_fill.up,
     down: migration_20261113_140000_seo_fill.down,
     name: '20261113_140000_seo_fill'
+  },
+  {
+    up: migration_20261113_150000_blog_posts.up,
+    down: migration_20261113_150000_blog_posts.down,
+    name: '20261113_150000_blog_posts',
   },
 ];
