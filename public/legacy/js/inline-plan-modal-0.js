@@ -103,7 +103,7 @@
                 var r = await fetch(adelfAjax.ajaxUrl, { method:'POST', body:fd });
                 var d = await r.json();
                 msg.innerHTML = d.data?.message || (d.success ? 'Заявка отправлена!' : 'Ошибка отправки');
-                msg.className='success-msg show' + (d.success ? '' : ' is-error');
+                msg.className='success-msg show' + (d.success ? '' : ' is-error'); if(d.success&&window.geobitGoal){window.geobitGoal('lead_form');}
                 if (d.success){
                     btn.innerHTML='<i class="fas fa-check"></i> Отправлено!';
                     setTimeout(function(){ form.reset(); btn.innerHTML=orig; btn.disabled=false; msg.className='success-msg'; closeModal(); }, 3500);

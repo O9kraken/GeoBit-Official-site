@@ -20,7 +20,7 @@
         var r = await fetch(adelfAjax.ajaxUrl, { method:'POST', body:fd });
         var d = await r.json();
         show((d.data && d.data.message) || (d.success ? 'Вы подписались!' : 'Ошибка. Попробуйте позже.'), !d.success);
-        if (d.success) form.reset();
+        if (d.success) { form.reset(); if (window.geobitGoal) window.geobitGoal('subscribe'); }
       } catch(err){ show('Произошла ошибка. Попробуйте позже.', true); }
       btn.innerHTML = orig; btn.disabled = false;
     });

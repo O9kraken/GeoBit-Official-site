@@ -40,7 +40,7 @@
                 var r = await fetch(adelfAjax.ajaxUrl, { method:'POST', body:fd });
                 var d = await r.json();
                 msg.innerHTML = (d.data && d.data.message) || (d.success ? 'Заявка отправлена!' : 'Ошибка отправки');
-                msg.className = 'success-msg show' + (d.success ? '' : ' is-error');
+                msg.className = 'success-msg show' + (d.success ? '' : ' is-error'); if(d.success&&window.geobitGoal){window.geobitGoal('lead_form');}
                 btn.innerHTML = '<i class="fas fa-check"></i> Отправлено!';
                 if(d.success){ setTimeout(function(){ lf.reset(); btn.innerHTML=orig; btn.disabled=false; msg.className='success-msg'; closeModal(); }, 4000); }
                 else { btn.innerHTML=orig; btn.disabled=false; }
