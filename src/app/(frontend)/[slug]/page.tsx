@@ -86,7 +86,7 @@ async function PostView({ post }: { post: any }) {
             <article className="single-article">
               {cover && (
                 <div className="single-featured">
-                  <img src={cover} alt={post.cover?.alt || post.title} className="single-featured-img" style={{ width: '100%', height: 420, objectFit: 'cover', display: 'block' }} />
+                  <img src={cover} alt={post.cover?.alt || post.title} className="single-featured-img" width={1600} height={900} style={{ width: '100%', height: 'auto', aspectRatio: '16 / 9', objectFit: 'cover', display: 'block' }} />
                 </div>
               )}
               <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 20 }}>

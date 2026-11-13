@@ -1,101 +1,151 @@
-# GeoBit — сайт getgeobit.ru
+<p align="center">
+  <a href="https://getgeobit.ru"><img src=".github/assets/banner.png" alt="GeoBit | Official site" width="100%"></a>
+</p>
 
-Сайт веб-студии GeoBit, перенесённый с WordPress на собственный стек. Внешне это тот же сайт: вёрстка, стили и скрипты темы `adelfotita-theme` перенесены как есть. Изменён только первый экран главной, цены обновлены (лендинг от 29 900 ₽, корпоративный сайт от 79 900 ₽, магазин от 129 900 ₽).
+<p align="center">
+  <a href="https://getgeobit.ru"><img alt="Сайт" src="https://img.shields.io/badge/getgeobit.ru-online-7c00ff?style=for-the-badge&logo=googlechrome&logoColor=white"></a>
+  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white">
+  <img alt="Payload CMS" src="https://img.shields.io/badge/Payload_CMS-3-0f0f0f?style=for-the-badge&logo=payloadcms&logoColor=white">
+  <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-18-336791?style=for-the-badge&logo=postgresql&logoColor=white">
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178c6?style=for-the-badge&logo=typescript&logoColor=white">
+  <img alt="Docker" src="https://img.shields.io/badge/Docker-Caddy-2496ed?style=for-the-badge&logo=docker&logoColor=white">
+</p>
 
-**Стек:** Next.js 16 + Payload CMS 3 (админка на `/admin/`) + PostgreSQL 18. На сервере: Docker Compose и Caddy (HTTPS выпускается автоматически). Весь контент, включая заявки, хранится в базе на российском VPS.
+<p align="center">
+  <b>Сайт веб-студии GeoBit</b> — разработка сайтов, дизайн и SEO для бизнеса в Севастополе, Крыму и по всей России.<br>
+  Лендинги от 29 900 ₽ · корпоративные сайты от 79 900 ₽ · интернет-магазины от 129 900 ₽
+</p>
 
-## Что где
+<p align="center">
+  <a href="https://getgeobit.ru"><b>Открыть сайт</b></a> ·
+  <a href="https://getgeobit.ru/portfolio/">Портфолио</a> ·
+  <a href="https://getgeobit.ru/services/">Услуги</a> ·
+  <a href="https://getgeobit.ru/blog/">Блог</a> ·
+  <a href="https://getgeobit.ru/contacts/">Связаться</a>
+</p>
 
-| Путь | Что там |
+---
+
+<img src=".github/assets/showcase.png" alt="Главная страница getgeobit.ru на компьютере и телефоне" width="100%">
+
+## О проекте
+
+Это исходный код официального сайта студии GeoBit. Сайт сделан с нуля: свой дизайн в тёмной теме, админка для всего контента, продуманное SEO и защита персональных данных по 152-ФЗ. Работает на собственном сервере в России.
+
+Сайт — одновременно и витрина студии, и пример того, как мы делаем проекты для клиентов.
+
+## Что внутри
+
+| | |
 |---|---|
-| `src/app/(frontend)/` | Страницы сайта. Адреса совпадают со старыми: `/services/landing-page/`, `/project/kofe-bu/`, `/skolko-stoit-…/` |
-| `src/components/` | Шапка, подвал и формы. Секции повторяют разметку PHP-шаблонов темы |
-| `src/collections/`, `src/globals/` | Что редактируется в админке: услуги, кейсы, статьи, страницы, команда, отзывы, заявки, настройки, меню, калькулятор |
-| `src/app/ajax/route.ts` | Приём всех форм (заявки и подписка) вместо `admin-ajax.php` |
-| `src/lib/notify.ts` | Уведомления о заявках: почта, Telegram, MAX |
-| `public/legacy/` | CSS, JS, шрифты и иконки старой темы. Всё лежит локально, без внешних CDN |
-| `src/migrations/` | Миграции базы. В продакшене применяются сами при старте |
-| `scripts/seed.ts` | Перенос контента из экспорта WordPress |
+| 🎨 **Дизайн с нуля** | Тёмная тема, фирменная палитра, шрифт Unbounded, анимации, отдельно проработанные телефоны и планшеты |
+| 🧩 **Удобная админка** | Payload CMS на русском: услуги и цены, кейсы, статьи, страницы, калькулятор, меню, заявки — всё правится без программиста |
+| 📈 **SEO под Яндекс** | Мета-теги и микроразметка (Organization, Service, FAQ, BreadcrumbList, BlogPosting), карта сайта, IndexNow, SEO-аудит прямо в админке |
+| 🤖 **Готовность к ИИ-поиску** | Короткие ответы для Алисы и ИИ-ассистентов, `llms.txt`, настройка доступа ИИ-ботов в `robots.txt` |
+| 🗺️ **Города и отрасли** | Посадочные страницы для Симферополя, Ялты, Евпатории, Феодосии, Керчи и для отраслей: гостиницы, кафе, экскурсии, автосервисы |
+| 🖼️ **Картинки для соцсетей** | Фирменная карточка для каждой страницы генерируется автоматически (`/og/`) |
+| 🗓️ **Публикация по расписанию** | Статьи блога выходят сами в заданное время |
+| 📬 **Заявки** | Формы с защитой от спама, письмо на почту, уведомление в Telegram и MAX, подтверждение клиенту, цели в Яндекс Метрике |
+| 🔒 **Безопасность** | Лимиты попыток входа и форм, CSRF-защита, заголовки безопасности, загруженные файлы не исполняют скрипты |
+| ⚖️ **152-ФЗ** | Согласие отдельным документом, баннер cookie с выбором категорий, данные только на серверах в России, журнал согласий, автоудаление старых заявок |
 
-## Локальная разработка
+## Скриншоты
 
-Нужны Node 22+ и PostgreSQL 16.
+<table>
+  <tr>
+    <td width="50%"><img src=".github/assets/service.png" alt="Страница услуги"><p align="center"><sub>Страница услуги с интерактивным макетом</sub></p></td>
+    <td width="50%"><img src=".github/assets/landing.png" alt="Отраслевая страница"><p align="center"><sub>Посадочная страница «Сайт для гостиницы»</sub></p></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src=".github/assets/admin-edit.png" alt="Админка"><p align="center"><sub>Админка: всё на русском, с подсказками</sub></p></td>
+    <td width="50%">
+      <p align="center">
+        <img src=".github/assets/mobile-home.png" alt="Главная на телефоне" width="31%">
+        <img src=".github/assets/mobile-post.png" alt="Статья на телефоне" width="31%">
+        <img src=".github/assets/mobile-contacts.png" alt="Контакты на телефоне" width="31%">
+      </p>
+      <p align="center"><sub>Мобильная версия</sub></p>
+    </td>
+  </tr>
+</table>
+
+## Как устроено
+
+```mermaid
+flowchart LR
+  U["Посетитель"] -->|HTTPS| C["Caddy<br/>сертификаты, сжатие, кэш"]
+  C --> A["Next.js 16<br/>страницы сайта"]
+  A --- P["Payload CMS 3<br/>админка /admin и API"]
+  P --> D[("PostgreSQL 18<br/>контент и заявки")]
+  P --> M["Файлы<br/>картинки и обложки"]
+  A -->|заявка| N["Уведомления<br/>почта · Telegram · MAX"]
+  G["GitHub Actions"] -->|образ ghcr.io| S["VPS в Москве<br/>Docker Compose"]
+  S -.- C
+```
+
+- **Фронтенд и бэкенд в одном приложении.** Next.js рендерит страницы на сервере, Payload работает внутри него же: одна сборка, один контейнер.
+- **Контент только в базе.** Тексты, цены и картинки меняются в админке и сразу появляются на сайте, без пересборки.
+- **Деплой по пушу.** Пуш в `main` → GitHub Actions собирает Docker-образ → сервер скачивает его и перезапускается. Миграции базы применяются сами при старте.
+
+## Стек
+
+| Слой | Технологии |
+|---|---|
+| Приложение | Next.js 16 (App Router, standalone), React 19, TypeScript |
+| CMS | Payload CMS 3: коллекции, глобалы, версии и черновики, очередь задач, Lexical-редактор |
+| База | PostgreSQL 18, миграции Payload |
+| Картинки | sharp (webp, нарезка размеров), `next/og` для карточек соцсетей |
+| Почта | Nodemailer, свои шаблоны писем со светлой и тёмной темой |
+| Сервер | Ubuntu 24.04, Docker Compose, Caddy (HTTPS от Let's Encrypt), резервные копии базы по расписанию |
+| CI/CD | GitHub Actions → GitHub Container Registry → VPS |
+
+## Структура
+
+```
+src/
+├── app/(frontend)/     страницы сайта: главная, услуги, кейсы, блог, города и отрасли
+├── app/(payload)/      админка Payload
+├── app/ajax/           приём форм (заявки, подписка)
+├── app/og/             генерация картинок для соцсетей
+├── collections/        что редактируется в админке: услуги, кейсы, статьи, заявки…
+├── globals/            страницы-одиночки и настройки сайта
+├── components/         шапка, подвал, секции страниц, панели админки
+├── content/            тексты, которые заливаются миграциями (статьи, документы)
+├── lib/                SEO, уведомления, шаблоны писем, ограничение частоты
+└── migrations/         миграции базы и контента
+public/legacy/          стили, скрипты и шрифты сайта (без внешних CDN)
+```
+
+## Запуск у себя
+
+Нужны Node.js 22+ и PostgreSQL 16+.
 
 ```bash
-cp .env.example .env        # заполнить DATABASE_URI, PAYLOAD_SECRET, NEXT_PUBLIC_SERVER_URL=http://localhost:3000
+cp .env.example .env      # заполнить DATABASE_URI и PAYLOAD_SECRET
 npm ci
-npm run dev                 # http://localhost:3000, админка — /admin/ (при первом входе создаётся пользователь)
+npm run dev               # http://localhost:3000, админка — /admin/
 ```
 
-Контент из WordPress переносится так:
+Если поменялись поля в `src/collections/` или `src/globals/`, создайте миграцию и закоммитьте её:
 
 ```bash
-python3 scripts/parse_wxr.py путь/к/export.xml content.json
-WP_CONTENT=content.json WP_UPLOADS=путь/к/wp-content/uploads npm run seed
+npm run migrate:create имя-изменения
 ```
 
-Скрипт seed очищает и заново заполняет услуги, кейсы, статьи, страницы, команду, отзывы, медиа и настройки. Заявки, подписчиков и пользователей он не трогает.
+Как устроены сервер и деплой — в [docs/DEPLOY.md](docs/DEPLOY.md).
 
-Если меняется схема (поля в `collections/` или `globals/`), создайте миграцию: `npm run migrate:create имя`. Файлы миграций нужно закоммитить.
+## Автор
 
-## Разработка: GitHub + Render + Neon
+**Георгий Каляков** — основатель GeoBit, дизайнер и разработчик. 5 лет делаю сайты для бизнеса.
 
-Пока идёт разработка, сайт живёт на `*.onrender.com`, а база — в Neon. Домен getgeobit.ru по-прежнему смотрит на WordPress в Beget.
+<p>
+  <a href="https://getgeobit.ru"><img alt="getgeobit.ru" src="https://img.shields.io/badge/getgeobit.ru-7c00ff?style=flat-square&logo=googlechrome&logoColor=white"></a>
+  <a href="https://t.me/krakeno9"><img alt="Telegram" src="https://img.shields.io/badge/Telegram-@krakeno9-26a5e4?style=flat-square&logo=telegram&logoColor=white"></a>
+  <a href="https://vk.com/kraken_o9"><img alt="VK" src="https://img.shields.io/badge/VK-kraken__o9-0077ff?style=flat-square&logo=vk&logoColor=white"></a>
+</p>
 
-- Картинки хранятся прямо в базе (`MEDIA_STORAGE=db`, таблица `media_blobs`), потому что диск Render стирается при каждом деплое.
-- `robots.txt` на любом домене, кроме getgeobit.ru, запрещает индексацию.
+Нужен сайт? [Оставьте заявку на getgeobit.ru](https://getgeobit.ru/contacts/) — обсудим задачу и назовём срок и цену.
 
-1. **Neon.** Создайте проект в регионе Frankfurt. Понадобятся две строки подключения: обычная (с `-pooler`) для Render и прямая (без `-pooler`) для заливки контента.
-2. **GitHub.** Запушьте код. В Settings → Secrets → Actions добавьте `NEON_DATABASE_URL` (прямую строку).
-3. **Контент.** Actions → **restore-content** → Run workflow → введите `ЗАМЕНИТЬ`. В Neon зальётся `seed/geobit-content.dump`: все услуги, кейсы, статьи, страницы, настройки и картинки.
-4. **Сборка.** Первый пуш в `main` соберёт образ `ghcr.io/<логин>/<репо>`.
-5. **Render.**
-   - New → Web Service → Existing Image → `ghcr.io/<логин>/<репо>:latest`. Для приватного пакета добавьте Registry Credential: логин GitHub и токен с `read:packages`.
-   - Можно вместо этого применить `render.yaml`.
-   - Переменные окружения: `DATABASE_URI` (строка Neon с `-pooler`), `PAYLOAD_SECRET` (случайная строка), `MEDIA_STORAGE=db`, `NODE_OPTIONS=--max-old-space-size=384`.
-6. **Автодеплой.** В Render скопируйте Settings → Deploy Hook и сохраните его в GitHub как секрет `RENDER_DEPLOY_HOOK`. После этого каждый пуш в `main` обновляет сайт.
-7. **Админка.** Откройте `https://<сервис>.onrender.com/admin/` и создайте первого пользователя.
+## Лицензия
 
-Особенности бесплатных тарифов:
-- Render засыпает через 15 минут без посещений. Первый запрос после этого идёт 30–60 секунд.
-- Neon «просыпается» за секунду.
-- Если 512 МБ не хватит (в логах будет падение по памяти), поможет тариф Starter.
-
-> ⚠️ Render и Neon находятся за пределами РФ. Пока сайт там, не публикуйте ссылку и не собирайте через формы настоящие заявки: по 152-ФЗ персональные данные россиян сначала должны записываться в базу в России. Для тестов используйте выдуманные имена и телефоны.
-
-Когда разработка закончится, переезжайте на свой VPS. Для этого задайте переменную репозитория `DEPLOY_TARGET=vps`, а дальше действуйте по разделу ниже. Перенести картинки из базы на диск можно позже: пока `MEDIA_STORAGE=db`, всё работает и на VPS.
-
-## Сервер (VPS до 600 ₽/мес)
-
-Хватит 1 vCPU и 2 ГБ RAM, Ubuntu 24.04, в российском дата-центре. Образ собирается в GitHub Actions, сервер только запускает готовое.
-
-1. **Подготовка сервера**
-   ```bash
-   curl -fsSL https://get.docker.com | sh
-   mkdir -p /opt/geobit/scripts && cd /opt/geobit
-   # положить сюда docker-compose.yml, Caddyfile, scripts/backup.sh и .env (по образцу .env.example)
-   # в .env добавить строку: APP_IMAGE=ghcr.io/<логин>/<репозиторий>:latest
-   echo <токен GitHub с правом read:packages> | docker login ghcr.io -u <логин> --password-stdin
-   ```
-2. **GitHub.** Создать приватный репозиторий и запушить код. В Settings → Secrets → Actions добавить `SSH_HOST`, `SSH_USER` и `SSH_KEY` (приватный ключ, публичная часть которого лежит в `~/.ssh/authorized_keys` на сервере). После каждого пуша в `main` сайт пересобирается и обновляется.
-3. **Первый запуск:** `docker compose up -d`. Миграции создадут пустую базу.
-4. **Контент:** с машины, где выполнялся `npm run seed`, запустить `scripts/push-data.sh root@<ip-сервера>`. Скрипт перенесёт базу и картинки. Заявки и подписчики из локальной базы не копируются.
-5. **Проверка до переключения домена.** В `/etc/hosts` своего компьютера временно пропишите `<ip-сервера> getgeobit.ru` и пройдите по сайту. Отправьте тестовую заявку.
-6. **Переезд.** В DNS (сейчас это Beget) поменяйте A-записи `getgeobit.ru` и `www` на IP сервера. Caddy сам получит сертификат. После этого в Яндекс Вебмастере стоит отправить на переобход `/sitemap.xml`.
-7. **Бэкапы:** `crontab -e` → `15 4 * * * /opt/geobit/scripts/backup.sh >> /var/log/geobit-backup.log 2>&1`. Копия вне сервера появится, если настроить `rclone` с remote `s3` (например, Yandex Object Storage).
-
-> ⚠️ Нельзя запускать продакшен на базе, созданной в режиме разработки без `push-data.sh`. Payload увидит «dev push» и при старте будет ждать ответа в консоли. Скрипт `push-data.sh` помечает такую базу как мигрированную.
-
-## Заявки
-
-- Все формы сайта (шапка, калькулятор, CTA, контакты, тарифы) сохраняют заявку в админку: **Заявки**. Там есть статус, заметка, страница, UTM и отметка о согласии.
-- Полные данные заявки приходят **на почту** через SMTP российского сервиса (`SMTP_*` в `.env`).
-- В **Telegram/MAX** уходят только номер заявки и ссылка в админку, без имени и телефона. Так данные остаются в РФ (152-ФЗ), и уведомление дойдёт, даже если Telegram с сервера недоступен. В поле `notify` каждой заявки видно, какой канал сработал.
-- Защита от спама: скрытое поле, проверка времени заполнения и не больше 5 отправок за 10 минут с одного IP.
-
-## Редиректы
-
-- Адреса страниц совпадают с WordPress, поэтому редиректы для них не нужны.
-- `/wp-content/uploads/…` → 301 на новую картинку `/media/…` (сопоставление по исходному пути файла).
-- `/feed/`, `/author/…`, `/*-sitemap.xml` → 301 на подходящие страницы (`next.config.ts`).
-- Свои редиректы задаются в админке: **Настройки → Редиректы**.
+Код открыт для просмотра, но не для использования: © GeoBit, все права защищены. Подробнее — в [LICENSE](LICENSE).
