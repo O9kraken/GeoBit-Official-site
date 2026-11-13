@@ -1,3 +1,4 @@
+import { av } from '@/lib/asset'
 import type { Metadata } from 'next'
 import LegacyScripts from '@/components/LegacyScripts'
 import Calculator from '@/components/sections/Calculator'
@@ -40,7 +41,7 @@ export default async function HomePage() {
   const landing = services.find((s: any) => s.slug === 'landing-page')
   return (
     <main id="main" role="main">
-      <link rel="stylesheet" href="/legacy/calculator/calculator.css" precedence="default" />
+      <link rel="stylesheet" href={av("/legacy/calculator/calculator.css")} precedence="default" />
       <Hero h={h} landingPrice={landing?.price || undefined} />
       <Dock variant="hero" />
       <ServicesSection h={h} services={services} />

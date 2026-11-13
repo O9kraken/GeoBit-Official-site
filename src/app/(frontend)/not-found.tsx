@@ -1,10 +1,11 @@
+import { av } from '@/lib/asset'
 import LegacyScripts from '@/components/LegacyScripts'
 
 /** 404.php — страница «не найдено» с игрой Neon Rider */
 export default function NotFound() {
   return (
     <main id="main" role="main">
-      <link rel="stylesheet" href="/legacy/css/inline-page-404-0.css" precedence="default" />
+      <link rel="stylesheet" href={av("/legacy/css/inline-page-404-0.css")} precedence="default" />
       <div className="page-404">
         <div className="page-404__inner">
           <div className="page-404__hero" id="hero404">

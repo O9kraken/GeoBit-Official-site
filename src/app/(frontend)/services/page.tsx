@@ -1,3 +1,4 @@
+import { av } from '@/lib/asset'
 import type { Metadata } from 'next'
 import { FaqSection, Html } from '@/components/Common'
 import LegacyScripts from '@/components/LegacyScripts'
@@ -23,7 +24,7 @@ export default async function ServicesPage() {
   const plans: any[] = g?.plans || []
   return (
     <main id="main" role="main">
-      <link rel="stylesheet" href="/legacy/css/inline-services-0.css" precedence="default" />
+      <link rel="stylesheet" href={av("/legacy/css/inline-services-0.css")} precedence="default" />
       <PageHero
         crumbs={[{ label: 'Услуги' }]}
         tag={g?.tag || 'Что мы делаем'}

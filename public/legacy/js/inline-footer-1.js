@@ -18,13 +18,13 @@
             var consent = this.querySelector('[name="consent"]');
             if (consent && !consent.checked) {
                 var m = document.getElementById('leadFormSuccess');
-                if (m) { m.textContent = 'Необходимо согласие на обработку персональных данных.'; m.classList.add('show'); }
+                if (m) { m.textContent = 'Необходимо согласие на обработку персональных данных.'; m.classList.add('show','is-error'); }
                 return;
             }
             var phoneInput = this.querySelector('[name="phone"]');
             if (phoneInput && phoneInput.value.replace(/\D/g,'').length < 10) {
                 var mp = document.getElementById('leadFormSuccess');
-                if (mp) { mp.textContent = 'Пожалуйста, укажите корректный номер телефона.'; mp.classList.add('show'); }
+                if (mp) { mp.textContent = 'Пожалуйста, укажите корректный номер телефона.'; mp.classList.add('show','is-error'); }
                 phoneInput.focus();
                 return;
             }
@@ -40,13 +40,13 @@
                 var r = await fetch(adelfAjax.ajaxUrl, { method:'POST', body:fd });
                 var d = await r.json();
                 msg.innerHTML = (d.data && d.data.message) || (d.success ? 'Заявка отправлена!' : 'Ошибка отправки');
-                msg.className = 'success-msg show';
+                msg.className = 'success-msg show' + (d.success ? '' : ' is-error');
                 btn.innerHTML = '<i class="fas fa-check"></i> Отправлено!';
                 if(d.success){ setTimeout(function(){ lf.reset(); btn.innerHTML=orig; btn.disabled=false; msg.className='success-msg'; closeModal(); }, 4000); }
                 else { btn.innerHTML=orig; btn.disabled=false; }
             } catch(err){
                 msg.innerHTML = 'Произошла ошибка. Попробуйте позже.';
-                msg.className = 'success-msg show';
+                msg.className = 'success-msg show is-error';
                 btn.innerHTML=orig; btn.disabled=false;
             }
         });

@@ -1,4 +1,5 @@
 import { APIError, type CollectionConfig } from 'payload'
+import { emailLayout, SITE } from '../lib/email-layout'
 import { authenticated } from '../access'
 
 const MIN_PASSWORD = 10
@@ -15,6 +16,23 @@ export const Users: CollectionConfig = {
     // вместе с пользователем сразу отдаётся аватар (для шапки админки)
     depth: 1,
     cookies: { sameSite: 'Lax', secure: process.env.NODE_ENV === 'production' && !/^http:\/\/localhost/.test(process.env.SERVER_URL || '') },
+    forgotPassword: {
+      generateEmailSubject: () => 'Сброс пароля в админке GeoBit',
+      generateEmailHTML: ({ token, user } = {}) => {
+        const name = (user as any)?.name ? String((user as any).name).split(/\s+/)[0] : ''
+        return emailLayout({
+          preheader: 'Ссылка для нового пароля действует 1 час',
+          title: name ? `${name}, сбросим пароль?` : 'Сброс пароля',
+          paragraphs: [
+            'Кто-то (надеемся, вы) запросил сброс пароля для входа в админку сайта getgeobit.ru.',
+            'Нажмите кнопку и задайте новый пароль: не короче 10 символов, с буквами и цифрами. Ссылка действует 1 час.',
+          ],
+          button: { href: `${SITE}/admin/reset/${token}`, text: 'Задать новый пароль' },
+          after: ['Если вы не запрашивали сброс, просто проигнорируйте это письмо — пароль останется прежним.'],
+          footer: 'Служебное письмо админки сайта getgeobit.ru.',
+        }).html
+      },
+    },
   },
   // Пользователей видят и меняют только вошедшие в админку; сам себя удалить нельзя
   access: {

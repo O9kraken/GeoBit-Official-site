@@ -7,6 +7,8 @@ const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
+  // версия статики для сброса кэша /legacy/* после каждого деплоя (см. src/lib/asset.ts)
+  env: { NEXT_PUBLIC_ASSET_V: Date.now().toString(36) },
   // Адреса как на старом сайте WordPress: /services/landing-page/
   trailingSlash: true,
   output: 'standalone',

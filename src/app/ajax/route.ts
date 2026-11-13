@@ -144,7 +144,12 @@ export async function POST(req: Request) {
   })
 
   // уведомления не задерживают ответ посетителю дольше ~8 секунд и не ломают сохранение заявки
-  const notify = await notifyLead(payload, { ...lead, service }, settings?.leadEmail || process.env.LEAD_EMAIL).catch((e) => ({ error: String(e) }))
+  const notify = await notifyLead(payload, { ...lead, service }, settings?.leadEmail || process.env.LEAD_EMAIL, {
+    phone: settings?.phone,
+    email: settings?.email,
+    telegramUrl: settings?.telegramUrl,
+    maxUrl: settings?.maxUrl,
+  }).catch((e) => ({ error: String(e) }))
   await payload.update({ collection: 'leads', id: lead.id, overrideAccess: true, data: { notify } as any }).catch(() => {})
 
   return ok(settings?.leadSuccessText || 'Спасибо! Заявка отправлена — свяжемся с вами в течение часа в рабочее время.')

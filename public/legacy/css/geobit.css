@@ -348,3 +348,109 @@ svg.max-glyph.fa-lg{font-size:1.25em;line-height:.05em;vertical-align:-.2em}
 .nav-msg-max svg.max-glyph{width:1.2em;height:1.2em}
 .footer-socials a.social-max{font-size:1rem}
 .cta2__row-ico--max{color:#7c4dff}
+
+/* ---- Сообщения форм: ошибки — красным, успех — зелёным ---- */
+.success-msg.is-error{
+  background:rgba(255,51,102,.07);
+  border-color:rgba(255,51,102,.45);
+  color:#ff5c85;
+}
+.success-msg.is-error::before{
+  content:"\f06a";font-family:"Font Awesome 6 Free";font-weight:900;
+  margin-right:8px;
+}
+.success-msg.is-error.show{animation:gbShake .4s ease}
+@keyframes gbShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@media (prefers-reduced-motion:reduce){.success-msg.is-error.show{animation:none}}
+
+/* ================= Адаптив: доработка 2026-11-12 ================= */
+/* ничто не даёт горизонтальной прокрутки (clip не ломает position:sticky, в отличие от hidden) */
+html,body{overflow-x:clip}
+.gb-founder__glow{inset:-12px}
+
+/* --- Ноутбуки и планшеты в альбоме (901–1199): меню-островок компактнее, чтобы влезало --- */
+@media (min-width:901px) and (max-width:1199px){
+  .gb-dock{padding:0 16px}
+  .gb-dock__bar{gap:10px;padding:0 8px 0 18px}
+  .gb-dock__links{gap:0}
+  .gb-dock__link,.gb-dock--hero:not(.is-island) .gb-dock__link,.gb-dock.is-island .gb-dock__link{padding:8px 10px;font-size:.74rem}
+  .gb-dock__icon{display:none}
+  .gb-dock__cta,.gb-dock.is-island .gb-dock__cta{padding:10px 16px!important;font-size:.8rem}
+  .gb-dock.is-island .gb-dock__bar,.gb-dock.is-island .gb-dock__bar:hover{max-width:calc(100% - 8px)}
+  .gb-herotop__mail{display:none}
+  .gb-dock--hero:not(.is-island) .gb-dock__links{margin:0 auto 0 0}
+  .gb-dock__drop--wide{width:min(520px,calc(100vw - 40px))}
+}
+
+/* --- Первый экран в одну колонку (≤1024): текст по левому краю сетки, как логотип --- */
+.hero>.container{width:100%}
+@media (max-width:1024px){
+  .hero-content{justify-self:start;max-width:720px}
+  .hero-visual{justify-self:start;width:min(100%,560px);max-width:none}
+  .hero-visual .hero-card{max-width:none}
+}
+
+/* --- Планшеты (601–1024): сетки в две колонки вместо длинной ленты --- */
+@media (min-width:601px) and (max-width:1024px){
+  .services-grid,.advantages-grid{grid-template-columns:repeat(2,1fr)}
+  .blog-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* --- Телефоны (≤600) --- */
+@media (max-width:600px){
+  /* карточка с кодом на первом экране: плашки не наезжают, метрики в две колонки */
+  .floating-badge{display:none}
+  .card-metrics{display:grid;grid-template-columns:1fr 1fr}
+  .card-metrics .metric{border-right:0!important;border-top:1px solid rgba(var(--ink-rgb),.06);padding:12px 14px}
+  .code-line{font-size:.8rem}
+  .card-screen{padding:18px}
+  /* телефоны и почты не переносятся посередине */
+  a[href^="tel:"],a[href^="mailto:"]{white-space:nowrap}
+  /* баннер cookie: кнопки в две строки, текст не обрезается */
+  .cb-scene{left:10px;right:10px;bottom:10px;width:auto;max-width:none}
+  .cb-banner{background:#0d0b16;max-height:calc(100dvh - 20px);overflow-y:auto;padding:16px}
+  .cb-row{padding:7px 11px}
+  .cb-actions{display:grid!important;grid-template-columns:1fr 1fr;gap:8px}
+  .cb-actions .btn,.cb-actions .btn.btn-outline,.cb-actions .btn.btn-lg,.cb-actions .btn.btn-primary{width:100%;min-width:0;height:44px!important;padding:0 10px!important;font-size:13px!important;white-space:nowrap;justify-content:center}
+  .cb-actions .btn-primary{grid-column:1/-1;order:-1}
+  .cb-close{width:32px;height:32px;top:10px;right:10px}
+  /* точки слайдеров — крупнее зона нажатия, вид прежний */
+  .slider-dot,.gbx-rs-dot{position:relative}
+  .slider-dot::after,.gbx-rs-dot::after{content:"";position:absolute;inset:-12px}
+  /* заголовки секций не упираются в края */
+  .section-title{overflow-wrap:break-word}
+}
+@media (max-width:600px){.card-metrics .metric:last-child:nth-child(odd){grid-column:1/-1}}
+
+/* --- Карточка с кодом на первом экране: плашки не закрывают метрики, края по сетке --- */
+@media (min-width:1025px){
+  .hero-visual{justify-content:flex-end}
+  .hero-visual .hero-card{margin-right:28px}
+  .hero-visual .fb1,.hero-visual .fb2{right:0}
+}
+.hero-visual .fb2{top:46%;bottom:auto;right:0}
+.hero-visual .fb3{top:-18px;bottom:auto;left:110px;right:auto}
+@media (max-width:1024px){.hero-visual .fb2{right:-16px}.hero-visual .fb1{right:-12px}}
+
+/* --- Услуги: интерактивные макеты видны и на планшетах (раньше прятались до 768px) --- */
+@media (min-width:601px) and (max-width:768px){
+  .service-detail-wysiwyg.svc-mock{display:block!important}
+  .svc-mock .web-mockup-container,.svc-mock .business-card-container,.svc-mock .browser-mockup,
+  .svc-mock .enterprise-site-container,.svc-mock .online-store-container{display:block!important;margin:0 auto}
+  .svc-mock .figma-app{display:flex!important}
+}
+.cb-banner{background:rgba(13,11,22,.97)}
+/* --- Услуги на телефонах: те же интерактивные макеты, уменьшенные под ширину экрана --- */
+@media (max-width:600px){
+  .service-detail-wysiwyg.svc-mock{display:block!important;overflow:hidden}
+  .svc-mock .web-mockup-container,.svc-mock .business-card-container,.svc-mock .browser-mockup,
+  .svc-mock .enterprise-site-container,.svc-mock .online-store-container{display:block!important;margin:0 auto;width:520px;max-width:none;zoom:calc((100vw - 32px) / 520px)}
+  .svc-mock .figma-app{display:flex!important;width:520px;max-width:none;zoom:calc((100vw - 32px) / 520px)}
+}
+/* --- «О нас» и блок основателя на планшетах: карточки по две в ряд --- */
+@media (min-width:601px) and (max-width:900px){
+  .ab2-why__card{grid-column:span 6}
+  .ab2-why__card.is-big{grid-column:span 12}
+}
+@media (min-width:601px) and (max-width:1100px){.gb-founder__does{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:901px) and (max-width:1100px){.gb-founder__does{grid-template-columns:1fr}}

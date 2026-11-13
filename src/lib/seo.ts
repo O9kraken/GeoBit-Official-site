@@ -112,6 +112,40 @@ async function seoSettings(): Promise<any> {
   }
 }
 
+/** Метка над заголовком карточки для соцсетей — по разделу сайта */
+function ogKind(path: string, type?: string): string {
+  if (path === '/') return 'Веб-студия в Крыму'
+  if (type === 'article' || /^\/(blog|category|tag)\//.test(path)) return 'Блог'
+  if (/^\/services\/[^/]+\/$/.test(path)) return 'Услуга'
+  if (/^\/(services|service-category)\//.test(path)) return 'Услуги'
+  if (/^\/project\//.test(path)) return 'Кейс'
+  if (/^\/(portfolio|portfolio-category)\//.test(path)) return 'Портфолио'
+  if (path === '/about/') return 'О студии'
+  if (path === '/contacts/') return 'Контакты'
+  if (path === '/faq/') return 'FAQ'
+  return 'Документ'
+}
+
+/** Адрес фирменной карточки /og/ для страницы (см. src/app/og/route.tsx) */
+function ogCard(o: { path: string; title: string; description?: string | null; image?: any; type?: string; badge?: string | null }): string {
+  const title =
+    stripTags(o.title)
+      .split(/\s+\|\s+/)[0]
+      .replace(/\s*[—–-]\s*(веб-студия\s*)?GeoBit\s*$/i, '')
+      .trim() || 'GeoBit'
+  const cover = o.image ? mediaUrl(o.image, 'wide') || mediaUrl(o.image) : ''
+  const q = new URLSearchParams()
+  q.set('t', title)
+  if (o.description) q.set('s', stripTags(String(o.description)))
+  q.set('k', ogKind(o.path, o.type))
+  if (o.badge) q.set('b', /^от\s/i.test(String(o.badge)) ? String(o.badge) : `от ${o.badge}`)
+  if (cover && cover.startsWith('/')) q.set('img', cover.split('?')[0])
+  let h = 0
+  for (const ch of q.toString()) h = (h * 31 + ch.charCodeAt(0)) | 0
+  q.set('v', (h >>> 0).toString(36))
+  return `${SITE_URL}/og/?${q.toString()}`
+}
+
 /**
  * Метаданные страницы. Источник — поля вкладки «SEO и ИИ» (seo/meta),
  * запасные значения — заголовок страницы, шаблон title и картинка по умолчанию.
@@ -126,14 +160,17 @@ export async function buildMeta(opts: {
   image?: any
   noindex?: boolean
   type?: 'website' | 'article'
+  /** Плашка на карточке для соцсетей, например цена услуги */
+  badge?: string | null
 }): Promise<Metadata> {
   const st = await seoSettings()
   const seo = opts.seo || {}
   const tpl: string = st?.titleTemplate || '%s — GeoBit'
   const title = String(seo.title || opts.title || (opts.pageTitle ? tpl.replace('%s', stripTags(opts.pageTitle)) : '') || 'GeoBit').trim()
   const description = seo.description || opts.description || undefined
-  const imgSrc = seo.image || opts.image || st?.defaultImage
-  const img = imgSrc ? mediaUrl(imgSrc, 'wide') || mediaUrl(imgSrc) : ''
+  // Картинка для соцсетей: если в «SEO и ИИ» выбрана своя — берём её, иначе фирменная карточка /og/
+  const own = seo.image ? mediaUrl(seo.image, 'wide') || mediaUrl(seo.image) : ''
+  const img = own || ogCard({ ...opts, title: stripTags(opts.pageTitle || seo.title || opts.title || 'GeoBit'), description })
   const url = `${SITE_URL}${opts.path}`
   const canonical = String(seo.canonical || '').trim() || url
   const noindex = Boolean(seo.noindex || opts.noindex)
@@ -165,4 +202,5 @@ export const docMeta = (doc: any, path: string, fallbackTitle?: string, type: 'w
     image: doc?.cover || doc?.image,
     noindex: doc?.noindex,
     type,
+    badge: doc?.price,
   })

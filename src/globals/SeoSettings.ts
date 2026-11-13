@@ -25,7 +25,8 @@ export const SeoSettings: GlobalConfig = {
               defaultValue: '%s — GeoBit',
               admin: { description: '%s заменяется заголовком страницы. Работает, когда у страницы не заполнен свой title.' },
             },
-            { name: 'defaultImage', label: 'Картинка для соцсетей по умолчанию', type: 'upload', relationTo: 'media', admin: { description: '1200×630, для страниц без своей картинки.' } },
+            { name: 'defaultImage', label: 'Картинка для соцсетей по умолчанию', type: 'upload', relationTo: 'media', admin: { hidden: true } },
+            { name: 'ogNote', type: 'ui', admin: { components: { Field: '@/components/admin/OgNote#OgNote' } } },
           ],
         },
         {

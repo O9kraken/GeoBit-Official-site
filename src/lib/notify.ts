@@ -7,9 +7,8 @@
  * «передачей ПДн третьим лицам», а Telegram из РФ может быть недоступен.
  */
 import type { Payload } from 'payload'
+import { emailLayout, esc, SITE } from './email-layout'
 
-const SITE = (process.env.SERVER_URL || process.env.RENDER_EXTERNAL_URL || process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000').replace(/\/$/, '')
-const esc = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]!)
 
 type Lead = { id: number | string; name?: string; phone?: string; email?: string; method?: string; service?: string; budget?: string; message?: string; page?: string }
 type Result = Record<string, 'ok' | 'skip' | string>
@@ -65,33 +64,76 @@ async function max(text: string): Promise<string> {
 
 async function email(payload: Payload, to: string | undefined, lead: Lead): Promise<string> {
   if (!to || !process.env.SMTP_HOST) return 'skip'
-  const rows: [string, string | undefined][] = [
-    ['Имя', lead.name],
-    ['Телефон', lead.phone],
-    ['Email', lead.email],
-    ['Как связаться', { telegram: 'Telegram', max: 'MAX', call: 'Звонок' }[lead.method || ''] || lead.method],
-    ['Услуга', lead.service],
-    ['Бюджет', lead.budget],
-    ['Сообщение', lead.message],
-    ['Страница', lead.page],
-  ]
-  const html =
-    `<h2>Заявка №${lead.id}</h2><table cellpadding="6" style="border-collapse:collapse">` +
-    rows
-      .filter(([, v]) => v)
-      .map(([k, v]) => `<tr><td style="color:#666;vertical-align:top">${k}</td><td>${esc(String(v)).replace(/\n/g, '<br>')}</td></tr>`)
-      .join('') +
-    `</table><p><a href="${SITE}/admin/collections/leads/${lead.id}">Открыть в админке</a></p>`
+  const method = { telegram: 'Telegram', max: 'MAX', call: 'Звонок' }[lead.method || ''] || lead.method
+  const { html, text } = emailLayout({
+    preheader: [lead.name, lead.phone, lead.service].filter(Boolean).join(' · ') || 'Новая заявка с сайта',
+    title: `Заявка №${lead.id}`,
+    paragraphs: [`Новая заявка с сайта${lead.service ? ` — ${lead.service}` : ''}.`],
+    rows: [
+      ['Имя', lead.name],
+      ['Телефон', lead.phone],
+      ['Email', lead.email],
+      ['Как связаться', method],
+      ['Услуга', lead.service],
+      ['Бюджет', lead.budget],
+      ['Сообщение', lead.message],
+      ['Страница', lead.page],
+    ],
+    button: { href: `${SITE}/admin/collections/leads/${lead.id}`, text: 'Открыть в админке' },
+    footer: 'Уведомление сайта getgeobit.ru о новой заявке.',
+  })
   try {
-    await payload.sendEmail({ to, subject: `Заявка №${lead.id} с сайта GeoBit${lead.service ? ' — ' + lead.service : ''}`, html })
+    await payload.sendEmail({
+      to,
+      subject: `Заявка №${lead.id}${lead.service ? ' — ' + lead.service : ''}${lead.name ? ' — ' + lead.name : ''}`,
+      html,
+      text,
+      ...(lead.email ? { replyTo: lead.email } : {}),
+    })
     return 'ok'
   } catch (e: any) {
     return `error: ${e?.message || e}`
   }
 }
 
-export async function notifyLead(payload: Payload, lead: Lead, leadEmail?: string): Promise<Result> {
+type Contacts = { phone?: string; email?: string; telegramUrl?: string; maxUrl?: string }
+
+/**
+ * Подтверждение клиенту «заявка получена». Включается в .env: LEAD_CONFIRM=on.
+ * Уходит только если клиент сам указал email. Без его данных в теле — только номер и что дальше.
+ */
+async function confirmClient(payload: Payload, lead: Lead, c: Contacts): Promise<string> {
+  if (process.env.LEAD_CONFIRM !== 'on' || !process.env.SMTP_HOST) return 'skip'
+  const to = String(lead.email || '').trim()
+  if (!/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(to)) return 'skip'
+  const name = lead.name ? String(lead.name).trim().split(/\s+/)[0] : ''
+  const contacts = [
+    c.phone && `Телефон: [${c.phone}](tel:${c.phone.replace(/[^\d+]/g, '')})`,
+    c.telegramUrl && `Telegram: [написать](${c.telegramUrl})`,
+    c.maxUrl && `MAX: [написать](${c.maxUrl})`,
+    c.email && `Почта: [${c.email}](mailto:${c.email})`,
+  ].filter(Boolean) as string[]
+  const { html, text } = emailLayout({
+    preheader: `Заявка №${lead.id} получена — свяжемся в течение часа в рабочее время`,
+    title: name ? `${name}, спасибо за заявку!` : 'Спасибо за заявку!',
+    paragraphs: [
+      `Мы получили вашу заявку №${lead.id}${lead.service ? ` — ${lead.service}` : ''}.`,
+      'Свяжемся с вами в течение часа в рабочее время: уточним задачу и назовём сроки и стоимость.',
+    ],
+    button: { href: `${SITE}/portfolio/`, text: 'Посмотреть наши работы' },
+    after: [...(contacts.length ? ['Если удобнее написать самим:', ...contacts] : []), 'С уважением, Георгий Каляков, GeoBit'],
+    footer: `Вы получили это письмо, потому что оставили заявку на сайте getgeobit.ru. Если это были не вы — просто проигнорируйте его.`,
+  })
+  try {
+    await payload.sendEmail({ to, subject: `Заявка №${lead.id} получена — GeoBit`, html, text })
+    return 'ok'
+  } catch (e: any) {
+    return `error: ${e?.message || e}`
+  }
+}
+
+export async function notifyLead(payload: Payload, lead: Lead, leadEmail?: string, contacts: Contacts = {}): Promise<Result> {
   const short = `🔔 Новая заявка №${lead.id}${lead.service ? ` — ${lead.service}` : ''}\n${SITE}/admin/collections/leads/${lead.id}`
-  const [e, t, m] = await Promise.all([email(payload, leadEmail, lead), telegram(esc(short)), max(short)])
-  return { email: e, telegram: t, max: m }
+  const [e, t, m, cl] = await Promise.all([email(payload, leadEmail, lead), telegram(esc(short)), max(short), confirmClient(payload, lead, contacts)])
+  return { email: e, telegram: t, max: m, client: cl }
 }

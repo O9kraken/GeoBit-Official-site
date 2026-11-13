@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { av } from '@/lib/asset'
 
 declare global {
   interface Window {
@@ -12,7 +13,7 @@ declare global {
 function loadOne(src: string): Promise<void> {
   return new Promise((resolve) => {
     const s = document.createElement('script')
-    s.src = src
+    s.src = av(src)
     s.async = false
     s.onload = () => resolve()
     s.onerror = () => {

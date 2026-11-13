@@ -1,3 +1,4 @@
+import { av } from '@/lib/asset'
 import type { Metadata } from 'next'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { Breadcrumbs, JsonLd, faqSchema } from '@/components/Common'
@@ -77,7 +78,7 @@ async function PostView({ post }: { post: any }) {
   const meta = { fontSize: '0.82rem', color: 'var(--gray)' }
   return (
     <main id="main" role="main">
-      <link rel="stylesheet" href="/legacy/css/inline-single-0.css" precedence="default" />
+      <link rel="stylesheet" href={av("/legacy/css/inline-single-0.css")} precedence="default" />
       <section className="section-padding single-section">
         <div className="container">
           <Breadcrumbs items={[...(cat ? [{ label: cat.name, href: paths.category(cat.slug) }] : []), { label: post.title }]} />

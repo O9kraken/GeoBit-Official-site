@@ -30,12 +30,12 @@
             var msg = document.getElementById('ctaLeadSuccess');
             var consent = this.querySelector('[name="consent"]');
             if (consent && !consent.checked) {
-                if (msg) { msg.textContent = 'Необходимо согласие на обработку персональных данных.'; msg.classList.add('show'); }
+                if (msg) { msg.textContent = 'Необходимо согласие на обработку персональных данных.'; msg.classList.add('show','is-error'); }
                 return;
             }
             var phoneInput = this.querySelector('[name="phone"]');
             if (phoneInput && phoneInput.value.replace(/\D/g,'').length < 10) {
-                if (msg) { msg.textContent = 'Пожалуйста, укажите корректный номер телефона.'; msg.classList.add('show'); }
+                if (msg) { msg.textContent = 'Пожалуйста, укажите корректный номер телефона.'; msg.classList.add('show','is-error'); }
                 phoneInput.focus();
                 return;
             }
@@ -52,7 +52,7 @@
                 var r = await fetch(adelfAjax.ajaxUrl, { method:'POST', body:fd });
                 var d = await r.json();
                 msg.innerHTML = (d.data && d.data.message) || (d.success ? 'Заявка отправлена!' : 'Ошибка отправки');
-                msg.className = 'success-msg show';
+                msg.className = 'success-msg show' + (d.success ? '' : ' is-error');
                 if(d.success){
                     btn.innerHTML = '<i class="fas fa-check"></i> Отправлено!';
                     setTimeout(function(){
@@ -68,7 +68,7 @@
                 }
             } catch(err){
                 msg.innerHTML = 'Произошла ошибка. Попробуйте позже.';
-                msg.className = 'success-msg show';
+                msg.className = 'success-msg show is-error';
                 btn.innerHTML = orig;
                 btn.disabled  = false;
             }

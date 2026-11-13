@@ -1,3 +1,4 @@
+import { av } from '@/lib/asset'
 import type { Metadata, Viewport } from 'next'
 import React from 'react'
 
@@ -53,10 +54,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="ru" data-theme="dark" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: boot }} />
-        <link rel="stylesheet" href="/legacy/css/fonts.css" />
-        <link rel="stylesheet" href="/legacy/vendor/fa/css/all.min.css" />
-        <link rel="stylesheet" href="/legacy/css/style.css" />
-        <link rel="stylesheet" href="/legacy/css/geobit.css" />
+        <link rel="stylesheet" href={av("/legacy/css/fonts.css")} />
+        <link rel="stylesheet" href={av("/legacy/vendor/fa/css/all.min.css")} />
+        <link rel="stylesheet" href={av("/legacy/css/style.css")} />
+        <link rel="stylesheet" href={av("/legacy/css/geobit.css")} />
       </head>
       <body suppressHydrationWarning>
         <PreviewRefresh />

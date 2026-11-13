@@ -16,7 +16,7 @@ type P = { params: Promise<{ slug: string }> }
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const { slug } = await params
   const p = await findBySlug('projects', decodeURIComponent(slug))
-  return p ? docMeta({ ...p, meta: { ...p.meta, image: p.meta?.image || p.cover } }, paths.project(p.slug)) : {}
+  return p ? docMeta(p, paths.project(p.slug)) : {}
 }
 
 export default async function ProjectPage({ params }: P) {
