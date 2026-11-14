@@ -18,8 +18,8 @@ export default async function Cta() {
             </div>
             <div className="cta2__main">
               <span className="section-tag">{h?.ctaTag || 'Начнём?'}</span>
-              <Html as="h2" className="cta2__title" html={h?.ctaTitle || 'Готовы создать <span class="gradient-text">крутой сайт</span>?'} />
-              <p className="cta2__desc">{h?.ctaDesc || 'Оставьте заявку — обсудим ваш проект и предложим оптимальное решение бесплатно'}</p>
+              <Html as="h2" className="cta2__title" html={h?.ctaTitle || 'Обсудим <span class="gradient-text">ваш сайт</span>?'} />
+              <p className="cta2__desc">{h?.ctaDesc || 'Расскажите о задаче — отвечу в течение дня, предложу решение и назову цену. Консультация бесплатная и ни к чему не обязывает.'}</p>
               <ul className="cta2__points">
                 <li>
                   <i className="fas fa-bolt"></i> Ответим в течение дня

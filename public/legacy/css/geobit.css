@@ -624,3 +624,17 @@ p,li,.hero-subtitle{text-wrap:pretty}
 @keyframes hbadgeFloat{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-9px) rotate(calc(var(--r,0deg) * -.5))}}
 @keyframes hbadgePing{75%,100%{transform:scale(2.4);opacity:0}}
 @media (prefers-reduced-motion:reduce){.hbadge,.hbadge::before,.hbadge__ping::after{animation:none}.hbadge{transform:rotate(var(--r,0deg))}}
+
+/* Блок основателя: цифры того же размера и вида, что в первом экране, всегда в одну строку */
+.gb-founder__stats{flex-wrap:nowrap;gap:32px}
+.gb-founder__stat{flex:0 1 auto;min-width:0}
+.gb-founder__stat-num{font-size:2.4rem}
+.gb-founder__stat-num span{font-size:1.8rem;margin-left:4px;background:none;-webkit-text-fill-color:var(--accent-cyan);color:var(--accent-cyan)}
+.gb-founder__stat-label{font-size:.65rem;font-weight:600;letter-spacing:.12em;color:rgba(var(--ink-rgb),.62);line-height:1.2}
+@media (max-width:768px){
+  .gb-founder__stats{justify-content:space-between;gap:6px}
+  .gb-founder__stat{flex:1 1 0;align-items:center;text-align:center}
+  .gb-founder__stat-num{font-size:clamp(22px,7vw,32px);white-space:nowrap}
+  .gb-founder__stat-num span{font-size:.75em}
+  .gb-founder__stat-label{font-size:10px}
+}

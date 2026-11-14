@@ -24,6 +24,8 @@ import * as migration_20261114_140000_testimonials_project from './20261114_1400
 import * as migration_20261114_150000_seo_meta_fix from './20261114_150000_seo_meta_fix';
 import * as migration_20261114_160000_landings_more from './20261114_160000_landings_more';
 import * as migration_20261114_161000_trust_and_meta from './20261114_161000_trust_and_meta';
+import * as migration_20261115_100000_landings_industries from './20261115_100000_landings_industries';
+import * as migration_20261115_110000_home_texts from './20261115_110000_home_texts';
 
 export const migrations = [
   {
@@ -155,5 +157,15 @@ export const migrations = [
     up: migration_20261114_161000_trust_and_meta.up,
     down: migration_20261114_161000_trust_and_meta.down,
     name: '20261114_161000_trust_and_meta',
+  },
+  {
+    up: migration_20261115_100000_landings_industries.up,
+    down: migration_20261115_100000_landings_industries.down,
+    name: '20261115_100000_landings_industries',
+  },
+  {
+    up: migration_20261115_110000_home_texts.up,
+    down: migration_20261115_110000_home_texts.down,
+    name: '20261115_110000_home_texts',
   },
 ];

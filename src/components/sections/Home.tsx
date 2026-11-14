@@ -181,9 +181,9 @@ export function ServicesSection({ h, services }: { h: any; services: any[] }) {
     <section className="services section-padding" id="services">
       <div className="container">
         <div className="section-header">
-          <span className="section-tag">{h?.servicesTag || 'Что мы делаем'}</span>
-          <Html as="h2" className="section-title" html={h?.servicesTitle || 'Наши <span class="gradient-text">услуги</span>'} />
-          <p className="section-desc">{h?.servicesDesc || 'Полный цикл создания веб-присутствия — от идеи до запуска и продвижения'}</p>
+          <span className="section-tag">{h?.servicesTag || 'Услуги'}</span>
+          <Html as="h2" className="section-title" html={h?.servicesTitle || 'Создание сайтов <span class="gradient-text">под ключ</span>'} />
+          <p className="section-desc">{h?.servicesDesc || 'Делаю сайты для бизнеса в Севастополе, по Крыму и удалённо по всей России — от лендинга за неделю до интернет-магазина. Цена известна заранее.'}</p>
         </div>
         <div className="services-grid">
           {services.slice(0, 5).map((s, i) => (
@@ -217,10 +217,10 @@ export function ServicesSection({ h, services }: { h: any; services: any[] }) {
           ))}
           <div className="service-cta-card" data-aos="fade-up" data-delay={Math.min(services.length, 5) * 100}>
             <div className="cta-card-content">
-              <h3>Не нашли нужную услугу?</h3>
-              <p>Ознакомьтесь со всеми нашими предложениями</p>
+              <h3>Нужно что-то другое?</h3>
+              <p>Логотип, фирменный стиль, дизайн или доработка готового сайта — всё в разделе услуг</p>
               <a href="/services/" className="btn btn-primary">
-                Больше услуг
+                Все услуги
               </a>
             </div>
             <div className="cta-card-bg"></div>
@@ -231,11 +231,17 @@ export function ServicesSection({ h, services }: { h: any; services: any[] }) {
   )
 }
 
+const ABOUT_TITLE = 'Сайты, которые <span class="gradient-text">приводят клиентов</span>'
+const ABOUT_TEXT1 =
+  'GeoBit — небольшая студия из Севастополя. Я делаю сайты для малого и среднего бизнеса: лендинги, сайты-визитки, корпоративные сайты и интернет-магазины. Каждый рисую с нуля под задачу, а не собираю из шаблона, — поэтому он выглядит как ваш бренд, а не как соседний сайт в выдаче.'
+const ABOUT_TEXT2 =
+  'Для меня сайт — не картинка, а рабочий инструмент: он должен быстро открываться, находиться в Яндексе и превращать посетителей в заявки. Поэтому адаптив под телефоны, базовое SEO и аналитика входят в каждый проект. Если нужно, сделаю логотип и фирменный стиль и займусь продвижением.'
+
 const DEFAULT_ABOUT_FEATURES = [
-  { icon: 'fa-bolt', title: 'Скорость', text: 'Сдаём проекты в срок без потери качества' },
-  { icon: 'fa-gem', title: 'Качество', text: 'Чистый код, современный дизайн, высокая производительность' },
-  { icon: 'fa-headset', title: 'Поддержка', text: 'Сопровождаем проект после запуска, всегда на связи' },
-  { icon: 'fa-chart-line', title: 'SEO с нуля', text: 'Оптимизируем каждый сайт под поисковые системы' },
+  { icon: 'fa-bolt', title: 'Точно в срок', text: 'Сроки прописываю в договоре и держу их' },
+  { icon: 'fa-gem', title: 'Быстрые сайты', text: 'Страницы открываются за секунды даже с телефона' },
+  { icon: 'fa-headset', title: 'На связи', text: 'Первый месяц после запуска правлю бесплатно' },
+  { icon: 'fa-chart-line', title: 'Видно в поиске', text: 'Структура и SEO под Яндекс с первого дня' },
 ]
 
 export function AboutSection({ h, team }: { h: any; team: any[] }) {
@@ -254,9 +260,9 @@ export function AboutSection({ h, team }: { h: any; team: any[] }) {
           <div className="gb-about" id="gbAbout">
             <div className="gb-ab-card gb-ab-intro" style={{ ['--d' as any]: d++ }}>
               <span className="section-tag">{h?.aboutTag || 'О студии'}</span>
-              <Html as="h2" className="gb-ab-title" html={h?.aboutTitle || 'Мы создаём <span class="gradient-text">цифровые продукты</span> с душой'} />
-              <p className="gb-ab-text">{h?.aboutText1}</p>
-              <p className="gb-ab-text">{h?.aboutText2}</p>
+              <Html as="h2" className="gb-ab-title" html={h?.aboutTitle || ABOUT_TITLE} />
+              <p className="gb-ab-text">{h?.aboutText1 || ABOUT_TEXT1}</p>
+              <p className="gb-ab-text">{h?.aboutText2 || ABOUT_TEXT2}</p>
             </div>
             <div className="gb-ab-card gb-ab-stat" style={{ ['--d' as any]: d++ }}>
               <span className="gb-ab-stat-ico c-gold">
@@ -287,8 +293,8 @@ export function AboutSection({ h, team }: { h: any; team: any[] }) {
             ))}
             <a href="/about/" className="gb-ab-card gb-ab-cta" style={{ ['--cta-span' as any]: ctaSpan, ['--d' as any]: d++ }}>
               <span className="gb-ab-cta-text">
-                <strong>Хотите узнать больше?</strong>
-                <span>Расскажем о подходе и наших проектах</span>
+                <strong>Как я работаю и что уже сделал</strong>
+                <span>Подробнее обо мне, подходе и проектах</span>
               </span>
               <span className="gb-ab-cta-btn">
                 Узнать больше <i className="fas fa-arrow-right"></i>
@@ -303,11 +309,11 @@ export function AboutSection({ h, team }: { h: any; team: any[] }) {
 }
 
 const DEFAULT_STEPS = [
-  { num: '01', title: 'Анализ', text: 'Изучаем ваш бизнес, конкурентов и целевую аудиторию. Определяем цели проекта и стратегию.', duration: '1–2 дня' },
-  { num: '02', title: 'Дизайн', text: 'Создаём прототипы и уникальный дизайн. Согласовываем с вами каждый экран до старта разработки.', duration: '3–5 дней' },
-  { num: '03', title: 'Разработка', text: 'Верстаем и программируем по утверждённому дизайну. Пишем чистый, оптимизированный код.', duration: '5–14 дней' },
-  { num: '04', title: 'Тестирование', text: 'Проверяем работу на всех устройствах и браузерах. Оптимизируем скорость и исправляем баги.', duration: '1–2 дня' },
-  { num: '05', title: 'Запуск', text: 'Публикуем сайт, настраиваем аналитику и передаём вам с инструкцией по управлению.', duration: '1 день' },
+  { num: '01', title: 'Знакомство', text: 'Созваниваемся, разбираю ваш бизнес, клиентов и конкурентов. Договариваемся о задачах, цене и сроках — всё фиксируем в договоре.', duration: '1–2 дня' },
+  { num: '02', title: 'Дизайн', text: 'Рисую дизайн с нуля: сначала главная, потом остальные страницы. Вносим правки, пока вам не понравится.', duration: '3–5 дней' },
+  { num: '03', title: 'Разработка', text: 'Собираю сайт по утверждённому дизайну, подключаю формы, админку и всё, что нужно для заявок.', duration: '5–14 дней' },
+  { num: '04', title: 'Проверка', text: 'Проверяю на телефонах и компьютерах, ускоряю загрузку, настраиваю SEO: мета-теги, разметку, карту сайта.', duration: '1–2 дня' },
+  { num: '05', title: 'Запуск', text: 'Публикую сайт, подключаю Метрику и Вебмастер, показываю, как самому менять тексты, цены и фото.', duration: '1 день' },
 ]
 
 export function ProcessSection({ h }: { h: any }) {
@@ -316,9 +322,9 @@ export function ProcessSection({ h }: { h: any }) {
     <section className="process section-padding" id="process">
       <div className="container">
         <div className="section-header">
-          <span className="section-tag">{h?.processTag || 'Как мы работаем'}</span>
-          <Html as="h2" className="section-title" html={h?.processTitle || 'Процесс <span class="gradient-text">работы</span>'} />
-          <p className="section-desc">{h?.processDesc || 'Прозрачный процесс на каждом этапе — знаете, что происходит с вашим проектом'}</p>
+          <span className="section-tag">{h?.processTag || 'Как я работаю'}</span>
+          <Html as="h2" className="section-title" html={h?.processTitle || 'Как проходит <span class="gradient-text">работа</span>'} />
+          <p className="section-desc">{h?.processDesc || 'Пять понятных шагов: на каждом вы видите результат и решаете, идём ли дальше'}</p>
         </div>
         <div className="gb-proc" id="gbProc" data-count={steps.length}>
           <svg className="gb-proc-wire" preserveAspectRatio="none" aria-hidden="true">
@@ -356,8 +362,8 @@ export function PortfolioSection({ projects, categories }: { projects: any[]; ca
       <div className="container">
         <div className="section-header">
           <span className="section-tag">Портфолио</span>
-          <h2 className="section-title" dangerouslySetInnerHTML={{ __html: 'Наши <span class="gradient-text">работы</span>' }} />
-          <p className="section-desc">Каждый проект — уникальное решение под конкретный бизнес</p>
+          <h2 className="section-title" dangerouslySetInnerHTML={{ __html: 'Последние <span class="gradient-text">работы</span>' }} />
+          <p className="section-desc">Сайты для бизнеса, логотипы и собственные проекты — в каждом кейсе задача, решение и результат</p>
         </div>
         <div className="portfolio-filter">
           <button className="filter-btn active" data-filter="all">
@@ -384,7 +390,7 @@ export function PortfolioSection({ projects, categories }: { projects: any[]; ca
   )
 }
 
-const DEFAULT_ADVANTAGES = [{"icon": "fa-tachometer-alt", "title": "Скорость загрузки", "text": "Оптимизируем каждый сайт до показателя Google PageSpeed ≥ 90. Быстрый сайт = больше клиентов.", "metricValue": 95, "metricLabel": "PageSpeed 95/100"}, {"icon": "fa-mobile-alt", "title": "Адаптивность", "text": "Mobile-first подход. Сайт идеально работает на смартфонах, планшетах и десктопах.", "metricValue": 100, "metricLabel": "100% адаптивность"}, {"icon": "fa-search", "title": "SEO с первого дня", "text": "Каждый сайт создаётся с учётом требований поисковых систем: мета-теги, семантика, скорость.", "metricValue": 90, "metricLabel": "SEO Score 90+"}, {"icon": "fa-shield-alt", "title": "Безопасность", "text": "HTTPS, защита от спама и взлома, регулярные бэкапы — ваш сайт под надёжной защитой 24/7.", "metricValue": 100, "metricLabel": "Security 100%"}, {"icon": "fa-clock", "title": "Сроки", "text": "Фиксируем сроки в договоре и соблюдаем их. Лендинг — от 7 дней, корпоративный — от 14.", "metricValue": 88, "metricLabel": "88% сдача в срок"}, {"icon": "fa-headset", "title": "Поддержка 24/7", "text": "После сдачи проекта остаёмся на связи. Бесплатная поддержка 30 дней, далее — по договору.", "metricValue": 98, "metricLabel": "98% решений за 24ч"}]
+const DEFAULT_ADVANTAGES = [{"icon": "fa-tachometer-alt", "title": "Быстрый сайт", "text": "Сжимаю картинки, убираю лишний код и проверяю скорость в PageSpeed до сдачи. Быстрые страницы выше в поиске и меньше теряют посетителей."}, {"icon": "fa-mobile-alt", "title": "Удобно с телефона", "text": "Большинство клиентов заходят со смартфона, поэтому сначала продумываю мобильную версию, а потом — компьютерную."}, {"icon": "fa-search", "title": "SEO с первого дня", "text": "Структура страниц под запросы, мета-теги, микроразметка, карта сайта, Яндекс Метрика и Вебмастер — уже в цене."}, {"icon": "fa-shield-alt", "title": "Безопасность", "text": "HTTPS, защита форм от спама и резервные копии. Заявки клиентов хранятся в России, как требует 152-ФЗ."}, {"icon": "fa-clock", "title": "Цена и сроки в договоре", "text": "Лендинг — от 7 дней, корпоративный сайт — от 30. Цену называю заранее, и она не растёт по ходу работы."}, {"icon": "fa-headset", "title": "Поддержка после запуска", "text": "Первый месяц исправляю недочёты бесплатно. Дальше — поддержка по договорённости, без обязательной абонентской платы."}]
 
 export function AdvantagesSection({ items: raw }: { items: any[] }) {
   const items = raw?.length ? raw : DEFAULT_ADVANTAGES
@@ -393,8 +399,8 @@ export function AdvantagesSection({ items: raw }: { items: any[] }) {
     <section className="advantages section-padding" id="advantages">
       <div className="container">
         <div className="section-header">
-          <span className="section-tag">Почему мы</span>
-          <h2 className="section-title" dangerouslySetInnerHTML={{ __html: 'Наши <span class="gradient-text">преимущества</span>' }} />
+          <span className="section-tag">Что входит</span>
+          <h2 className="section-title" dangerouslySetInnerHTML={{ __html: 'Что вы получаете <span class="gradient-text">в каждом проекте</span>' }} />
         </div>
         <div className="advantages-grid">
           {items.map((a, i) => (
@@ -442,7 +448,7 @@ export function BlogPreviewSection({ posts }: { posts: any[] }) {
         <div className="section-header">
           <span className="section-tag">Блог</span>
           <h2 className="section-title" dangerouslySetInnerHTML={{ __html: 'Полезные <span class="gradient-text">статьи</span>' }} />
-          <p className="section-desc">Делимся знаниями о веб-разработке, дизайне и SEO</p>
+          <p className="section-desc">Простым языком о том, сколько стоит сайт, как выбрать подрядчика и как получать клиентов из поиска</p>
         </div>
         <div className="blog-grid">
           {posts.length ? (
