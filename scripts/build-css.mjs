@@ -47,7 +47,7 @@ const [res] = await new PurgeCSS().purge({
   css: [{ raw: css }],
   // классы, которые собираются из кусочков или ставятся скриптами
   safelist: {
-    standard: [/^is-/, /^fb\d/, /^sb-/, /^has-/, /^aos-/, /^gb-tone-/, /^fa-/, /active$/, /open$/, /visible$/, /hidden$/, /show$/, /scrolled$/, /loaded$/],
+    standard: [/^is-/, /^fb\d/, /^hbadge/, /^sb-/, /^has-/, /^aos-/, /^gb-tone-/, /^fa-/, /active$/, /open$/, /visible$/, /hidden$/, /show$/, /scrolled$/, /loaded$/],
     greedy: [/--/, /data-theme/, /gb-in-preview/, /swiper/, /lh-/],
   },
   defaultExtractor: (s) => s.match(/[\w-/:%.]+(?<!:)/g) || [],

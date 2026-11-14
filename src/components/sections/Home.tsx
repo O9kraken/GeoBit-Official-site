@@ -93,68 +93,77 @@ export function Hero({ h, landingPrice }: { h: any; landingPrice?: string }) {
           </div>
         </div>
         <div className="hero-visual">
-          <div className="hero-card">
+          <div className="hero-card hcode">
             <div className="card-glow"></div>
             <div className="card-inner">
-              <div className="card-screen">
-                <div className="screen-bar">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <div className="screen-content">
-                  <div className="code-line">
-                    <span className="c-blue">.geobit</span> <span className="c-white">{'{'}</span>
-                  </div>
-                  <div className="code-line pad">
-                    <span className="c-cyan">city</span>
-                    <span className="c-white">: </span>
-                    <span className="c-green">Севастополь</span>
-                    <span className="c-white">;</span>
-                  </div>
-                  <div className="code-line pad">
-                    <span className="c-cyan">design</span>
-                    <span className="c-white">: </span>
-                    <span className="c-green">с нуля</span>
-                    <span className="c-white">;</span>
-                  </div>
-                  <div className="code-line pad">
-                    <span className="c-cyan">price</span>
-                    <span className="c-white">: </span>
-                    <span className="c-green">в договоре</span>
-                    <span className="c-white">;</span>
-                  </div>
-                  <div className="code-line pad">
-                    <span className="c-cyan">landing</span>
-                    <span className="c-white">: </span>
-                    <span className="c-pink">от {landingPrice || '29 900 ₽'}</span>
-                    <span className="c-white">;</span>
-                  </div>
-                  <div className="code-line">
-                    <span className="c-white">{'}'}</span>
-                  </div>
-                </div>
+              <div className="hcode__bar">
+                <span className="hcode__dots" aria-hidden="true">
+                  <i></i>
+                  <i></i>
+                  <i></i>
+                </span>
+                <span className="hcode__tab">
+                  <i className="fab fa-js" aria-hidden="true"></i>geobit.config.js
+                </span>
               </div>
-              <div className="card-metrics">
-                <div className="metric">
-                  <i className="fas fa-bolt c-green"></i>
-                  <span>Лендинг 1–2 недели</span>
-                </div>
-                <div className="metric">
-                  <i className="fas fa-search c-cyan"></i>
-                  <span>SEO с первого дня</span>
-                </div>
-                <div className="metric">
-                  <i className="fas fa-mobile-alt c-pink"></i>
-                  <span>Адаптив</span>
-                </div>
+              <div className="hcode__body">
+                <ol className="hcode__code" aria-label="Коротко о студии">
+                  <li>
+                    <span className="t-com">{'// студия веб-разработки'}</span>
+                  </li>
+                  <li>
+                    <span className="t-key">export const </span><span className="t-var">studio </span><span className="t-pun">= {'{'}</span>
+                  </li>
+                  <li className="in">
+                    <span className="t-prop">city</span>
+                    <span className="t-pun">: </span>
+                    <span className="t-str">{"'Севастополь'"}</span>
+                    <span className="t-pun">,</span>
+                  </li>
+                  <li className="in">
+                    <span className="t-prop">design</span>
+                    <span className="t-pun">: </span>
+                    <span className="t-str">{"'с нуля'"}</span>
+                    <span className="t-pun">,</span>
+                  </li>
+                  <li className="in">
+                    <span className="t-prop">price</span>
+                    <span className="t-pun">: </span>
+                    <span className="t-str">{"'в договоре'"}</span>
+                    <span className="t-pun">,</span>
+                  </li>
+                  <li className="in">
+                    <span className="t-prop">landing</span>
+                    <span className="t-pun">: </span>
+                    <span className="t-num">{`'от ${landingPrice || '29 900 ₽'}'`}</span>
+                    <span className="t-pun">,</span>
+                  </li>
+                  <li>
+                    <span className="t-pun">{'}'}</span>
+                    <span className="hcode__cursor" aria-hidden="true"></span>
+                  </li>
+                </ol>
+              </div>
+              <div className="hcode__status">
+                <span>
+                  <i className="fas fa-bolt" aria-hidden="true"></i>Лендинг 1–2 недели
+                </span>
+                <span>
+                  <i className="fas fa-search" aria-hidden="true"></i>SEO с первого дня
+                </span>
+                <span>
+                  <i className="fas fa-mobile-alt" aria-hidden="true"></i>Адаптив
+                </span>
               </div>
             </div>
           </div>
           {badges.slice(0, 3).map((b, i) => (
-            <div key={i} className={`floating-badge fb${i + 1}`}>
-              <i className={b.icon || 'fas fa-check'}></i>
-              <span>{b.text}</span>
+            <div key={i} className={`floating-badge hbadge fb${i + 1}`}>
+              <span className="hbadge__ico" aria-hidden="true">
+                <i className={b.icon || 'fas fa-check'}></i>
+              </span>
+              <span className="hbadge__txt">{b.text}</span>
+              {i === 0 && <span className="hbadge__ping" aria-hidden="true"></span>}
             </div>
           ))}
         </div>

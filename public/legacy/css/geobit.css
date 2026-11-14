@@ -573,3 +573,54 @@ p,li,.hero-subtitle{text-wrap:pretty}
 
 /* Телефон: текст первого экрана показывается сразу, без плавного появления — так быстрее главный блок (LCP) */
 @media (max-width:900px){.hero-title .line,.hero-subtitle,.hero-actions,.hero-stats{animation:none}}
+.ab2-mission{grid-template-columns:1fr}
+
+/* ===== Первый экран: окно редактора кода ===== */
+.hcode{max-width:500px;border:0;background:none;backdrop-filter:none;box-shadow:0 40px 90px -30px rgba(123,47,255,.55),0 24px 60px -24px rgba(0,0,0,.85)}
+.hcode .card-glow{opacity:.55}
+.hcode .card-inner{background:#0e0c15}
+.hcode__bar{display:flex;align-items:center;gap:14px;height:44px;padding:0 14px;background:#15121e;border-bottom:1px solid rgba(var(--ink-rgb),.06)}
+.hcode__dots{display:flex;gap:7px}.hcode__dots i{width:11px;height:11px;border-radius:50%;background:#ff5f57}.hcode__dots i:nth-child(2){background:#febc2e}.hcode__dots i:nth-child(3){background:#28c840}
+.hcode__tab{display:inline-flex;align-items:center;gap:8px;align-self:flex-end;height:34px;padding:0 14px;border-radius:9px 9px 0 0;background:#0e0c15;font:500 .78rem/1 var(--font-mono);color:var(--white);position:relative;top:1px}
+.hcode__tab i{color:#f7df1e;font-size:.9rem}
+.hcode__live{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font:600 .7rem/1 var(--font-mono);letter-spacing:.06em;color:var(--accent-green);text-transform:uppercase}
+.hcode__live i{width:7px;height:7px;border-radius:50%;background:var(--accent-green);box-shadow:0 0 0 0 rgba(0,255,136,.6);animation:hcodePulse 2s ease-out infinite}
+@keyframes hcodePulse{0%{box-shadow:0 0 0 0 rgba(0,255,136,.55)}70%{box-shadow:0 0 0 7px rgba(0,255,136,0)}100%{box-shadow:0 0 0 0 rgba(0,255,136,0)}}
+.hcode__body{position:relative;padding:20px 22px 22px 0;background:linear-gradient(180deg,rgba(123,47,255,.05),transparent 60%)}
+.hcode__code{list-style:none;margin:0;padding:0;counter-reset:ln;font:500 .9rem/1.9 var(--font-mono);color:var(--white)}
+.hcode__code li{counter-increment:ln;display:block;white-space:pre;opacity:0;animation:typeLine .35s ease forwards}
+.hcode__code li::before{content:counter(ln);display:inline-block;width:46px;padding-right:18px;box-sizing:border-box;text-align:right;color:rgba(var(--ink-rgb),.22);user-select:none}
+.hcode__code li.in::before{width:68px;padding-right:40px}
+.hcode__code li:nth-child(1){animation-delay:.3s}.hcode__code li:nth-child(2){animation-delay:.5s}.hcode__code li:nth-child(3){animation-delay:.7s}.hcode__code li:nth-child(4){animation-delay:.85s}.hcode__code li:nth-child(5){animation-delay:1s}.hcode__code li:nth-child(6){animation-delay:1.15s}.hcode__code li:nth-child(7){animation-delay:1.3s}
+.hcode__code li:nth-child(4){background:linear-gradient(90deg,rgba(123,47,255,.14),transparent 85%);box-shadow:inset 2px 0 0 var(--accent-purple)}
+.t-com{color:#6b6880;font-style:italic}.t-key{color:#c792ea}.t-var{color:#82aaff}.t-pun{color:#a6accd}.t-prop{color:var(--accent-cyan)}.t-str{color:#c3e88d}.t-num{color:#ff79c6}
+.hcode__cursor{display:inline-block;width:8px;height:1.1em;margin-left:6px;vertical-align:-.2em;background:var(--accent-cyan);animation:hcodeBlink 1.1s steps(1) infinite}
+@keyframes hcodeBlink{50%{opacity:0}}
+.hcode__status{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;padding:11px 16px;background:#15121e;border-top:1px solid rgba(var(--ink-rgb),.06);font:500 .74rem/1.3 var(--font-mono);color:var(--gray-2)}
+.hcode__status i{margin-right:7px;color:var(--accent-cyan)}
+.hcode__status span:nth-child(1) i{color:var(--accent-green)}.hcode__status span:nth-child(3) i{color:var(--accent-pink)}
+/* плашки вокруг окна — по краям, не на коде */
+.hero-visual .fb1{top:-20px;right:-6px;bottom:auto;left:auto}
+.hero-visual .fb2{top:auto;bottom:84px;right:-22px;left:auto}
+.hero-visual .fb3{top:auto;bottom:-42px;left:28px;right:auto}
+@media (min-width:1025px){.hero-visual .hcode{margin-right:24px}}
+@media (max-width:600px){.hcode__code{font-size:.78rem}.hcode__code li::before{width:34px;padding-right:12px}.hcode__code li.in::before{width:52px;padding-right:30px}.hcode__body{padding:16px 14px 16px 0}.hcode__status{font-size:.68rem;gap:6px 12px}.hcode__tab{font-size:.72rem;padding:0 10px}}
+@media (prefers-reduced-motion:reduce){.hcode__code li{opacity:1;animation:none}.hcode__cursor,.hcode__live i{animation:none}}
+
+/* ===== Плашки вокруг окна кода ===== */
+.hbadge{--g1:#ff2d8a;--g2:#7b2fff;gap:10px;padding:6px 16px 6px 6px;border:0;border-radius:100px;background:rgba(18,15,28,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-weight:700;font-size:.82rem;color:var(--white);box-shadow:0 14px 34px -12px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06);isolation:isolate;animation:hbadgeFloat 5s ease-in-out infinite;transform-origin:center;transition:transform .25s}
+.hbadge::before{content:"";position:absolute;inset:0;padding:1px;border-radius:inherit;background:conic-gradient(from var(--hb-a,0deg),var(--g1),var(--g2),transparent 40%,transparent 60%,var(--g1));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:hbadgeSpin 4s linear infinite;z-index:-1}
+.hbadge::after{content:"";position:absolute;inset:-14px;border-radius:inherit;background:radial-gradient(closest-side,color-mix(in srgb,var(--g2) 35%,transparent),transparent);filter:blur(10px);z-index:-2;opacity:.7}
+.hbadge__ico{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--g1),var(--g2));box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 6px 14px -4px var(--g2)}
+.hbadge__ico i{color:#fff!important;font-size:.82rem}
+.hbadge__ping{position:absolute;top:2px;right:6px;width:9px;height:9px;border-radius:50%;background:var(--accent-green);box-shadow:0 0 0 2px #120f1c}
+.hbadge__ping::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent-green);animation:hbadgePing 1.8s cubic-bezier(0,0,.2,1) infinite}
+.hbadge.fb1{--g1:#00e5ff;--g2:#7b2fff;--r:-4deg;animation-delay:0s}
+.hbadge.fb2{--g1:#ff2d8a;--g2:#ff8a00;--r:3deg;animation-delay:-1.6s}
+.hbadge.fb3{--g1:#00ff88;--g2:#00b3ff;--r:-2deg;animation-delay:-3.2s}
+.hbadge:hover{transform:rotate(0) scale(1.06)!important;animation-play-state:paused}
+@property --hb-a{syntax:"<angle>";inherits:false;initial-value:0deg}
+@keyframes hbadgeSpin{to{--hb-a:360deg}}
+@keyframes hbadgeFloat{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-9px) rotate(calc(var(--r,0deg) * -.5))}}
+@keyframes hbadgePing{75%,100%{transform:scale(2.4);opacity:0}}
+@media (prefers-reduced-motion:reduce){.hbadge,.hbadge::before,.hbadge__ping::after{animation:none}.hbadge{transform:rotate(var(--r,0deg))}}
