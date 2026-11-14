@@ -30,7 +30,7 @@ export default async function ProjectPage({ params }: P) {
   const [all, faqs] = await Promise.all([getProjects(), pageFaqs()])
   const catName = p.categories?.[0]?.name || ''
   const results: any[] = (p.results || []).filter((r: any) => r.value)
-  const resultTxt = results[0]?.label || ''
+  const resultTxt = results.map((r) => (r.label ? `${r.value} — ${r.label}` : r.value)).join('. ')
   const cover = mediaUrl(p.cover, 'wide') || mediaUrl(p.cover)
   const displayCat = p.categoryLabel || catName
   const tsr = [
@@ -111,7 +111,7 @@ export default async function ProjectPage({ params }: P) {
                   <div key={i} className="pf-media-block">
                     {b.image && (
                       <div className="pf-media-block__shot">
-                        <img src={mediaUrl(b.image, 'wide') || mediaUrl(b.image)} alt={p.title} loading="lazy" decoding="async" />
+                        <img src={mediaUrl(b.image, 'wide') || mediaUrl(b.image)} alt={(typeof b.image === 'object' && b.image?.alt) || p.title} loading="lazy" decoding="async" />
                       </div>
                     )}
                     <div className="pf-media-block__desc" dangerouslySetInnerHTML={{ __html: autop(b.desc) }} />

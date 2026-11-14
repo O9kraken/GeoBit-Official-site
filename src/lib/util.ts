@@ -12,7 +12,8 @@ export function mediaUrl(m: any, size?: 'thumb' | 'card' | 'wide'): string {
 /** Аналог wpautop: абзацы и переносы строк */
 export function autop(text?: string | null): string {
   if (!text) return ''
-  const esc = escapeHtml(text.trim())
+  // экранируем всё, кроме простого выделения: <strong>, <b>, <em>, <i>
+  const esc = escapeHtml(text.trim()).replace(/&lt;(\/?)(strong|b|em|i)&gt;/g, '<$1$2>')
   return esc
     .split(/\n{2,}/)
     .map((p) => `<p>${p.replace(/\n/g, '<br>')}</p>`)
