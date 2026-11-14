@@ -5,7 +5,13 @@ export const Html = ({ html, as: Tag = 'span', className }: { html?: string | nu
   html ? <Tag className={className} dangerouslySetInnerHTML={{ __html: html }} /> : null
 
 /** Внутренность логотипа — инлайн SVG (для currentColor) */
-export const LogoInner = () => <span style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: LOGO_SVG }} />
+// Полный SVG (≈12 КБ) вставляется один раз — в шапке (master); остальные логотипы ссылаются на него через <use>,
+// чтобы не раздувать HTML пятью копиями.
+const LOGO_MASTER = LOGO_SVG.replace(/(<svg[^>]*>)/, '$1<g id="gb-logo-shape">').replace(/<\/svg>\s*$/, '</g></svg>')
+const LOGO_USE = (LOGO_SVG.match(/<svg[^>]*>/)?.[0] || '<svg>') + '<use href="#gb-logo-shape"/></svg>'
+export const LogoInner = ({ master = false }: { master?: boolean }) => (
+  <span style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: master ? LOGO_MASTER : LOGO_USE }} />
+)
 
 /** Логотип MAX: встроенный SVG в цвет текста (currentColor), размер 1em — как у иконок Font Awesome рядом */
 const MAX_PATH =

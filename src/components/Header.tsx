@@ -66,7 +66,7 @@ export default async function Header() {
     <nav className="navbar" id="navbar">
       <div className="container">
         <a href="/" className="logo logo--svg" aria-label="GeoBit — на главную">
-          <LogoInner />
+          <LogoInner master />
         </a>
         <ul id="navLinks" className="nav-links">
           <li className="nav-mobile-logo">

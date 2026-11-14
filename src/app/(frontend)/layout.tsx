@@ -1,4 +1,6 @@
-import { asyncCss, av } from '@/lib/asset'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { asyncCss, av, lazyCss } from '@/lib/asset'
 import type { Metadata, Viewport } from 'next'
 import React from 'react'
 
@@ -33,6 +35,12 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
+// fonts.css встраивается в <head>; если файл не найден — подключится обычной ссылкой
+let FONTS_CSS = ''
+try {
+  FONTS_CSS = readFileSync(join(process.cwd(), 'public/legacy/css/fonts.css'), 'utf8')
+} catch {}
+
 const THEME_INIT = `(function(){document.documentElement.setAttribute('data-theme','dark');try{localStorage.removeItem('adelf-theme')}catch(e){}})();`
 
 const COMMON_SCRIPTS = [
@@ -56,13 +64,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="ru" data-theme="dark" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: boot }} />
-        {/* шрифты и иконки грузятся без блокировки отрисовки; основные начертания — заранее */}
-        <link rel="preload" href="/legacy/fonts/unbounded-cyrillic-800-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/legacy/fonts/nunito-cyrillic-400-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <script dangerouslySetInnerHTML={{ __html: asyncCss([av('/legacy/css/fonts.css'), av('/legacy/vendor/fa/css/all.min.css')]) }} />
+        {/* описания шрифтов встроены в страницу (1 КБ) — без отдельного запроса */}
+        {FONTS_CSS ? <style dangerouslySetInnerHTML={{ __html: FONTS_CSS }} /> : <link rel="stylesheet" href={av('/legacy/css/fonts.css')} />}
+        {/* иконки: сразу — маленький файл с используемыми, после показа страницы — полный набор */}
+        <script dangerouslySetInnerHTML={{ __html: asyncCss([av('/legacy/vendor/fa/css/fa-lite.css')]) + lazyCss([av('/legacy/vendor/fa/css/fa-site.css')]) }} />
         <noscript>
-          <link rel="stylesheet" href={av('/legacy/css/fonts.css')} />
-          <link rel="stylesheet" href={av('/legacy/vendor/fa/css/all.min.css')} />
+          <link rel="stylesheet" href={av('/legacy/vendor/fa/css/fa-site.css')} />
         </noscript>
         {/* style.css + geobit.css без неиспользуемых правил, сжатые (scripts/build-css.mjs) */}
         <link rel="stylesheet" href={av("/legacy/css/site.min.css")} />

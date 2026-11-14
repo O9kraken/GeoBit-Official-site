@@ -41,17 +41,28 @@ export default async function HomePage() {
   const landing = services.find((s: any) => s.slug === 'landing-page')
   return (
     <main id="main" role="main">
-      <script dangerouslySetInnerHTML={{ __html: asyncCss([av('/legacy/calculator/calculator.css')]) }} />
       <Hero h={h} landingPrice={landing?.price || undefined} />
+      {/* Пустой скрипт сразу после первого экрана: браузер на нём отрисовывает уже разобранную часть страницы,
+          не дожидаясь разбора остального HTML — первый экран появляется раньше */}
+      <script dangerouslySetInnerHTML={{ __html: '/*paint*/' }} />
       <Dock variant="hero" />
       <ServicesSection h={h} services={services} />
+      {/* стили калькулятора — здесь, а не перед первым экраном: скрипт до первого экрана задерживает его отрисовку */}
+      <script dangerouslySetInnerHTML={{ __html: asyncCss([av('/legacy/calculator/calculator.css')]) }} />
       <Calculator />
+      <script dangerouslySetInnerHTML={{ __html: '/*y*/' }} />
       <AboutSection h={h} team={team} />
+      <script dangerouslySetInnerHTML={{ __html: '/*y*/' }} />
       <ProcessSection h={h} />
+      <script dangerouslySetInnerHTML={{ __html: '/*y*/' }} />
       <PortfolioSection projects={projects} categories={usedCats} />
+      <script dangerouslySetInnerHTML={{ __html: '/*y*/' }} />
       <AdvantagesSection items={h?.advantages || []} />
+      <script dangerouslySetInnerHTML={{ __html: '/*y*/' }} />
       <TestimonialsSection items={testimonials} />
+      <script dangerouslySetInnerHTML={{ __html: '/*y*/' }} />
       <BlogPreviewSection posts={posts} />
+      <script dangerouslySetInnerHTML={{ __html: '/*y*/' }} />
       <HomeFaq h={h} faqs={faqs} />
       <Cta />
       <LegacyScripts
