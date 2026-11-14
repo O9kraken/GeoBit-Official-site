@@ -43,6 +43,13 @@ export const getTestimonials = cache(async () => {
   return (await p.find({ collection: 'testimonials', sort: 'order', limit: 50, depth: 1, where: { published: { equals: true } } })).docs
 })
 
+export const getProjectTestimonials = cache(async (projectId: number | string) => {
+  const p = await payload()
+  return (
+    await p.find({ collection: 'testimonials', sort: 'order', limit: 10, depth: 1, where: { and: [{ published: { equals: true } }, { projectRef: { equals: projectId } }] } })
+  ).docs as any[]
+})
+
 export const findBySlug = cache(async (collection: string, slug: string, depth = 2) => {
   const p = await payload()
   const r = await p.find({ collection: collection as any, where: { slug: { equals: slug } }, limit: 1, depth })

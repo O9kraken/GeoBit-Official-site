@@ -3,10 +3,10 @@ import type { Metadata } from 'next'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { Breadcrumbs, FaqSection, JsonLd } from '@/components/Common'
 import LegacyScripts from '@/components/LegacyScripts'
-import { PfCard } from '@/components/sections/Cards'
+import { AvatarArt, PfCard } from '@/components/sections/Cards'
 import Cta from '@/components/sections/Cta'
 import { pageFaqs } from '@/components/sections/Pages'
-import { findBySlug, getProjects, cmsRedirect } from '@/lib/payload'
+import { findBySlug, getProjects, getProjectTestimonials, cmsRedirect } from '@/lib/payload'
 import { breadcrumbSchema, docMeta } from '@/lib/seo'
 import { SITE_URL, autop, mediaUrl, paths } from '@/lib/util'
 
@@ -27,7 +27,7 @@ export default async function ProjectPage({ params }: P) {
     if (to) permanentRedirect(to)
     notFound()
   }
-  const [all, faqs] = await Promise.all([getProjects(), pageFaqs()])
+  const [all, faqs, reviews] = await Promise.all([getProjects(), pageFaqs(), getProjectTestimonials(p.id)])
   const catName = p.categories?.[0]?.name || ''
   const results: any[] = (p.results || []).filter((r: any) => r.value)
   const resultTxt = results.map((r) => (r.label ? `${r.value} — ${r.label}` : r.value)).join('. ')
@@ -52,14 +52,14 @@ export default async function ProjectPage({ params }: P) {
         <div className="container">
           <Breadcrumbs items={[{ label: 'Портфолио', href: '/portfolio/' }, { label: p.title }]} />
           <div className="pf-single-hero">
-            <div className="pf-single-cover">{cover && <img src={cover} decoding="async" alt={p.title} width={800} height={600} loading="lazy" />}</div>
-            <div>
+            <div className="pf-single-cover">{cover && <img src={cover} decoding="async" alt={p.title} width={800} height={600} />}</div>
+            <div className="pf-single-text">
               {catName && <span className="section-tag pf-single-tag">{catName}</span>}
               <h1 className="pf-single-title">{p.title}</h1>
               <p className="pf-single-lead">{p.excerpt}</p>
               <AnswerBox text={p.meta?.answer} />
               {results.length > 0 && (
-                <div className="pf-single-metrics">
+                <div className={'pf-single-metrics pf-single-metrics--' + Math.min(results.length, 3)}>
                   {results.map((r, i) => (
                     <div key={i} className="pf-single-metric">
                       <div className="pf-single-metric-val">{r.value}</div>
@@ -68,6 +68,8 @@ export default async function ProjectPage({ params }: P) {
                   ))}
                 </div>
               )}
+            </div>
+            <div className="pf-single-aside">
               <div className="pf-single-info">
                 <div className="pf-single-info-list">
                   {info.map(([k, v]) => (
@@ -93,13 +95,54 @@ export default async function ProjectPage({ params }: P) {
           </div>
 
           {tsr.length > 0 && (
-            <div className="pf-ts-grid">
+            <div className={`pf-ts-grid pf-ts-grid--${tsr.length}`}>
               {tsr.map((i) => (
                 <div key={i.mod} className={`pf-ts-card pf-ts-card--${i.mod}`}>
                   <h3>{i.label}</h3>
-                  <p>{i.text}</p>
+                  {i.mod === 'result' ? (
+                    <ul className="pf-ts-results">
+                      {results.map((r, k) => (
+                        <li key={k}>
+                          <b>{r.value}</b>
+                          {r.label && <span>{r.label}</span>}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{i.text}</p>
+                  )}
                 </div>
               ))}
+            </div>
+          )}
+
+          {reviews.length > 0 && (
+            <div className="pf-single-block">
+              <h3 className="pf-single-section-title">Отзыв клиента</h3>
+              <div className="pf-reviews">
+                {reviews.map((t: any) => {
+                  const photo = mediaUrl(t.photo, 'thumb') || mediaUrl(t.photo)
+                  const rating = t.rating || 5
+                  return (
+                    <figure key={t.id} className="pf-review">
+                      <i className="fas fa-quote-left pf-review__q" aria-hidden="true"></i>
+                      <div className="pf-review__stars" aria-label={`Оценка ${rating} из 5`}>
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <i key={i} className={i < rating ? 'fas fa-star' : 'far fa-star'}></i>
+                        ))}
+                      </div>
+                      <blockquote className="pf-review__text" dangerouslySetInnerHTML={{ __html: autop(t.text) }} />
+                      <figcaption className="pf-review__author">
+                        {photo ? <img src={photo} alt={t.name} width={56} height={56} loading="lazy" /> : <AvatarArt name={t.name} size={56} />}
+                        <span>
+                          <strong>{t.name}</strong>
+                          {t.position && <em>{t.position}</em>}
+                        </span>
+                      </figcaption>
+                    </figure>
+                  )
+                })}
+              </div>
             </div>
           )}
 

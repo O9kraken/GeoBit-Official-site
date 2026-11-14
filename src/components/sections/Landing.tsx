@@ -3,7 +3,7 @@
  * Используется в /sozdanie-sajtov/ (регион) и /sozdanie-sajtov/[slug]/.
  */
 import { AnswerBox } from '@/components/sections/Aeo'
-import { Breadcrumbs, JsonLd, faqSchema } from '@/components/Common'
+import { Breadcrumbs, JsonLd, faqSchema, topFaq } from '@/components/Common'
 import LegacyScripts from '@/components/LegacyScripts'
 import { PlanModal } from '@/components/sections/Pages'
 import { getLandings, getProjects, getServices } from '@/lib/payload'
@@ -16,6 +16,14 @@ const relId = (v: any) => (typeof v === 'object' && v ? v.id : v)
 const ICONS = ['fa-route', 'fa-bullhorn', 'fa-lightbulb', 'fa-gem', 'fa-mobile-screen', 'fa-magnifying-glass']
 const TONES = ['pink', 'purple', 'cyan']
 const DEFAULT_SERVICES = ['landing-page', 'corp-site', 'shops']
+// 3D-визуализации, отрендеренные для посадочных (public/landing-3d/<slug>.webp)
+const VISUAL_3D = ['krym', 'simferopol', 'yalta', 'evpatoriya', 'feodosiya', 'kerch', 'dlya-kafe', 'dlya-gostinic', 'dlya-ekskursij', 'dlya-avtoservisa']
+
+/** «Сезонность. Гостиницы…» → заголовок «Сезонность» + текст */
+function splitHead(t: string): { head: string; text: string } {
+  const m = t.match(/^([^.!?\n]{3,48})[.:—–-]\s+([\s\S]+)$/)
+  return m ? { head: m[1].trim(), text: m[2].trim() } : { head: '', text: t }
+}
 
 function paras(t: string): string[] {
   return String(t || '')
@@ -37,8 +45,9 @@ export async function LandingView({ doc }: { doc: any }) {
   const exPoints: string[] = (ex.points || []).map((p: any) => p.text).filter(Boolean)
   const features: any[] = (doc.features || []).filter((f: any) => f.title)
   const steps: any[] = doc.steps || []
-  const faqs: any[] = [...(doc.faq || []), ...(doc.meta?.faq || [])].filter((f: any) => f.q)
+  const faqs: any[] = topFaq([...(doc.faq || []), ...(doc.meta?.faq || [])].filter((f: any) => f.q))
   const img = mediaUrl(doc.image, 'wide') || mediaUrl(doc.image)
+  const visual3d = !img && VISUAL_3D.includes(doc.slug) ? `/landing-3d/${doc.slug}.webp` : ''
 
   const picked: any[] = (doc.services || []).filter((x: any) => typeof x === 'object' && x)
   const svc = picked.length ? picked : DEFAULT_SERVICES.map((s) => services.find((x: any) => x.slug === s)).filter(Boolean)
@@ -96,13 +105,19 @@ export async function LandingView({ doc }: { doc: any }) {
                 <i className="fas fa-arrow-right"></i>
               </a>
             </div>
-            <div className={`gb-land-visual${img ? '' : ' gb-land-visual--icon'}`}>
-              {img ? <img src={img} alt={doc.title} width={600} height={500} loading="lazy" /> : <i className={iconOf(doc.icon)} style={grad}></i>}
-            </div>
+            {visual3d ? (
+              <div className="gb-land-3d">
+                <img src={visual3d} alt="" width={900} height={800} decoding="async" fetchPriority="high" />
+              </div>
+            ) : (
+              <div className={`gb-land-visual${img ? '' : ' gb-land-visual--icon'}`}>
+                {img ? <img src={img} alt={doc.title} width={600} height={500} loading="lazy" /> : <i className={iconOf(doc.icon)} style={grad}></i>}
+              </div>
+            )}
           </div>
 
           {(ex.title || exP.length > 0) && (
-            <div className="svc-explainer-v2">
+            <div className="svc-explainer-v2 gb-land-ex">
               <div className="svc-ex2-top">
                 <div className="svc-ex2-head">
                   <span className="section-tag">
@@ -112,32 +127,41 @@ export async function LandingView({ doc }: { doc: any }) {
                 </div>
                 {exP[0] && <div className="svc-ex2-lead">{exP[0]}</div>}
               </div>
-              {(exP.length > 1 || exPoints.length > 0) && (
-                <div className="svc-ex2-grid">
-                  {exP.slice(1).map((t, i) => (
-                    <div className="svc-ex2-card" key={i}>
-                      <span className={`svc-ex2-ico gb-tone-${TONES[i % 2]}`}>
-                        <i className={`fas ${ICONS[i % ICONS.length]}`}></i>
-                      </span>
-                      <div className="svc-ex2-text">{t}</div>
-                    </div>
-                  ))}
-                  {exPoints.length > 0 && (
-                    <div className="svc-ex2-card svc-ex2-card--accent">
-                      <span className="svc-ex2-ico gb-tone-cyan">
-                        <i className="fas fa-bolt"></i>
-                      </span>
-                      <h3>Коротко</h3>
-                      <ul>
-                        {exPoints.map((pt, i) => (
-                          <li key={i}>
-                            <i className="fas fa-check"></i>
-                            <span>{pt}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+              {exP.length > 1 && (
+                <div className={`gb-feat3 gb-feat3--${Math.min(exP.length - 1, 4)}`}>
+                  {exP.slice(1).map((t, i) => {
+                    const { head, text } = splitHead(t)
+                    return (
+                      <div className="gb-feat3__card" key={i}>
+                        <div className="gb-feat3__top">
+                          <span className="gb-feat3__num">{String(i + 1).padStart(2, '0')}</span>
+                          <span className={`svc-ex2-ico gb-tone-${TONES[i % 3]}`}>
+                            <i className={`fas ${ICONS[i % ICONS.length]}`}></i>
+                          </span>
+                        </div>
+                        {head && <h3>{head}</h3>}
+                        <div className="svc-ex2-text">{text}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+              {exPoints.length > 0 && (
+                <div className="gb-short">
+                  <div className="gb-short__label">
+                    <span className="svc-ex2-ico gb-tone-cyan">
+                      <i className="fas fa-bolt"></i>
+                    </span>
+                    <span>Коротко</span>
+                  </div>
+                  <ul className="gb-short__list">
+                    {exPoints.map((pt, i) => (
+                      <li key={i}>
+                        <i className="fas fa-check"></i>
+                        <span>{pt}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
             </div>

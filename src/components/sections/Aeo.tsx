@@ -17,6 +17,7 @@ export function AnswerBox({ text }: { text?: string | null }) {
 
 export function DocFaq({ faq, title = 'Вопросы и ответы' }: { faq?: { q: string; a: string }[] | null; title?: string }) {
   if (!faq?.length) return null
+  faq = faq.slice(0, 7)
   return (
     <section className="gb-docfaq">
       <h2>{title}</h2>

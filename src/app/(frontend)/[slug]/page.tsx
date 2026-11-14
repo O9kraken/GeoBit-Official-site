@@ -57,7 +57,7 @@ function PageView({ page }: { page: any }) {
           <AnswerBox text={page.meta?.answer} />
           <div className="post-body" dangerouslySetInnerHTML={{ __html: richHtml(page.content) }} />
           <DocFaq faq={page.meta?.faq} />
-          {page.meta?.faq?.length > 0 && <JsonLd data={faqSchema(page.meta.faq)} />}
+          {page.meta?.faq?.length > 0 && <JsonLd data={faqSchema(page.meta.faq.slice(0, 7))} />}
         </div>
       </section>
     </main>
@@ -193,7 +193,7 @@ async function PostView({ post }: { post: any }) {
       </section>
       <Newsletter />
       <JsonLd data={articleSchema(post, url, author)} />
-      {post.meta?.faq?.length > 0 && <JsonLd data={faqSchema(post.meta.faq)} />}
+      {post.meta?.faq?.length > 0 && <JsonLd data={faqSchema(post.meta.faq.slice(0, 7))} />}
       <JsonLd
         data={breadcrumbSchema([
           { name: 'Главная', url: `${SITE_URL}/` },

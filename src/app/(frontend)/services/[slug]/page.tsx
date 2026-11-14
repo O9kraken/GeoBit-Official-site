@@ -1,7 +1,7 @@
 import { AnswerBox } from '@/components/sections/Aeo'
 import type { Metadata } from 'next'
 import { notFound, permanentRedirect } from 'next/navigation'
-import { Breadcrumbs, JsonLd, faqSchema } from '@/components/Common'
+import { Breadcrumbs, JsonLd, faqSchema, topFaq } from '@/components/Common'
 import LegacyScripts from '@/components/LegacyScripts'
 import { PlanModal } from '@/components/sections/Pages'
 import { findBySlug, getProjects, getServices, cmsRedirect } from '@/lib/payload'
@@ -35,7 +35,7 @@ export default async function ServicePage({ params }: P) {
   const features: string[] = (s.features || []).map((f: any) => f.text).filter(Boolean)
   const steps: any[] = s.steps || []
   const plans: any[] = s.plans || []
-  const faqs: any[] = [...(s.faq || []), ...(s.meta?.faq || [])].filter((f: any) => f.q)
+  const faqs: any[] = topFaq([...(s.faq || []), ...(s.meta?.faq || [])].filter((f: any) => f.q))
   const ex = s.explainer || {}
   const exPoints: string[] = (ex.points || []).map((p: any) => p.text).filter(Boolean)
   const exParas = splitParas(ex.text || '')

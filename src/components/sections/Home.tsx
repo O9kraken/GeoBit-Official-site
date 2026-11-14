@@ -1,4 +1,4 @@
-import { FaqList, Html, JsonLd, MaxIcon, faqSchema, type FaqItem } from '@/components/Common'
+import { FaqList, Html, JsonLd, MaxIcon, faqSchema, topFaq, type FaqItem } from '@/components/Common'
 import { paths, typo } from '@/lib/util'
 import { BlogCard, PfCard, TestimonialsSlider } from './Cards'
 import Founder from './Founder'
@@ -452,7 +452,8 @@ export function BlogPreviewSection({ posts }: { posts: any[] }) {
   )
 }
 
-export function HomeFaq({ h, faqs }: { h: any; faqs: FaqItem[] }) {
+export function HomeFaq({ h, faqs: all }: { h: any; faqs: FaqItem[] }) {
+  const faqs = topFaq(all)
   if (!faqs?.length) return null
   return (
     <>

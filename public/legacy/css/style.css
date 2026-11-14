@@ -4986,9 +4986,18 @@ h1, h2, .hero-title, .section-title { word-break: keep-all; }
     margin-top: 24px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 64px;
+    grid-template-areas: "cover text" "aside text";
+    grid-template-rows: auto 1fr;
+    column-gap: 64px;
+    row-gap: 24px;
     align-items: start;
 }
+.pf-single-cover { grid-area: cover; }
+.pf-single-text { grid-area: text; }
+.pf-single-aside { grid-area: aside; display: flex; flex-direction: column; gap: 20px; align-items: flex-start; }
+.pf-single-aside .pf-single-info { width: 100%; margin-bottom: 0; }
+.pf-single-metrics--1 { grid-template-columns: 1fr; }
+.pf-single-metrics--2 { grid-template-columns: repeat(2, 1fr); }
 .pf-single-cover {
     border-radius: 20px;
     overflow: hidden;
@@ -5070,6 +5079,15 @@ h1, h2, .hero-title, .section-title { word-break: keep-all; }
 .pf-ts-card--solution h3 { color: var(--accent-purple); }
 .pf-ts-card--result h3   { color: var(--accent-green); }
 .pf-ts-card p { color: var(--gray-2); font-size: 0.95rem; line-height: 1.8; }
+/* три блока: задача и результат слева, решение справа на всю высоту — без «висячего» блока */
+.pf-ts-grid--3 { grid-template-areas: "task solution" "result solution"; }
+.pf-ts-grid--3 .pf-ts-card--task { grid-area: task; }
+.pf-ts-grid--3 .pf-ts-card--solution { grid-area: solution; }
+.pf-ts-grid--3 .pf-ts-card--result { grid-area: result; }
+.pf-ts-grid--1 { grid-template-columns: 1fr; }
+.pf-ts-results { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.pf-ts-results li { display: flex; align-items: baseline; gap: 14px; color: var(--gray-2); font-size: 0.95rem; line-height: 1.5; }
+.pf-ts-results b { flex: 0 0 auto; min-width: 84px; font-size: 1.35rem; font-weight: 800; color: var(--accent-green); }
 
 .pf-single-content {
     margin-top: 48px;
@@ -5146,8 +5164,9 @@ h1, h2, .hero-title, .section-title { word-break: keep-all; }
 }
 @media (max-width: 768px) {
     .pf-single { padding-top: 110px; }
-    .pf-single-hero { grid-template-columns: 1fr; gap: 28px; }
-    .pf-ts-grid { grid-template-columns: 1fr; margin-top: 40px; }
+    .pf-single-hero { grid-template-columns: 1fr; grid-template-areas: "cover" "text" "aside"; grid-template-rows: auto; gap: 28px; }
+    .pf-ts-grid, .pf-ts-grid--3 { grid-template-columns: 1fr; grid-template-areas: none; margin-top: 40px; }
+    .pf-ts-grid--3 .pf-ts-card { grid-area: auto; }
     .pf-media-block,
     .pf-media-block:nth-child(even) { grid-template-columns: 1fr; gap: 18px; }
     .pf-media-block:nth-child(even) .pf-media-block__shot { order: 0; }
@@ -6120,3 +6139,15 @@ body,
 .form-group .form-method__opt input[type="radio"] { width: 16px; height: 16px; margin: 0; padding: 0; accent-color: var(--accent-purple); box-shadow: none; }
 .form-group .form-method__opt:has(input:checked) { border-color: var(--accent-purple); background: rgba(124,0,255,0.12); }
 .form-group .form-method__opt:focus-within { box-shadow: 0 0 0 3px rgba(124,0,255,0.25); }
+/* метрики кейса: не распирают экран на телефоне */
+.pf-single-hero > * { min-width: 0; }
+.pf-single-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pf-single-metrics--1 { grid-template-columns: minmax(0, 1fr); }
+.pf-single-metrics--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 600px) {
+    .pf-single-metrics { gap: 8px; }
+    .pf-single-metric { padding: 14px 8px; }
+    .pf-single-metric-val { font-size: 1.05rem; line-height: 1.25; }
+    .pf-single-metric-lbl { font-size: 0.7rem; }
+    .pf-ts-results b { min-width: 72px; font-size: 1.1rem; }
+}

@@ -30,6 +30,10 @@ export const Breadcrumbs = ({ items }: { items: { label: string; href?: string }
 
 export type FaqItem = { q: string; a: string }
 
+/** На всех страницах, кроме /faq, показываем не больше 7 вопросов */
+export const FAQ_MAX = 7
+export const topFaq = <T,>(faqs: T[] | null | undefined, max = FAQ_MAX): T[] => (faqs || []).slice(0, max)
+
 export const FaqList = ({ faqs, openFirst = true }: { faqs: FaqItem[]; openFirst?: boolean }) =>
   faqs?.length ? (
     <div className="faq-list">
@@ -63,8 +67,9 @@ export const faqSchema = (faqs: FaqItem[]) => ({
 })
 
 /** Секция FAQ в стиле темы + разметка FAQPage */
-export const FaqSection = ({ faqs, tag = 'Вопросы и ответы', title = 'Частые <span class="gradient-text">вопросы</span>' }: { faqs: FaqItem[]; tag?: string; title?: string }) =>
-  faqs?.length ? (
+export const FaqSection = ({ faqs: all, tag = 'Вопросы и ответы', title = 'Частые <span class="gradient-text">вопросы</span>' }: { faqs: FaqItem[]; tag?: string; title?: string }) => {
+  const faqs = topFaq(all)
+  return faqs.length ? (
     <>
       <section className="faq section-padding" id="faq">
         <div className="container">
@@ -78,3 +83,4 @@ export const FaqSection = ({ faqs, tag = 'Вопросы и ответы', title
       <JsonLd data={faqSchema(faqs)} />
     </>
   ) : null
+}

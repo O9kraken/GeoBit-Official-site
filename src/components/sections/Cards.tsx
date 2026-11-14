@@ -7,7 +7,6 @@ export function PfCard({ p }: { p: any }) {
   const catSlug = cat?.slug || 'other'
   const catName = cat?.name || p.categoryLabel || ''
   const tech = (p.technologies || '').split(',').map((t: string) => t.trim()).filter(Boolean).slice(0, 3)
-  const metric = p.results?.[0]
   const hover = p.hoverVideo ? mediaUrl(p.hoverVideo) : ''
   const words = (p.excerpt || '').split(/\s+/).filter(Boolean)
   const excerpt = words.slice(0, 16).join(' ') + (words.length > 16 ? '…' : '')
@@ -19,12 +18,6 @@ export function PfCard({ p }: { p: any }) {
           {hover && <video className="pf-card-media__anim" muted loop playsInline preload="none" data-src={hover} aria-hidden="true"></video>}
           <div className="pf-card-media-grad"></div>
           {catName && <span className="pf-card-cat">{catName}</span>}
-          {metric?.value && (
-            <div className="pf-card-metric">
-              <span className="pf-card-metric-val">{metric.value}</span>
-              {metric.label && <span className="pf-card-metric-lbl">{metric.label}</span>}
-            </div>
-          )}
           <span className="pf-card-open">
             <i className="fas fa-arrow-right"></i>
           </span>
@@ -239,6 +232,12 @@ export function TestimonialsSlider({ items }: { items: any[] }) {
                   {t.position && <span>{t.position}</span>}
                 </div>
               </div>
+              {typeof t.projectRef === 'object' && t.projectRef?.slug && (
+                <a href={paths.project(t.projectRef.slug)} className="testimonial-case">
+                  <span>{t.project || t.projectRef.title}</span>
+                  Смотреть кейс <i className="fas fa-arrow-right"></i>
+                </a>
+              )}
             </div>
           )
         })}

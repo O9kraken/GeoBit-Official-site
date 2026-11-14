@@ -515,3 +515,51 @@ p,li,.hero-subtitle{text-wrap:pretty}
 .blog-img img{width:100%;height:100%;object-fit:cover;display:block}
 .blog-tag--meta{display:inline-block;background:var(--accent-purple);color:var(--on-accent);font-size:.72rem;font-weight:600;padding:3px 11px;border-radius:100px}
 @media (max-width:1024px){.blog-card--featured .blog-card__thumb{min-height:0;height:auto;aspect-ratio:16/9}}
+
+/* ===== Посадочные: 3D-визуал в первом экране ===== */
+.gb-land-3d{position:relative;display:flex;align-items:center;justify-content:center;isolation:isolate}
+.gb-land-3d::before{content:"";position:absolute;inset:8% 6% 2%;z-index:-1;border-radius:50%;background:radial-gradient(closest-side,rgba(124,0,255,.38),rgba(255,0,102,.14) 55%,transparent 75%);filter:blur(30px)}
+.gb-land-3d img{width:100%;max-width:620px;height:auto;display:block;animation:gbFloat3d 7s ease-in-out infinite;filter:drop-shadow(0 30px 60px rgba(0,0,0,.5))}
+@keyframes gbFloat3d{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@media (prefers-reduced-motion:reduce){.gb-land-3d img{animation:none}}
+@media (max-width:900px){.gb-land-3d img{max-width:440px;margin:0 auto}}
+
+/* ===== Посадочные: блок «Особенности» ===== */
+.gb-land-ex .svc-ex2-top{grid-template-columns:1.1fr .9fr}
+.gb-land-ex{position:relative;overflow:hidden;background:radial-gradient(ellipse 60% 80% at 0% 0%,rgba(123,47,255,.22),transparent 60%),radial-gradient(ellipse 50% 70% at 100% 100%,rgba(0,229,255,.12),transparent 60%),rgba(var(--ink-rgb),.02)}
+.gb-land-ex::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(var(--ink-rgb),.035) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--ink-rgb),.035) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse at 30% 0%,#000 10%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 30% 0%,#000 10%,transparent 70%)}
+.gb-land-ex>*{position:relative;z-index:1}
+.gb-feat3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.gb-feat3--1{grid-template-columns:1fr}.gb-feat3--2{grid-template-columns:repeat(2,1fr)}.gb-feat3--4{grid-template-columns:repeat(2,1fr)}
+.gb-feat3__card{position:relative;padding:28px 28px 30px;border-radius:20px;background:linear-gradient(180deg,rgba(var(--ink-rgb),.05),rgba(var(--ink-rgb),.015));border:1px solid rgba(var(--ink-rgb),.08);display:flex;flex-direction:column;gap:14px;transition:transform .3s,border-color .3s,background .3s}
+.gb-feat3__card::before{content:"";position:absolute;left:28px;right:28px;top:-1px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--accent-pink),var(--accent-purple),var(--accent-cyan));opacity:.7}
+.gb-feat3__card:hover{transform:translateY(-4px);border-color:rgba(124,0,255,.4);background:linear-gradient(180deg,rgba(124,0,255,.08),rgba(var(--ink-rgb),.02))}
+.gb-feat3__top{display:flex;align-items:center;justify-content:space-between}
+.gb-feat3__num{font-family:var(--font-main);font-size:2.6rem;font-weight:800;line-height:1;background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(255,255,255,.15));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.gb-feat3__card h3{margin:4px 0 0;font-family:var(--font-main);font-size:1.25rem;line-height:1.25;color:var(--white)}
+.gb-short{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;padding:22px 28px;border-radius:20px;background:linear-gradient(110deg,rgba(0,229,255,.10),rgba(123,47,255,.12) 60%,rgba(255,0,102,.08));border:1px solid rgba(0,229,255,.25)}
+.gb-short__label{display:flex;align-items:center;gap:12px;font-family:var(--font-main);font-weight:800;font-size:1.15rem;color:var(--white);padding-right:28px;border-right:1px solid rgba(var(--ink-rgb),.12)}
+.gb-short__list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px 24px}
+.gb-short__list li{display:flex;gap:10px;align-items:flex-start;color:var(--white);font-size:.95rem;line-height:1.45}
+.gb-short__list i{color:var(--accent-cyan);margin-top:4px;font-size:.85rem}
+@media (max-width:900px){.gb-feat3,.gb-feat3--2{grid-template-columns:1fr}}
+@media (max-width:700px){.gb-feat3--4{grid-template-columns:1fr}.gb-short{grid-template-columns:1fr;gap:16px;padding:20px}.gb-short__label{border-right:0;padding-right:0}}
+
+/* ===== Отзыв на странице кейса ===== */
+.pf-reviews{display:grid;gap:20px}
+.pf-review{position:relative;margin:0;padding:36px 40px;border-radius:22px;background:radial-gradient(ellipse at 0% 0%,rgba(123,47,255,.16),transparent 60%),rgba(var(--ink-rgb),.03);border:1px solid rgba(var(--ink-rgb),.08);overflow:hidden}
+.pf-review__q{position:absolute;right:32px;top:24px;font-size:4.5rem;line-height:1;background:linear-gradient(135deg,var(--accent-pink),var(--accent-purple),var(--accent-cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;opacity:.35}
+.pf-review__stars{display:flex;gap:4px;color:#fbbf24;font-size:.95rem;margin-bottom:16px}
+.pf-review__text{margin:0 0 24px;max-width:860px;color:var(--white-3);font-size:1.08rem;line-height:1.75}
+.pf-review__text p{margin:0 0 12px}.pf-review__text p:last-child{margin:0}
+.pf-review__author{display:flex;align-items:center;gap:14px}
+.pf-review__author img{width:56px;height:56px;border-radius:50%;object-fit:cover}
+.pf-review__author span{display:flex;flex-direction:column;gap:2px}
+.pf-review__author strong{color:var(--white);font-family:var(--font-main)}
+.pf-review__author em{font-style:normal;color:var(--gray);font-size:.9rem}
+@media (max-width:700px){.pf-review{padding:26px 22px}.pf-review__q{font-size:3rem;right:18px;top:16px}}
+/* ссылка на кейс в слайдере отзывов */
+.testimonial-case{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid rgba(var(--ink-rgb),.08);color:var(--accent-cyan);font-size:.9rem;font-weight:600;text-decoration:none}
+.testimonial-case span{color:var(--gray);font-weight:400;margin-right:auto}
+.testimonial-case:hover{color:var(--white)}
+@media (max-width:900px){.gb-land-ex .svc-ex2-top{grid-template-columns:1fr}}
