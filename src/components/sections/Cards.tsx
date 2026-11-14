@@ -9,7 +9,8 @@ export function PfCard({ p }: { p: any }) {
   const tech = (p.technologies || '').split(',').map((t: string) => t.trim()).filter(Boolean).slice(0, 3)
   const metric = p.results?.[0]
   const hover = p.hoverVideo ? mediaUrl(p.hoverVideo) : ''
-  const excerpt = (p.excerpt || '').split(/\s+/).slice(0, 16).join(' ')
+  const words = (p.excerpt || '').split(/\s+/).filter(Boolean)
+  const excerpt = words.slice(0, 16).join(' ') + (words.length > 16 ? '…' : '')
   return (
     <article className="pf-card" data-category={catSlug}>
       <a href={paths.project(p.slug)} className="pf-card-link" aria-label={p.title}>

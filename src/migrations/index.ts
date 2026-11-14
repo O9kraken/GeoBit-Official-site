@@ -18,6 +18,7 @@ import * as migration_20261113_190000_users_admin_look from './20261113_190000_u
 import * as migration_20261114_100000_pet_projects from './20261114_100000_pet_projects';
 import * as migration_20261114_101000_faq_more from './20261114_101000_faq_more';
 import * as migration_20261114_110000_blog_posts_20 from './20261114_110000_blog_posts_20';
+import * as migration_20261114_120000_portfolio_texts from './20261114_120000_portfolio_texts';
 
 export const migrations = [
   {
@@ -119,5 +120,10 @@ export const migrations = [
     up: migration_20261114_110000_blog_posts_20.up,
     down: migration_20261114_110000_blog_posts_20.down,
     name: '20261114_110000_blog_posts_20',
+  },
+  {
+    up: migration_20261114_120000_portfolio_texts.up,
+    down: migration_20261114_120000_portfolio_texts.down,
+    name: '20261114_120000_portfolio_texts',
   },
 ];

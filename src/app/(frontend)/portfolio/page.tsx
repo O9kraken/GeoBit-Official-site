@@ -23,7 +23,7 @@ export default async function PortfolioPage() {
         crumbs={[{ label: 'Портфолио' }]}
         tag={g?.tag || 'Наши проекты'}
         title={g?.title || '<span class="gradient-text">Наши </span>работы и проекты'}
-        subtitle={g?.subtitle || 'Более 50 реализованных проектов — сайты, дизайн, SEO и логотипы'}
+        subtitle={g?.subtitle || 'Сайты, веб-приложения, логотипы и айдентика — с задачей, решением и результатом по каждому проекту'}
       />
       <section className="section-padding portfolio portfolio-page">
         <div className="container">
