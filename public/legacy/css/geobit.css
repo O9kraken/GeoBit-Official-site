@@ -567,3 +567,6 @@ p,li,.hero-subtitle{text-wrap:pretty}
 /* Доступность: заголовки подвала (h2 вместо h4) без отступов по умолчанию, точки слайдера — зона нажатия 24px */
 .footer-h{margin-top:0}
 .slider-dot{width:10px;height:10px;margin:7px}
+
+/* Скорость на телефоне: секции ниже первого экрана браузер оформляет и рисует только при подходе к ним */
+@media (max-width:900px){main>section.section-padding{content-visibility:auto;contain-intrinsic-size:auto 1600px}}

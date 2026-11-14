@@ -276,9 +276,21 @@ function initCtaCanvas() {
             ctx.fillRect(0, 0, W, H);
         });
 
-        requestAnimationFrame(draw);
+        if (animated && visible) requestAnimationFrame(draw);
     }
-    draw();
+    // анимируем только на компьютере и только пока блок на экране; на телефоне — один статичный кадр
+    const animated = !window.matchMedia('(max-width: 768px)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let visible = false;
+    if ('IntersectionObserver' in window) {
+        new IntersectionObserver((entries) => {
+            const was = visible;
+            visible = entries[0].isIntersecting;
+            if (visible && !was) draw();
+        }, { rootMargin: '200px' }).observe(canvas);
+    } else {
+        visible = true;
+        draw();
+    }
 }
 
 // Init CTA canvas when page loads
