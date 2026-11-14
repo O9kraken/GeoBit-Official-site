@@ -25,6 +25,10 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { SeoPanel as SeoPanel_67dac997f23513256040d82c55be3a45 } from '../../../components/admin/SeoPanel'
+import { AuthorCell as AuthorCell_16b8c86bd93ffff46e138effca2db2a6 } from '../../../components/admin/posts/AuthorCell'
+import { ReleaseCell as ReleaseCell_3ba76ba6087e9f608ef8ccbb1d5ebde6 } from '../../../components/admin/posts/ReleaseCell'
+import { ActionsCell as ActionsCell_d184a076b02376c12ef1b28f6dd3bbbd } from '../../../components/admin/posts/ActionsCell'
+import { PostsToolbar as PostsToolbar_9b74e65272c8f2ba5792e41a6c9ff096 } from '../../../components/admin/posts/Toolbar'
 import { OgNote as OgNote_2d7520c9d4fb6b450180a87990ba1177 } from '@/components/admin/OgNote'
 import { Avatar as Avatar_ff2b3aef4ce7bf470d100ee3d53f4ed9 } from '../../../components/admin/Avatar'
 import { Icon as Icon_dfe4008080d895d460898c3a6155e9ba } from '../../../components/admin/Icon'
@@ -64,6 +68,10 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "/components/admin/SeoPanel#SeoPanel": SeoPanel_67dac997f23513256040d82c55be3a45,
+  "/components/admin/posts/AuthorCell#AuthorCell": AuthorCell_16b8c86bd93ffff46e138effca2db2a6,
+  "/components/admin/posts/ReleaseCell#ReleaseCell": ReleaseCell_3ba76ba6087e9f608ef8ccbb1d5ebde6,
+  "/components/admin/posts/ActionsCell#ActionsCell": ActionsCell_d184a076b02376c12ef1b28f6dd3bbbd,
+  "/components/admin/posts/Toolbar#PostsToolbar": PostsToolbar_9b74e65272c8f2ba5792e41a6c9ff096,
   "@/components/admin/OgNote#OgNote": OgNote_2d7520c9d4fb6b450180a87990ba1177,
   "/components/admin/Avatar#Avatar": Avatar_ff2b3aef4ce7bf470d100ee3d53f4ed9,
   "/components/admin/Icon#Icon": Icon_dfe4008080d895d460898c3a6155e9ba,

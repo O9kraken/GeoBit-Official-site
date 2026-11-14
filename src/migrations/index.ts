@@ -26,6 +26,7 @@ import * as migration_20261114_160000_landings_more from './20261114_160000_land
 import * as migration_20261114_161000_trust_and_meta from './20261114_161000_trust_and_meta';
 import * as migration_20261115_100000_landings_industries from './20261115_100000_landings_industries';
 import * as migration_20261115_110000_home_texts from './20261115_110000_home_texts';
+import * as migration_20261115_120000_posts_list_columns from './20261115_120000_posts_list_columns';
 
 export const migrations = [
   {
@@ -167,5 +168,10 @@ export const migrations = [
     up: migration_20261115_110000_home_texts.up,
     down: migration_20261115_110000_home_texts.down,
     name: '20261115_110000_home_texts',
+  },
+  {
+    up: migration_20261115_120000_posts_list_columns.up,
+    down: migration_20261115_120000_posts_list_columns.down,
+    name: '20261115_120000_posts_list_columns',
   },
 ];

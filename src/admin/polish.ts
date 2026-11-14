@@ -43,6 +43,23 @@ const GLOBAL_URL: Record<string, string> = {
   'portfolio-page': '/portfolio/', 'blog-page': '/blog/', 'faq-page': '/faq/', settings: '/contacts/', navigation: '/', calculator: '/#calculator',
 }
 
+/** Подсказка под заголовком раздела: что здесь лежит и где это видно на сайте */
+const DESC: Record<string, string> = {
+  leads: 'Заявки с форм сайта. Новые подсвечиваются на панели и в меню. Хранятся 3 года, потом удаляются сами (152-ФЗ).',
+  subscribers: 'Подписчики рассылки блога. Отписка — по ссылке в письме, вручную удалять не нужно.',
+  pages: 'Отдельные страницы: юридические документы, согласия, оферта. Адрес — /<slug>/.',
+  services: 'Услуги и цены: карточки на /services/ и отдельные страницы /services/<slug>/. Порядок — поле «Порядок».',
+  projects: 'Кейсы портфолио. «Показать на главной» — кейс попадает в блок работ на главной странице.',
+  team: 'Люди в блоке команды на странице «О нас».',
+  testimonials: 'Отзывы клиентов. Привяжите отзыв к кейсу — он появится и на странице проекта. Только настоящие отзывы.',
+  media: 'Все картинки сайта. Сжатые версии делаются сами при загрузке; подпись «Alt» нужна для поиска и незрячих.',
+  categories: 'Рубрики блога — фильтр на /blog/ и страницы /category/<slug>/.',
+  tags: 'Метки статей. Необязательны: рубрик обычно хватает.',
+  'service-categories': 'Группы услуг для фильтра на странице услуг.',
+  'portfolio-categories': 'Группы кейсов для фильтра в портфолио.',
+  users: 'Кто может входить в админку. Имя и аватар из профиля показываются как автор статей.',
+}
+
 const PREVIEW: Record<string, (slug: string) => string> = {
   services: paths.service,
   landings: paths.landing,
@@ -57,6 +74,7 @@ export const polishCollection = (c: CollectionConfig): CollectionConfig => ({
   admin: {
     ...c.admin,
     group: GROUP[c.slug] ?? c.admin?.group,
+    description: c.admin?.description ?? DESC[c.slug],
     ...(PREVIEW[c.slug]
       ? {
           preview: (doc: any) => (doc?.slug ? `${SITE_URL}${PREVIEW[c.slug](doc.slug)}` : null),

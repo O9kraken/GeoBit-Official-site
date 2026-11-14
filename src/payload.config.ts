@@ -61,10 +61,20 @@ export default buildConfig({
       ],
     },
     dateFormat: 'dd.MM.yyyy HH:mm',
+    // Один часовой пояс — Москва: и в выборе даты, и в «Запланировать публикацию»
+    timezones: {
+      supportedTimezones: [{ label: 'Москва (МСК, UTC+3)', value: 'Europe/Moscow' }],
+      defaultTimezone: 'Europe/Moscow',
+    },
     // без Gravatar: админка не ходит на внешние сервисы
     avatar: { Component: '/components/admin/Avatar#Avatar' },
   },
-  i18n: { supportedLanguages: { ru }, fallbackLanguage: 'ru' },
+  i18n: {
+    supportedLanguages: { ru },
+    fallbackLanguage: 'ru',
+    // в русском переводе Payload у «Искать по» потеряно название поля — подсказка в поиске обрывалась
+    translations: { ru: { general: { searchBy: 'Поиск: {{label}}', or: 'или' } } },
+  },
   // порядок здесь = порядок групп в меню админки: заявки — первыми
   collections: [
     Leads, Subscribers,
