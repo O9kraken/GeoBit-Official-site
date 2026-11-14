@@ -10,3 +10,6 @@ next-env.d.ts
 backups/
 *.log
 .DS_Store
+
+# секреты пет-проектов
+deploy/pets/pets.env

@@ -1,0 +1,17 @@
+# Поддомены пет-проектов. Подключается строкой `import pets.caddy` в конце основного Caddyfile.
+# HTTPS Caddy выпустит сам, как только A-записи поддоменов смотрят на этот сервер.
+poker.getgeobit.ru {
+	encode zstd gzip
+	header -Server
+	reverse_proxy poker:3000 {
+		header_up X-Real-IP {remote_host}
+	}
+}
+
+zerostack.getgeobit.ru {
+	encode zstd gzip
+	header -Server
+	reverse_proxy zerostack:3000 {
+		header_up X-Real-IP {remote_host}
+	}
+}

@@ -1,0 +1,118 @@
+# Пет-проекты на сервере сайта: NOIR RIVER (poker.getgeobit.ru) и ZERO/STACK (zerostack.getgeobit.ru).
+# Запуск вручную: Actions → pets → Run workflow. Можно запускать повторно — шаги идемпотентны.
+#
+# Перед первым запуском:
+#   1. В DNS домена (Beget) — A-записи poker и zerostack → IP сервера.
+#   2. Секреты репозитория (Settings → Secrets → Actions):
+#        ZEROSTACK_ADMIN_PASSWORD  — пароль администратора учебной платформы
+#        GIGACHAT_AUTH_KEY         — ключ GigaChat для ИИ-наставника (можно не задавать)
+#        NEON_POKER_URL, NEON_ZEROSTACK_URL — строки подключения к базам Neon, только если нужен перенос данных
+#   SSH_HOST / SSH_USER / SSH_KEY уже есть — те же, что для деплоя сайта.
+name: pets
+
+on:
+  workflow_dispatch:
+    inputs:
+      migrate_from_neon:
+        description: 'Перенести данные из Neon (ЗАМЕНИТ базы пет-проектов на сервере)'
+        type: boolean
+        default: false
+
+concurrency: deploy
+
+jobs:
+  pets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Папка для дампов
+        run: mkdir -p dumps && touch dumps/.keep
+
+      - name: Выгрузить базы из Neon
+        if: ${{ inputs.migrate_from_neon }}
+        env:
+          POKER: ${{ secrets.NEON_POKER_URL }}
+          ZERO: ${{ secrets.NEON_ZEROSTACK_URL }}
+        run: |
+          dump() { url=$(echo "$2" | sed 's/-pooler\././'); docker run --rm -e URL="$url" -v "$PWD/dumps":/w postgres:18-alpine sh -c "pg_dump \"\$URL\" -Fc --no-owner --no-acl -f /w/$1.dump"; }
+          if [ -n "$POKER" ]; then dump noir "$POKER"; fi
+          if [ -n "$ZERO" ]; then dump zerostack "$ZERO"; fi
+          ls -lh dumps
+
+      - name: Отправить файлы на сервер
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: deploy/pets/*,dumps/*
+          target: /opt/geobit/pets-upload
+          overwrite: true
+
+      - name: Настроить и запустить
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          ZS_ADMIN_PASSWORD: ${{ secrets.ZEROSTACK_ADMIN_PASSWORD }}
+          GIGACHAT_AUTH_KEY: ${{ secrets.GIGACHAT_AUTH_KEY }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          envs: ZS_ADMIN_PASSWORD,GIGACHAT_AUTH_KEY
+          command_timeout: 30m
+          script: |
+            set -e
+            cd /opt/geobit
+            echo "== Память до запуска"; free -h
+
+            # swap 2 ГБ — подстраховка от нехватки памяти на тарифе с 2 ГБ
+            if ! swapon --show | grep -q '/swapfile'; then
+              sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile
+              grep -q '^/swapfile' /etc/fstab || echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+            fi
+
+            mkdir -p pets
+            cp pets-upload/deploy/pets/compose.pets.yml pets-upload/deploy/pets/pets.caddy pets/
+
+            # переменные: секреты из GitHub, JWT_SECRET генерируется один раз и дальше не меняется
+            touch pets/pets.env && chmod 600 pets/pets.env
+            setv() { grep -v "^$1=" pets/pets.env > pets/pets.env.tmp || true; echo "$1=$2" >> pets/pets.env.tmp; mv pets/pets.env.tmp pets/pets.env; }
+            grep -q '^JWT_SECRET=.' pets/pets.env || setv JWT_SECRET "$(openssl rand -hex 32)"
+            grep -q '^ADMIN_NAMES=' pets/pets.env || setv ADMIN_NAMES KRAKER
+            grep -q '^ADMIN_USERNAME=' pets/pets.env || setv ADMIN_USERNAME KRAKER
+            grep -q '^ALLOW_REGISTRATION=' pets/pets.env || setv ALLOW_REGISTRATION true
+            [ -n "$ZS_ADMIN_PASSWORD" ] && setv ADMIN_PASSWORD "$ZS_ADMIN_PASSWORD"
+            [ -n "$GIGACHAT_AUTH_KEY" ] && setv GIGACHAT_AUTH_KEY "$GIGACHAT_AUTH_KEY"
+            chmod 600 pets/pets.env
+
+            # docker compose всегда с пет-проектами — иначе обычный деплой сайта пересоздаст Caddy без их конфига
+            grep -q '^COMPOSE_FILE=' .env || echo 'COMPOSE_FILE=docker-compose.yml:pets/compose.pets.yml' >> .env
+            grep -q '^import pets.caddy' Caddyfile || printf '\nimport pets.caddy\n' >> Caddyfile
+
+            # отдельные базы в том же PostgreSQL
+            PW=$(grep ^POSTGRES_PASSWORD= .env | cut -d= -f2)
+            for d in noir zerostack; do
+              docker compose exec -T db psql -U geobit -d geobit -tAc "SELECT 1 FROM pg_database WHERE datname='$d'" | grep -q 1 \
+                || docker compose exec -T db psql -U geobit -d geobit -c "CREATE DATABASE $d"
+            done
+
+            # перенос данных из Neon, если выгружали
+            for d in noir zerostack; do
+              f=pets-upload/dumps/$d.dump
+              if [ -s "$f" ]; then
+                docker compose stop poker zerostack 2>/dev/null || true
+                docker compose exec -T db psql -U geobit -d $d -v ON_ERROR_STOP=1 -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+                docker compose exec -T db pg_restore -U geobit -d $d --no-owner --no-acl < "$f" || echo "pg_restore $d: были предупреждения"
+              fi
+            done
+            rm -rf pets-upload
+
+            docker compose build --pull poker zerostack
+            docker compose up -d
+            sleep 15
+            docker compose ps
+            echo "== Память после запуска"; free -h
+            docker stats --no-stream

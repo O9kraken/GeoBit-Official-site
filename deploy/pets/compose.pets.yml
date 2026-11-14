@@ -1,0 +1,52 @@
+# Пет-проекты на том же сервере, что и сайт: NOIR RIVER (poker.getgeobit.ru) и ZERO/STACK (zerostack.getgeobit.ru).
+# Подключается к основному docker-compose.yml через COMPOSE_FILE в /opt/geobit/.env:
+#   COMPOSE_FILE=docker-compose.yml:pets/compose.pets.yml
+# Код собирается прямо из публичных репозиториев GitHub. Пересобрать после обновления кода:
+#   docker compose build --pull poker zerostack && docker compose up -d poker zerostack
+services:
+  poker:
+    build:
+      context: https://github.com/O9kraken/noir-river-poker.git#main
+    restart: unless-stopped
+    env_file: pets/pets.env
+    environment:
+      NODE_ENV: production
+      PORT: '3000'
+      TRUST_PROXY: 'true'
+      PUBLIC_URL: https://poker.getgeobit.ru
+      DATABASE_URL: postgres://geobit:${POSTGRES_PASSWORD}@db:5432/noir
+    depends_on:
+      db:
+        condition: service_healthy
+    mem_limit: 180m
+    logging: { driver: json-file, options: { max-size: '10m', max-file: '3' } }
+
+  zerostack:
+    build:
+      context: https://github.com/O9kraken/fe-platform.git#main
+      dockerfile_inline: |
+        FROM node:22-alpine
+        WORKDIR /app
+        COPY package*.json ./
+        RUN npm ci --omit=dev
+        COPY server ./server
+        COPY public ./public
+        ENV NODE_ENV=production PORT=3000
+        EXPOSE 3000
+        USER node
+        CMD ["node", "server/index.js"]
+    restart: unless-stopped
+    env_file: pets/pets.env
+    environment:
+      NODE_ENV: production
+      PORT: '3000'
+      DATABASE_URL: postgres://geobit:${POSTGRES_PASSWORD}@db:5432/zerostack
+    depends_on:
+      db:
+        condition: service_healthy
+    mem_limit: 220m
+    logging: { driver: json-file, options: { max-size: '10m', max-file: '3' } }
+
+  caddy:
+    volumes:
+      - ./pets/pets.caddy:/etc/caddy/pets.caddy:ro
