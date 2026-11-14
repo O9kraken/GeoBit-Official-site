@@ -34,6 +34,7 @@ export default async function PortfolioCategoryPage({ params }: P) {
     <main id="main" role="main">
       <PageHero
         crumbs={[{ label: 'Портфолио', href: '/portfolio/' }, { label: term.name }]}
+        path={`/portfolio-category/${term.slug}/`}
         tag="Портфолио"
         title={`Проекты: <span class="gradient-text">${escapeHtmlText(term.name)}</span>`}
         subtitle={term.description || `Реализованные проекты студии GeoBit в категории «${term.name}»`}

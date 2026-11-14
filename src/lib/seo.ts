@@ -38,8 +38,8 @@ export function organizationSchema(s: any) {
     email: s?.email,
     telephone: s?.phone,
     priceRange: s?.priceRange || '₽₽',
-    image: `${SITE_URL}/logo.svg`,
-    logo: `${SITE_URL}/logo.svg`,
+    image: `${SITE_URL}/logo-512.png`,
+    logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo-512.png`, width: 512, height: 512 },
     areaServed: AREA_SERVED,
     address,
     serviceType: ['Создание сайтов', 'Разработка сайтов', 'Дизайн сайтов', 'Разработка логотипа', 'SEO-продвижение'],
@@ -66,6 +66,7 @@ export function organizationSchema(s: any) {
     '@id': `${SITE_URL}/#website`,
     url: `${SITE_URL}/`,
     name: 'GeoBit',
+    alternateName: ['ГеоБит', 'GeoBit — веб-студия в Севастополе'],
     inLanguage: 'ru-RU',
     publisher: { '@id': ORG_ID },
   }

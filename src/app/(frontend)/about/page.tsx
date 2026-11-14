@@ -61,6 +61,7 @@ export default async function AboutPage() {
     <main id="main" role="main">
       <PageHero
         crumbs={[{ label: 'О нас' }]}
+        path="/about/"
         tag={g?.tag || 'О студии'}
         title={g?.title || 'Мы создаём <span class="gradient-text">цифровые продукты</span> с душой'}
         subtitle={g?.subtitle || 'Веб-студия GeoBit — команда профессионалов с многолетним опытом'}

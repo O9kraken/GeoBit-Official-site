@@ -21,6 +21,7 @@ export default async function PortfolioPage() {
     <main id="main" role="main">
       <PageHero
         crumbs={[{ label: 'Портфолио' }]}
+        path="/portfolio/"
         tag={g?.tag || 'Наши проекты'}
         title={g?.title || '<span class="gradient-text">Наши </span>работы и проекты'}
         subtitle={g?.subtitle || 'Сайты, веб-приложения, логотипы и айдентика — с задачей, решением и результатом по каждому проекту'}

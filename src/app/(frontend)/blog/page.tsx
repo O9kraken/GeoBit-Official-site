@@ -52,6 +52,7 @@ export default async function BlogPage({ searchParams }: P) {
         titleClass="page-hero-title"
         subtitleClass="page-hero-subtitle"
         crumbs={[{ label: 'Блог' }]}
+        path="/blog/"
         tag={g?.tag || 'Блог о сайтах и продвижении'}
         title={g?.title || 'Полезные статьи о веб-разработке'}
         subtitle={g?.subtitle || 'Делимся опытом, лайфхаками и трендами в мире веб-разработки и дизайна'}

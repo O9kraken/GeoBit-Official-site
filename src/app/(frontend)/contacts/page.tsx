@@ -34,6 +34,7 @@ export default async function ContactsPage() {
     <main id="main" role="main">
       <PageHero
         crumbs={[{ label: 'Контакты' }]}
+        path="/contacts/"
         tag={g?.tag || 'Напишите нам'}
         title={g?.title || '<span class="gradient-text">Заказать сайт</span> свяжитесь с нами'}
         subtitle={g?.subtitle || 'Обсудим ваш проект — это бесплатно. Ответим в течение 1 часа.'}

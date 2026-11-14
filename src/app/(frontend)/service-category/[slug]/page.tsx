@@ -36,6 +36,7 @@ export default async function ServiceCategoryPage({ params }: P) {
     <main id="main" role="main">
       <PageHero
         crumbs={[{ label: 'Услуги', href: '/services/' }, { label: term.name }]}
+        path={`/service-category/${term.slug}/`}
         tag="Услуги"
         title={`<span class="gradient-text">${escapeHtmlText(term.name)}</span> — услуги и кейсы`}
         subtitle={term.description || `Услуги веб-студии GeoBit в категории «${term.name}» — цены, сроки и примеры работ`}

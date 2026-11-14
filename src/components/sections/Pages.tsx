@@ -1,5 +1,6 @@
 import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
-import { Breadcrumbs, Html, MaxIcon } from '@/components/Common'
+import { Breadcrumbs, Html, JsonLd, MaxIcon } from '@/components/Common'
+import { breadcrumbSchema } from '@/lib/seo'
 import { Consent, HiddenFields, MethodField } from '@/components/LeadForm'
 import { getGlobal } from '@/lib/payload'
 import { mediaUrl } from '@/lib/util'
@@ -16,8 +17,11 @@ export function PageHero({
   className = 'services-hero',
   titleClass,
   subtitleClass,
+  path,
 }: {
   crumbs: Crumb[]
+  /** URL текущей страницы — если указан, выводим BreadcrumbList для сниппета */
+  path?: string
   tag?: string
   title: string
   subtitle?: string
@@ -35,9 +39,14 @@ export function PageHero({
           {subtitle && <p className={subtitleClass}>{subtitle}</p>}
         </div>
       </div>
+      {path && <JsonLd data={crumbsSchema(crumbs, path)} />}
     </section>
   )
 }
+
+/** Хлебные крошки → BreadcrumbList (последний пункт = текущая страница) */
+export const crumbsSchema = (crumbs: Crumb[], path: string) =>
+  breadcrumbSchema(crumbs.map((c, i) => ({ name: c.label.replace(/<[^>]+>/g, ''), url: i === crumbs.length - 1 ? path : c.href || path })))
 
 /** Lexical → HTML (та же разметка, что выдавал WordPress) */
 export const richHtml = (data: any) => {

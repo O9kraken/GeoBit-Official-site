@@ -25,7 +25,17 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(SITE_URL),
     title: { default: 'GeoBit', template: '%s' },
-    icons: { icon: '/favicon.svg' },
+    // Яндекс и Google берут значок для сниппета отсюда: ICO по умолчанию, PNG 120 — рекомендованный размер Яндекса
+    icons: {
+      icon: [
+        { url: '/favicon.ico', sizes: '16x16 32x32 48x48' },
+        { url: '/favicon.svg', type: 'image/svg+xml' },
+        { url: '/favicon-120.png', type: 'image/png', sizes: '120x120' },
+        { url: '/favicon-192.png', type: 'image/png', sizes: '192x192' },
+      ],
+      apple: { url: '/apple-touch-icon.png', sizes: '180x180' },
+    },
+    manifest: '/site.webmanifest',
     verification: {
       yandex: s?.yandexVerification || undefined,
       google: s?.googleVerification || undefined,

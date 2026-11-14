@@ -25,6 +25,7 @@ export default async function FaqPage() {
     <main id="main" role="main">
       <PageHero
         crumbs={[{ label: 'FAQ' }]}
+        path="/faq/"
         tag={g?.tag || 'Вопросы и ответы'}
         title={g?.title || 'Частые <span class="gradient-text">вопросы</span>'}
         subtitle={g?.subtitle || 'Собрали ответы на вопросы, которые чаще всего задают перед началом работы. Не нашли свой — напишите нам.'}

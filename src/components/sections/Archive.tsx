@@ -20,6 +20,7 @@ export function PostArchive({
     <main id="main" role="main">
       <PageHero
         crumbs={kind === 'category' ? [{ label: 'Блог', href: '/blog/' }, { label: term.name }] : [{ label: `Метка: ${term.name}` }]}
+        path={kind === 'category' ? paths.category(term.slug) : paths.tag(term.slug)}
         tag="Блог"
         title={`Статьи: <span class="gradient-text">${escape(term.name)}</span>`}
         subtitle={desc}

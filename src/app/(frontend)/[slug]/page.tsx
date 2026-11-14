@@ -46,6 +46,7 @@ function PageView({ page }: { page: any }) {
     <main id="main" role="main">
       <section className="page-hero">
         <div className="container">
+          <Breadcrumbs items={[{ label: page.title }]} />
           <div className="page-hero-content">
             <span className="section-tag">Страница</span>
             <h1 className="page-hero-title">{page.title}</h1>
@@ -60,6 +61,7 @@ function PageView({ page }: { page: any }) {
           {page.meta?.faq?.length > 0 && <JsonLd data={faqSchema(page.meta.faq.slice(0, 7))} />}
         </div>
       </section>
+      <JsonLd data={breadcrumbSchema([{ name: page.title, url: `${SITE_URL}${paths.page(page.slug)}` }])} />
     </main>
   )
 }
