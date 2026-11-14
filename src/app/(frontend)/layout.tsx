@@ -1,4 +1,4 @@
-import { av } from '@/lib/asset'
+import { asyncCss, av } from '@/lib/asset'
 import type { Metadata, Viewport } from 'next'
 import React from 'react'
 
@@ -8,7 +8,7 @@ import Header from '@/components/Header'
 import { LeadModal } from '@/components/LeadForm'
 import PreviewRefresh from '@/components/PreviewRefresh'
 import LegacyScripts from '@/components/LegacyScripts'
-import { JsonLd, LogoInner } from '@/components/Common'
+import { JsonLd } from '@/components/Common'
 import { getGlobal, getServices } from '@/lib/payload'
 import { organizationSchema } from '@/lib/seo'
 import { SITE_URL } from '@/lib/util'
@@ -56,23 +56,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="ru" data-theme="dark" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: boot }} />
-        <link rel="stylesheet" href={av("/legacy/css/fonts.css")} />
-        <link rel="stylesheet" href={av("/legacy/vendor/fa/css/all.min.css")} />
+        {/* шрифты и иконки грузятся без блокировки отрисовки; основные начертания — заранее */}
+        <link rel="preload" href="/legacy/fonts/unbounded-cyrillic-800-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/legacy/fonts/nunito-cyrillic-400-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <script dangerouslySetInnerHTML={{ __html: asyncCss([av('/legacy/css/fonts.css'), av('/legacy/vendor/fa/css/all.min.css')]) }} />
+        <noscript>
+          <link rel="stylesheet" href={av('/legacy/css/fonts.css')} />
+          <link rel="stylesheet" href={av('/legacy/vendor/fa/css/all.min.css')} />
+        </noscript>
         <link rel="stylesheet" href={av("/legacy/css/style.css")} />
         <link rel="stylesheet" href={av("/legacy/css/geobit.css")} />
       </head>
       <body suppressHydrationWarning>
         <PreviewRefresh />
-        <div id="preloader">
-          <div className="preloader-inner">
-            <div className="preloader-logo logo--svg">
-              <LogoInner />
-            </div>
-            <div className="preloader-bar">
-              <div className="preloader-fill"></div>
-            </div>
-          </div>
-        </div>
         <Header />
         <Dock variant="top" />
         <LegacyScripts src={COMMON_SCRIPTS} />

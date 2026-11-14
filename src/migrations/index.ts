@@ -21,6 +21,7 @@ import * as migration_20261114_110000_blog_posts_20 from './20261114_110000_blog
 import * as migration_20261114_120000_portfolio_texts from './20261114_120000_portfolio_texts';
 import * as migration_20261114_130000_portfolio_media from './20261114_130000_portfolio_media';
 import * as migration_20261114_140000_testimonials_project from './20261114_140000_testimonials_project';
+import * as migration_20261114_150000_seo_meta_fix from './20261114_150000_seo_meta_fix';
 
 export const migrations = [
   {
@@ -137,5 +138,10 @@ export const migrations = [
     up: migration_20261114_140000_testimonials_project.up,
     down: migration_20261114_140000_testimonials_project.down,
     name: '20261114_140000_testimonials_project',
+  },
+  {
+    up: migration_20261114_150000_seo_meta_fix.up,
+    down: migration_20261114_150000_seo_meta_fix.down,
+    name: '20261114_150000_seo_meta_fix',
   },
 ];

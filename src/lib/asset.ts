@@ -4,3 +4,7 @@
  */
 export const ASSET_V = process.env.NEXT_PUBLIC_ASSET_V || 'dev'
 export const av = (u: string) => `${u}${u.includes('?') ? '&' : '?'}v=${ASSET_V}`
+
+/** Подключает CSS без блокировки первой отрисовки */
+export const asyncCss = (hrefs: string[]) =>
+  `(function(d){${JSON.stringify(hrefs)}.forEach(function(h){var l=d.createElement('link');l.rel='stylesheet';l.href=h;d.head.appendChild(l)})})(document);`
