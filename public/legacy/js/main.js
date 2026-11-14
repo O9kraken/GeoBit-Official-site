@@ -44,9 +44,12 @@ if (document.readyState === 'loading') {
 }
 
 // Тяжёлые эффекты и страховочное скрытие прелоадера — на полную загрузку.
+// На телефоне — когда браузер свободен, без canvas-частиц в первом экране.
 window.addEventListener('load', () => {
     adelfHidePreloader();
-    adelfInitHeavyAnims();
+    const run = () => adelfInitHeavyAnims();
+    if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 3000 });
+    else setTimeout(run, 1200);
 });
 
 // Жёсткий предохранитель: прелоадер точно уйдёт, даже если что-то пойдёт не так.
@@ -104,6 +107,8 @@ setActiveNavLink();
 function initHeroCanvas() {
     const canvas = document.getElementById('heroCanvas');
     if (!canvas) return;
+    // телефоны и режим экономии трафика: частицы не рисуем — экономим батарею и процессор
+    if (window.matchMedia('(max-width: 768px)').matches || (navigator.connection && navigator.connection.saveData)) return;
 
     const ctx = canvas.getContext('2d');
     let W = canvas.width = canvas.offsetWidth;

@@ -197,7 +197,7 @@ export function MessengerButtons({ s }: { s: any }) {
   if (!items.length) return null
   return (
     <>
-      <h4 style={{ fontSize: '0.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16, color: 'var(--white)' }}>Мессенджеры</h4>
+      <h3 style={{ fontSize: '0.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16, color: 'var(--white)' }}>Мессенджеры</h3>
       <div className="contact-messengers">
         {items.map((it) => (
           <a key={it.cls} href={it.href} className={`contact-messenger-btn ${it.cls}`} target="_blank" rel="noopener">

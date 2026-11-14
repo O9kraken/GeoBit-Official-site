@@ -149,7 +149,7 @@ export default async function ContactsPage() {
               <MessengerButtons s={s} />
               {faqs.length > 0 && (
                 <div style={{ marginTop: 40 }}>
-                  <h4 style={{ fontSize: '0.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 20, color: 'var(--white)' }}>Частые вопросы</h4>
+                  <h3 style={{ fontSize: '0.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 20, color: 'var(--white)' }}>Частые вопросы</h3>
                   {faqs.map((f, i) => (
                     <details key={i} style={{ background: 'var(--dark-3)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: 16, marginBottom: 12, cursor: 'pointer' }}>
                       <summary style={{ fontSize: '0.9rem', fontWeight: 600, listStyle: 'none', color: 'var(--white-3)' }}>{f.q}</summary>

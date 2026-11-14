@@ -29,8 +29,8 @@
     --white: #ffffff;
     --white-2: #f0f0f0;
     --white-3: #cccccc;
-    --gray-2: #888888;
-    --gray: #666666;
+    --gray-2: #9a9a9a;
+    --gray: #8f8f8f;
     /* Фирменные акценты — общие для обеих тем */
     --rgb-1: #ff0066;
     --rgb-2: #7c00ff;
@@ -546,7 +546,7 @@ img.custom-logo {
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgba(var(--ink-rgb),0.45);
+    color: rgba(var(--ink-rgb), 0.62);
     line-height: 1.2;
     margin-top: 4px;
 }
@@ -1757,7 +1757,7 @@ img.custom-logo {
     border-color: transparent;
     transform: translateY(-3px);
 }
-.footer-nav h4, .footer-services h4, .footer-contact h4 {
+.footer-nav h4, .footer-services h4, .footer-contact h4, .footer-h {
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 1px;
@@ -3607,12 +3607,14 @@ h1, h2, .hero-title, .section-title { word-break: keep-all; }
 /* ============================================================
    GeoBit — макеты услуг SEO + Фирменный стиль
    Неймспейс gbx-* (новый, нигде в теме не используется).
-   Полностью самодостаточно: НЕ зависит от .figma-*/.bm-*/.web-*.
+   Полностью самодостаточно: НЕ зависит от .figma-* / .bm-* / .web-*.
    Все стили заданы только через потомков .gbx-frame, чтобы
    гарантированно перебивать старые/глобальные правила темы.
    ============================================================ */
 
 /* --- Изоляция фрейма: гасим глобальные сбросы темы --- */
+/* Правило ниже раньше не применялось браузером из-за битого комментария выше;
+   оставлено выключенным, чтобы не менять вид макетов.
 .gbx-frame, .gbx-frame * {
     box-sizing: border-box;
     margin: 0;
@@ -3624,6 +3626,7 @@ h1, h2, .hero-title, .section-title { word-break: keep-all; }
     line-height: 1.3;
     letter-spacing: normal;
 }
+*/
 .gbx-frame {
     position: relative;
     display: block;

@@ -563,3 +563,7 @@ p,li,.hero-subtitle{text-wrap:pretty}
 .testimonial-case span{color:var(--gray);font-weight:400;margin-right:auto}
 .testimonial-case:hover{color:var(--white)}
 @media (max-width:900px){.gb-land-ex .svc-ex2-top{grid-template-columns:1fr}}
+
+/* Доступность: заголовки подвала (h2 вместо h4) без отступов по умолчанию, точки слайдера — зона нажатия 24px */
+.footer-h{margin-top:0}
+.slider-dot{width:10px;height:10px;margin:7px}

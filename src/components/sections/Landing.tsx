@@ -17,7 +17,7 @@ const ICONS = ['fa-route', 'fa-bullhorn', 'fa-lightbulb', 'fa-gem', 'fa-mobile-s
 const TONES = ['pink', 'purple', 'cyan']
 const DEFAULT_SERVICES = ['landing-page', 'corp-site', 'shops']
 // 3D-визуализации, отрендеренные для посадочных (public/landing-3d/<slug>.webp)
-const VISUAL_3D = ['krym', 'simferopol', 'yalta', 'evpatoriya', 'feodosiya', 'kerch', 'dlya-kafe', 'dlya-gostinic', 'dlya-ekskursij', 'dlya-avtoservisa']
+const VISUAL_3D = ['krym', 'simferopol', 'yalta', 'evpatoriya', 'feodosiya', 'kerch', 'dlya-kafe', 'dlya-gostinic', 'dlya-ekskursij', 'dlya-avtoservisa', 'dlya-stomatologii', 'dlya-salona-krasoty', 'dlya-stroitelnoj-kompanii']
 
 /** «Сезонность. Гостиницы…» → заголовок «Сезонность» + текст */
 function splitHead(t: string): { head: string; text: string } {

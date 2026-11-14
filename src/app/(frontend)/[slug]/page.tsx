@@ -141,7 +141,7 @@ async function PostView({ post }: { post: any }) {
                   </span>
                 )}
                 <div>
-                  <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: 4 }}>{author.name}</h4>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: 4 }}>{author.name}</h3>
                   <p style={{ fontSize: '0.85rem', color: 'var(--gray-2)', lineHeight: 1.6 }}>{author.about || 'Автор блога GeoBit'}</p>
                 </div>
               </div>
@@ -154,7 +154,7 @@ async function PostView({ post }: { post: any }) {
                       <a key={rp.id} href={paths.post(rp.slug)} className="gb-related-card">
                         <img src={mediaUrl(rp.cover, 'card') || mediaUrl(rp.cover)} alt={rp.title} width={400} height={220} style={{ width: '100%', height: 160, objectFit: 'cover' }} loading="lazy" />
                         <div style={{ padding: 16 }}>
-                          <h4 style={{ fontSize: '0.9rem', fontWeight: 600, lineHeight: 1.4 }}>{rp.title}</h4>
+                          <h3 style={{ fontSize: '0.9rem', fontWeight: 600, lineHeight: 1.4 }}>{rp.title}</h3>
                         </div>
                       </a>
                     ))}
@@ -165,7 +165,7 @@ async function PostView({ post }: { post: any }) {
 
             <aside className="single-sidebar">
               <div style={{ background: 'linear-gradient(135deg,rgba(124,0,255,0.15),rgba(0,229,255,0.05))', border: '1px solid rgba(124,0,255,0.3)', borderRadius: 20, padding: 28, marginBottom: 24 }}>
-                <h4 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: 8 }}>Нужен сайт?</h4>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: 8 }}>Нужен сайт?</h3>
                 <p style={{ fontSize: '0.85rem', color: 'var(--gray-2)', marginBottom: 20 }}>Обсудим ваш проект бесплатно</p>
                 <a href="/contacts/" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
                   Оставить заявку
@@ -173,7 +173,7 @@ async function PostView({ post }: { post: any }) {
               </div>
               {recent.length > 0 && (
                 <div style={{ background: 'var(--dark-3)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: 24 }}>
-                  <h4 style={{ fontSize: '0.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 20 }}>Свежие статьи</h4>
+                  <h3 style={{ fontSize: '0.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 20 }}>Свежие статьи</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                     {recent.map((rr: any) => (
                       <a key={rr.id} href={paths.post(rr.slug)} className="gb-recent-link" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>

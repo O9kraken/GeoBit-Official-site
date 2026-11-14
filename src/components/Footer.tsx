@@ -62,7 +62,7 @@ export default async function Footer() {
               </div>
             </div>
             <div className="footer-nav">
-              <h4>Навигация</h4>
+              <h2 className="footer-h">Навигация</h2>
               <ul>
                 {footerNav.map((l, i) => (
                   <li key={i}>
@@ -72,7 +72,7 @@ export default async function Footer() {
               </ul>
             </div>
             <div className="footer-services">
-              <h4>Услуги</h4>
+              <h2 className="footer-h">Услуги</h2>
               <ul>
                 {(nav?.footerServices?.length ? nav.footerServices : services.slice(0, 6).map((sv: any) => ({ label: sv.title, url: paths.service(sv.slug) }))).map(
                   (l: any, i: number) => (
@@ -84,7 +84,7 @@ export default async function Footer() {
               </ul>
             </div>
             <div className="footer-contact">
-              <h4>Контакты</h4>
+              <h2 className="footer-h">Контакты</h2>
               <ul>
                 {s?.email && (
                   <li>

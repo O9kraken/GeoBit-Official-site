@@ -64,8 +64,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <link rel="stylesheet" href={av('/legacy/css/fonts.css')} />
           <link rel="stylesheet" href={av('/legacy/vendor/fa/css/all.min.css')} />
         </noscript>
-        <link rel="stylesheet" href={av("/legacy/css/style.css")} />
-        <link rel="stylesheet" href={av("/legacy/css/geobit.css")} />
+        {/* style.css + geobit.css без неиспользуемых правил, сжатые (scripts/build-css.mjs) */}
+        <link rel="stylesheet" href={av("/legacy/css/site.min.css")} />
       </head>
       <body suppressHydrationWarning>
         <PreviewRefresh />
