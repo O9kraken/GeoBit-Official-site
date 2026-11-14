@@ -104,7 +104,9 @@ export default async function AboutPage() {
       <section className="section-padding bg-dark-2">
         <div className="container">
           <figure className="ab2-mission">
-
+            <span className="ab2-mission__mark" aria-hidden="true">
+              <i className="fas fa-quote-left"></i>
+            </span>
             <div>
               <span className="section-tag">Миссия</span>
               <blockquote>
