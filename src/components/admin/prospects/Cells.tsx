@@ -88,15 +88,26 @@ export function ContactsField() {
   const v = (k: string) => (f?.[k]?.value as string) || undefined
   const lat = f?.lat?.value as number | undefined
   const lon = f?.lon?.value as number | undefined
+  const name = v('name') || ''
+  const address = v('address') || ''
+  const sourceKey = v('sourceKey') || ''
+  // Открываем карточку организации, а не голую метку: поиск по названию и адресу рядом с точкой
+  const q = encodeURIComponent([name, address].filter(Boolean).join(', '))
+  const ll = lat && lon ? `${lon},${lat}` : ''
+  const yandexUrl = `https://yandex.ru/maps/?mode=search&text=${q}${ll ? `&ll=${ll}&sll=${ll}&z=17` : ''}`
+  const gisId = sourceKey.startsWith('2gis:') ? sourceKey.slice(5) : ''
+  const gisUrl = gisId
+    ? `https://2gis.ru/firm/${gisId}`
+    : `https://2gis.ru/search/${encodeURIComponent(name || address)}${ll ? `?m=${ll}%2F17` : ''}`
   return (
     <div className="gb-pr-card">
       <Links phone={v('phone')} website={v('website')} email={v('email')} socials={v('socials')} />
-      {lat && lon && (
+      {(name || (lat && lon)) && (
         <span className="gb-pr-links">
-          <a href={`https://yandex.ru/maps/?pt=${lon},${lat}&z=17&l=map`} target="_blank" rel="noopener noreferrer">
+          <a href={yandexUrl} target="_blank" rel="noopener noreferrer">
             📍 На Яндекс Картах
           </a>
-          <a href={`https://2gis.ru/geo/${lon},${lat}`} target="_blank" rel="noopener noreferrer">
+          <a href={gisUrl} target="_blank" rel="noopener noreferrer">
             📍 В 2ГИС
           </a>
         </span>
