@@ -16,6 +16,7 @@ import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
 import { Leads, Subscribers } from './collections/Leads'
+import { Prospects } from './collections/Prospects'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Team, Testimonials } from './collections/People'
@@ -30,6 +31,7 @@ import { Navigation } from './globals/Navigation'
 import { AboutPage, BlogPage, ContactsPage, FaqPage, HomePage, PortfolioPage, ServicesPage } from './globals/PageGlobals'
 import { SiteSettings } from './globals/SiteSettings'
 import { polishCollection, polishGlobal } from './admin/polish'
+import { roles, withRolesCollection, withRolesGlobal } from './access/roles'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -77,15 +79,16 @@ export default buildConfig({
   },
   // порядок здесь = порядок групп в меню админки: заявки — первыми
   collections: [
-    Leads, Subscribers,
+    Leads, Subscribers, Prospects,
     Pages,
     Services, Landings, Projects, Posts, Team, Testimonials, Media,
     ServiceCategories, PortfolioCategories, Categories, Tags,
     Users,
   ]
     .map(polishCollection)
+    .map(withRolesCollection)
     .map(withIndexNow),
-  globals: [HomePage, ServicesPage, AboutPage, ContactsPage, PortfolioPage, BlogPage, FaqPage, SiteSettings, SeoSettings, Navigation, Calculator].map(polishGlobal),
+  globals: [HomePage, ServicesPage, AboutPage, ContactsPage, PortfolioPage, BlogPage, FaqPage, SiteSettings, SeoSettings, Navigation, Calculator].map(polishGlobal).map(withRolesGlobal),
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [...defaultFeatures, EXPERIMENTAL_TableFeature()],
   }),
@@ -174,7 +177,8 @@ export default buildConfig({
       collections: ['pages', 'posts', 'services', 'landings', 'projects'],
       overrides: {
         labels: { singular: 'Редирект', plural: 'Редиректы' },
-        admin: { group: 'Настройки' },
+        admin: { group: 'Настройки', hidden: ({ user }) => (user as any)?.role && (user as any).role !== 'admin' },
+        access: { read: () => true, create: roles('admin'), update: roles('admin'), delete: roles('admin') },
       },
     }),
   ],

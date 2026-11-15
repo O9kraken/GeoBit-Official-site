@@ -1,6 +1,7 @@
 import { APIError, type CollectionConfig } from 'payload'
 import { emailLayout, SITE } from '../lib/email-layout'
 import { authenticated } from '../access'
+import { isAdmin, ROLE_OPTIONS, rolesField } from '../access/roles'
 import { clientIpFrom, overLimit } from '../lib/rate-limit'
 
 // Ограничения с одного IP: подбор пароля и рассылка писем сброса
@@ -16,7 +17,12 @@ const MIN_PASSWORD = 10
 export const Users: CollectionConfig = {
   slug: 'users',
   labels: { singular: 'Пользователь', plural: 'Пользователи' },
-  admin: { useAsTitle: 'email', group: 'Система', defaultColumns: ['avatar', 'name', 'email'] },
+  admin: {
+    useAsTitle: 'email',
+    group: 'Система',
+    defaultColumns: ['avatar', 'name', 'email', 'role'],
+    hidden: ({ user }) => !isAdmin(user),
+  },
   auth: {
     // 5 неверных паролей подряд — блокировка на 15 минут
     maxLoginAttempts: 5,
@@ -43,12 +49,13 @@ export const Users: CollectionConfig = {
       },
     },
   },
-  // Пользователей видят и меняют только вошедшие в админку; сам себя удалить нельзя
+  // Список пользователей видят все вошедшие (нужно для авторов статей). Добавлять, удалять и менять чужие профили — только администратор.
+  // Свой профиль (имя, аватар, пароль, оформление) может менять каждый; сам себя удалить нельзя.
   access: {
     read: authenticated,
-    create: authenticated,
-    update: authenticated,
-    delete: ({ req, id }) => Boolean(req.user) && String(req.user?.id) !== String(id),
+    create: ({ req }) => isAdmin(req.user),
+    update: ({ req, id }) => isAdmin(req.user) || (Boolean(req.user) && String(req.user?.id) === String(id)),
+    delete: ({ req, id }) => isAdmin(req.user) && String(req.user?.id) !== String(id),
     admin: ({ req }) => Boolean(req.user),
   },
   hooks: {
@@ -64,6 +71,21 @@ export const Users: CollectionConfig = {
         return args
       },
     ],
+    beforeChange: [
+      // нельзя оставить сайт без администратора
+      async ({ data, originalDoc, req, operation }) => {
+        if (operation === 'update' && originalDoc && (originalDoc.role || 'admin') === 'admin' && data?.role && data.role !== 'admin') {
+          const others = await req.payload.count({
+            collection: 'users',
+            where: { and: [{ id: { not_equals: originalDoc.id } }, { or: [{ role: { equals: 'admin' } }, { role: { exists: false } }] }] },
+            overrideAccess: true,
+            req,
+          })
+          if (!others.totalDocs) throw new APIError('Это единственный администратор — сначала назначьте администратором кого-то ещё.', 400, undefined, true)
+        }
+        return data
+      },
+    ],
     beforeValidate: [
       ({ data }) => {
         const pw = (data as any)?.password
@@ -77,6 +99,21 @@ export const Users: CollectionConfig = {
   },
   fields: [
     { name: 'name', label: 'Имя', type: 'text', admin: { description: 'Показывается как автор статей в блоге' } },
+    {
+      name: 'role',
+      label: 'Роль',
+      type: 'select',
+      required: true,
+      defaultValue: 'editor',
+      options: ROLE_OPTIONS,
+      saveToJWT: true,
+      access: { create: rolesField('admin'), update: rolesField('admin') },
+      admin: {
+        position: 'sidebar',
+        description: 'Администратор — всё. Редактор — контент сайта без заявок и настроек. Менеджер — заявки, подписчики и поиск клиентов без правки сайта.',
+        components: { Cell: '/components/admin/RoleCell#RoleCell' },
+      },
+    },
     {
       name: 'avatar',
       label: 'Аватар',

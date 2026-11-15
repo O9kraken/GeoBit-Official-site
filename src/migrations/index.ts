@@ -27,6 +27,8 @@ import * as migration_20261114_161000_trust_and_meta from './20261114_161000_tru
 import * as migration_20261115_100000_landings_industries from './20261115_100000_landings_industries';
 import * as migration_20261115_110000_home_texts from './20261115_110000_home_texts';
 import * as migration_20261115_120000_posts_list_columns from './20261115_120000_posts_list_columns';
+import * as migration_20261115_130000_prospects from './20261115_130000_prospects';
+import * as migration_20261115_140000_roles from './20261115_140000_roles';
 
 export const migrations = [
   {
@@ -87,7 +89,7 @@ export const migrations = [
   {
     up: migration_20261113_150000_blog_posts.up,
     down: migration_20261113_150000_blog_posts.down,
-    name: '20261113_150000_blog_posts'
+    name: '20261113_150000_blog_posts',
   },
   {
     up: migration_20261113_160000_schedule_posts.up,
@@ -173,5 +175,15 @@ export const migrations = [
     up: migration_20261115_120000_posts_list_columns.up,
     down: migration_20261115_120000_posts_list_columns.down,
     name: '20261115_120000_posts_list_columns',
+  },
+  {
+    up: migration_20261115_130000_prospects.up,
+    down: migration_20261115_130000_prospects.down,
+    name: '20261115_130000_prospects'
+  },
+  {
+    up: migration_20261115_140000_roles.up,
+    down: migration_20261115_140000_roles.down,
+    name: '20261115_140000_roles',
   },
 ];

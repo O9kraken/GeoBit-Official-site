@@ -87,6 +87,13 @@ export const SiteSettings: GlobalConfig = {
             { name: 'leadEmail', label: 'Куда слать письма о заявках', type: 'email', access: { read: authenticatedField } },
             { name: 'consentDocLabel', label: 'Редакция согласия на ПД (для журнала)', type: 'text', defaultValue: 'Редакция от 21.07.2026 — /soglasie-pd/' },
             { name: 'leadSuccessText', label: 'Текст после отправки заявки', type: 'text', defaultValue: 'Заявка отправлена! Мы свяжемся с вами в течение часа.' },
+            {
+              name: 'dgisApiKey',
+              label: 'Ключ 2ГИС Places API (для «Поиска клиентов»)',
+              type: 'text',
+              access: { read: authenticatedField },
+              admin: { description: 'Получить в кабинете platform.2gis.ru → API-ключи. Виден только в админке. Без ключа поиск работает по OpenStreetMap.' },
+            },
           ],
         },
       ],

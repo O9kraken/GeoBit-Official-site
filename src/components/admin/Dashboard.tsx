@@ -1,27 +1,36 @@
 import type { Payload } from 'payload'
+import { can, type Role } from '@/access/roles'
 
-type Props = { payload: Payload }
+type Props = { payload: Payload; user?: any }
 
 const ADMIN = '/admin'
 
 /** Блок над стандартным дашбордом: свежие заявки и частые действия */
-export async function Dashboard({ payload }: Props) {
-  const [fresh, total, latest] = await Promise.all([
-    payload.count({ collection: 'leads', where: { status: { equals: 'new' } }, overrideAccess: true }),
-    payload.count({ collection: 'leads', overrideAccess: true }),
-    payload.find({ collection: 'leads', sort: '-createdAt', limit: 5, depth: 0, overrideAccess: true }),
-  ])
-  const quick: [string, string, string][] = [
-    ['Первый экран главной', `${ADMIN}/globals/home`, 'Заголовок, кнопки, цифры'],
-    ['Цены и услуги', `${ADMIN}/collections/services`, 'Карточки, тарифы, FAQ'],
-    ['Калькулятор', `${ADMIN}/globals/calculator`, 'Цены типов сайтов и блоков'],
-    ['Кейсы', `${ADMIN}/collections/projects`, 'Портфолио и скриншоты'],
-    ['Новая статья', `${ADMIN}/collections/posts/create`, 'Блог'],
-    ['Контакты и соцсети', `${ADMIN}/globals/settings`, 'Телефон, мессенджеры, Метрика'],
-    ['Отзывы', `${ADMIN}/collections/testimonials`, 'Тексты и фото клиентов'],
-    ['Мой профиль', `${ADMIN}/account`, 'Имя, аватар автора, пароль'],
-    ['SEO-аудит', `${ADMIN}/seo`, 'Слабые страницы, ИИ-поиск, llms.txt'],
+export async function Dashboard({ payload, user }: Props) {
+  const sales = can(user, 'admin', 'manager')
+  const [fresh, total, latest] = sales
+    ? await Promise.all([
+        payload.count({ collection: 'leads', where: { status: { equals: 'new' } }, overrideAccess: true }),
+        payload.count({ collection: 'leads', overrideAccess: true }),
+        payload.find({ collection: 'leads', sort: '-createdAt', limit: 5, depth: 0, overrideAccess: true }),
+      ])
+    : [{ totalDocs: 0 }, { totalDocs: 0 }, { docs: [] as any[] }]
+  const C: Role[] = ['admin', 'editor']
+  const S: Role[] = ['admin', 'manager']
+  const all: [string, string, string, Role[]][] = [
+    ['Первый экран главной', `${ADMIN}/globals/home`, 'Заголовок, кнопки, цифры', C],
+    ['Цены и услуги', `${ADMIN}/collections/services`, 'Карточки, тарифы, FAQ', C],
+    ['Калькулятор', `${ADMIN}/globals/calculator`, 'Цены типов сайтов и блоков', ['admin']],
+    ['Кейсы', `${ADMIN}/collections/projects`, 'Портфолио и скриншоты', C],
+    ['Новая статья', `${ADMIN}/collections/posts/create`, 'Блог', C],
+    ['Поиск клиентов', `${ADMIN}/collections/prospects`, 'Компании без сайта или со старым сайтом', S],
+    ['Контакты и соцсети', `${ADMIN}/globals/settings`, 'Телефон, мессенджеры, Метрика', ['admin']],
+    ['Отзывы', `${ADMIN}/collections/testimonials`, 'Тексты и фото клиентов', C],
+    ['Пользователи и роли', `${ADMIN}/collections/users`, 'Кто входит в админку и что может', ['admin']],
+    ['Мой профиль', `${ADMIN}/account`, 'Имя, аватар автора, пароль', ['admin', 'editor', 'manager']],
+    ['SEO-аудит', `${ADMIN}/seo`, 'Слабые страницы, ИИ-поиск, llms.txt', C],
   ]
+  const quick = all.filter((q) => can(user, ...q[3])).map(([t, h, d]) => [t, h, d] as [string, string, string])
   const status: Record<string, string> = { new: 'Новая', progress: 'В работе', won: 'Клиент', lost: 'Отказ', spam: 'Спам' }
   const fmt = (d: string) => new Date(d).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' })
   return (
@@ -36,6 +45,7 @@ export async function Dashboard({ payload }: Props) {
         </a>
       </div>
 
+      {sales && (
       <div className="gb-dash__grid">
         <a className={`gb-dash__leads ${fresh.totalDocs ? 'is-hot' : ''}`} href={`${ADMIN}/collections/leads?where[status][equals]=new`}>
           <span className="gb-dash__num">{fresh.totalDocs}</span>
@@ -61,6 +71,7 @@ export async function Dashboard({ payload }: Props) {
           )}
         </div>
       </div>
+      )}
 
       <h3 className="gb-dash__title">Быстрые действия</h3>
       <div className="gb-dash__quick">

@@ -12,54 +12,7 @@
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "supportedTimezones".
  */
-export type SupportedTimezones =
-  | 'Pacific/Midway'
-  | 'Pacific/Niue'
-  | 'Pacific/Honolulu'
-  | 'Pacific/Rarotonga'
-  | 'America/Anchorage'
-  | 'Pacific/Gambier'
-  | 'America/Los_Angeles'
-  | 'America/Tijuana'
-  | 'America/Denver'
-  | 'America/Phoenix'
-  | 'America/Chicago'
-  | 'America/Guatemala'
-  | 'America/New_York'
-  | 'America/Bogota'
-  | 'America/Caracas'
-  | 'America/Santiago'
-  | 'America/Buenos_Aires'
-  | 'America/Sao_Paulo'
-  | 'Atlantic/South_Georgia'
-  | 'Atlantic/Azores'
-  | 'Atlantic/Cape_Verde'
-  | 'Europe/London'
-  | 'Europe/Berlin'
-  | 'Africa/Lagos'
-  | 'Europe/Athens'
-  | 'Africa/Cairo'
-  | 'Europe/Moscow'
-  | 'Asia/Riyadh'
-  | 'Asia/Dubai'
-  | 'Asia/Baku'
-  | 'Asia/Karachi'
-  | 'Asia/Tashkent'
-  | 'Asia/Calcutta'
-  | 'Asia/Dhaka'
-  | 'Asia/Almaty'
-  | 'Asia/Jakarta'
-  | 'Asia/Bangkok'
-  | 'Asia/Shanghai'
-  | 'Asia/Singapore'
-  | 'Asia/Tokyo'
-  | 'Asia/Seoul'
-  | 'Australia/Brisbane'
-  | 'Australia/Sydney'
-  | 'Pacific/Guam'
-  | 'Pacific/Noumea'
-  | 'Pacific/Auckland'
-  | 'Pacific/Fiji';
+export type SupportedTimezones = 'Europe/Moscow';
 
 export interface Config {
   auth: {
@@ -69,6 +22,7 @@ export interface Config {
   collections: {
     leads: Lead;
     subscribers: Subscriber;
+    prospects: Prospect;
     pages: Page;
     services: Service;
     landings: Landing;
@@ -89,10 +43,15 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    projects: {
+      testimonials: 'testimonials';
+    };
+  };
   collectionsSelect: {
     leads: LeadsSelect<false> | LeadsSelect<true>;
     subscribers: SubscribersSelect<false> | SubscribersSelect<true>;
+    prospects: ProspectsSelect<false> | ProspectsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     landings: LandingsSelect<false> | LandingsSelect<true>;
@@ -178,6 +137,8 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * Заявки с форм сайта. Новые подсвечиваются на панели и в меню. Хранятся 3 года, потом удаляются сами (152-ФЗ).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "leads".
  */
@@ -211,6 +172,8 @@ export interface Lead {
   createdAt: string;
 }
 /**
+ * Подписчики рассылки блога. Отписка — по ссылке в письме, вручную удалять не нужно.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "subscribers".
  */
@@ -225,6 +188,49 @@ export interface Subscriber {
   createdAt: string;
 }
 /**
+ * Компании из OpenStreetMap и 2ГИС (официальный API). Сайт каждой проверяется автоматически: чем выше оценка, тем нужнее компании новый сайт. Звоните и пишите лично — массовые рассылки без согласия запрещены законом о рекламе.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "prospects".
+ */
+export interface Prospect {
+  id: number;
+  name: string;
+  niche?: string | null;
+  category?: string | null;
+  city?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  website?: string | null;
+  socials?: string | null;
+  hours?: string | null;
+  siteStatus?: ('unchecked' | 'none' | 'social' | 'down' | 'old' | 'weak' | 'ok') | null;
+  /**
+   * 0–100: чем выше, тем нужнее компании новый сайт (−1 — ещё не проверен)
+   */
+  score?: number | null;
+  siteNotes?: string | null;
+  siteTitle?: string | null;
+  siteFinalUrl?: string | null;
+  siteMs?: number | null;
+  siteCheckedAt?: string | null;
+  status?: ('new' | 'contacted' | 'interested' | 'offer' | 'client' | 'rejected' | 'skip') | null;
+  nextAt?: string | null;
+  /**
+   * Что обсуждали, кто ЛПР, что предложить
+   */
+  note?: string | null;
+  source?: ('osm' | '2gis' | 'manual') | null;
+  sourceKey?: string | null;
+  lat?: number | null;
+  lon?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Отдельные страницы: юридические документы, согласия, оферта. Адрес — /<slug>/.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
@@ -291,6 +297,8 @@ export interface Page {
   createdAt: string;
 }
 /**
+ * Все картинки сайта. Сжатые версии делаются сами при загрузке; подпись «Alt» нужна для поиска и незрячих.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
@@ -340,6 +348,8 @@ export interface Media {
   };
 }
 /**
+ * Услуги и цены: карточки на /services/ и отдельные страницы /services/<slug>/. Порядок — поле «Порядок».
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services".
  */
@@ -457,6 +467,8 @@ export interface Service {
   createdAt: string;
 }
 /**
+ * Группы услуг для фильтра на странице услуг.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "service-categories".
  */
@@ -624,6 +636,8 @@ export interface Landing {
   createdAt: string;
 }
 /**
+ * Кейсы портфолио. «Показать на главной» — кейс попадает в блок работ на главной странице.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "projects".
  */
@@ -667,6 +681,14 @@ export interface Project {
   slug: string;
   categories?: (number | PortfolioCategory)[] | null;
   serviceCategories?: (number | ServiceCategory)[] | null;
+  /**
+   * Привязка делается в самом отзыве: поле «Кейс в портфолио»
+   */
+  testimonials?: {
+    docs?: (number | Testimonial)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   isFeatured?: boolean | null;
   order?: number | null;
   publishedAt?: string | null;
@@ -710,6 +732,8 @@ export interface Project {
   createdAt: string;
 }
 /**
+ * Группы кейсов для фильтра в портфолио.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "portfolio-categories".
  */
@@ -761,13 +785,50 @@ export interface PortfolioCategory {
   createdAt: string;
 }
 /**
+ * Отзывы клиентов. Привяжите отзыв к кейсу — он появится и на странице проекта. Только настоящие отзывы.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  name: string;
+  position?: string | null;
+  text: string;
+  photo?: (number | null) | Media;
+  rating?: number | null;
+  /**
+   * Например: «Электронное меню и сайт-визитка»
+   */
+  project?: string | null;
+  /**
+   * Отзыв появится на странице этого кейса, а в слайдере отзывов — ссылка «Смотреть кейс»
+   */
+  projectRef?: (number | null) | Project;
+  published?: boolean | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Статьи выходят сами по расписанию — по вторникам и пятницам в 10:00 по Москве. Дату можно сменить в статье: стрелка у «Опубликовать» → «Запланировать публикацию».
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
  */
 export interface Post {
   id: number;
+  /**
+   * Он же заголовок в поиске, если во вкладке «SEO и ИИ» не задан свой. Лучше 40–65 знаков, главный запрос — ближе к началу.
+   */
   title: string;
+  /**
+   * 1–2 предложения: о чём статья и чем полезна. Показывается в карточке блога и в описании для поиска.
+   */
   excerpt?: string | null;
+  /**
+   * Горизонтальная картинка от 1200×630.
+   */
   cover?: (number | null) | Media;
   content: {
     root: {
@@ -788,16 +849,22 @@ export interface Post {
    * Часть URL. Латиница, цифры и дефис. Не меняйте у опубликованных страниц без редиректа.
    */
   slug: string;
+  /**
+   * По Москве. Ставится сама при первой публикации — менять не нужно.
+   */
   publishedAt?: string | null;
   /**
    * Имя и аватар берутся из профиля пользователя
    */
   author?: (number | null) | User;
+  /**
+   * Нужно, только если автор выше не выбран
+   */
   authorName?: string | null;
   categories?: (number | Category)[] | null;
   tags?: (number | Tag)[] | null;
   /**
-   * Считается автоматически
+   * Считается само по объёму текста
    */
   readingTime?: number | null;
   meta?: {
@@ -841,6 +908,8 @@ export interface Post {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Кто может входить в админку. Имя и аватар из профиля показываются как автор статей.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -850,6 +919,10 @@ export interface User {
    * Показывается как автор статей в блоге
    */
   name?: string | null;
+  /**
+   * Администратор — всё. Редактор — контент сайта без заявок и настроек. Менеджер — заявки, подписчики и поиск клиентов без правки сайта.
+   */
+  role: 'admin' | 'editor' | 'manager';
   /**
    * Квадратное фото. Показывается у автора в блоге и в шапке админки.
    */
@@ -883,6 +956,8 @@ export interface User {
   collection: 'users';
 }
 /**
+ * Рубрики блога — фильтр на /blog/ и страницы /category/<slug>/.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".
  */
@@ -934,6 +1009,8 @@ export interface Category {
   createdAt: string;
 }
 /**
+ * Метки статей. Необязательны: рубрик обычно хватает.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "tags".
  */
@@ -948,6 +1025,8 @@ export interface Tag {
   createdAt: string;
 }
 /**
+ * Люди в блоке команды на странице «О нас».
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "team".
  */
@@ -962,23 +1041,6 @@ export interface Team {
   vk?: string | null;
   github?: string | null;
   linkedin?: string | null;
-  published?: boolean | null;
-  order?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "testimonials".
- */
-export interface Testimonial {
-  id: number;
-  name: string;
-  position?: string | null;
-  text: string;
-  photo?: (number | null) | Media;
-  rating?: number | null;
-  project?: string | null;
   published?: boolean | null;
   order?: number | null;
   updatedAt: string;
@@ -1144,6 +1206,10 @@ export interface PayloadLockedDocument {
         value: number | Subscriber;
       } | null)
     | ({
+        relationTo: 'prospects';
+        value: number | Prospect;
+      } | null)
+    | ({
         relationTo: 'pages';
         value: number | Page;
       } | null)
@@ -1275,6 +1341,38 @@ export interface SubscribersSelect<T extends boolean = true> {
   token?: T;
   ip?: T;
   consentAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "prospects_select".
+ */
+export interface ProspectsSelect<T extends boolean = true> {
+  name?: T;
+  niche?: T;
+  category?: T;
+  city?: T;
+  address?: T;
+  phone?: T;
+  email?: T;
+  website?: T;
+  socials?: T;
+  hours?: T;
+  siteStatus?: T;
+  score?: T;
+  siteNotes?: T;
+  siteTitle?: T;
+  siteFinalUrl?: T;
+  siteMs?: T;
+  siteCheckedAt?: T;
+  status?: T;
+  nextAt?: T;
+  note?: T;
+  source?: T;
+  sourceKey?: T;
+  lat?: T;
+  lon?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1512,6 +1610,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   slug?: T;
   categories?: T;
   serviceCategories?: T;
+  testimonials?: T;
   isFeatured?: T;
   order?: T;
   publishedAt?: T;
@@ -1608,6 +1707,7 @@ export interface TestimonialsSelect<T extends boolean = true> {
   photo?: T;
   rating?: T;
   project?: T;
+  projectRef?: T;
   published?: T;
   order?: T;
   updatedAt?: T;
@@ -1778,6 +1878,7 @@ export interface TagsSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  role?: T;
   avatar?: T;
   about?: T;
   uiAccent?: T;
@@ -2456,6 +2557,10 @@ export interface Setting {
   leadEmail?: string | null;
   consentDocLabel?: string | null;
   leadSuccessText?: string | null;
+  /**
+   * Получить в кабинете platform.2gis.ru → API-ключи. Виден только в админке. Без ключа поиск работает по OpenStreetMap.
+   */
+  dgisApiKey?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2992,6 +3097,7 @@ export interface SettingsSelect<T extends boolean = true> {
   leadEmail?: T;
   consentDocLabel?: T;
   leadSuccessText?: T;
+  dgisApiKey?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

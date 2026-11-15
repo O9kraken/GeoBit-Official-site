@@ -1,4 +1,5 @@
 import { DefaultTemplate } from '@payloadcms/next/templates'
+import { can } from '@/access/roles'
 import { Gutter } from '@payloadcms/ui'
 import { redirect } from 'next/navigation'
 import { analyze, scoreColor, type Kind } from '@/lib/seo-analysis'
@@ -46,6 +47,7 @@ const Pill = ({ v }: { v: number }) => (
 export async function SeoAudit({ initPageResult, params, searchParams }: any) {
   const { req, permissions, visibleEntities, locale } = initPageResult
   if (!req.user) redirect('/admin/login')
+  if (!can(req.user, 'admin', 'editor')) redirect('/admin')
   const payload = req.payload
   const sort = (searchParams?.sort as string) || 'seo'
 
