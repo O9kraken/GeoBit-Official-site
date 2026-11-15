@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CITIES, NICHES } from '@/lib/prospects/presets'
 
 const API = '/api/prospects'
@@ -14,6 +14,14 @@ export function ProspectsToolbar() {
   const [q, setQ] = useState('')
   const [busy, setBusy] = useState<string | null>(null)
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
+
+  // при первом открытии досчитываем потенциал у старых записей
+  useEffect(() => {
+    fetch(`${API}/rescore?ifNeeded=1`, { method: 'POST', credentials: 'include' })
+      .then((r) => r.json())
+      .then((j) => j?.updated && router.refresh())
+      .catch(() => {})
+  }, [router])
 
   const call = async (url: string) => {
     const r = await fetch(url, { method: 'POST', credentials: 'include' })
@@ -47,10 +55,13 @@ export function ProspectsToolbar() {
         const j = await call(`${API}/check-sites?batch=40`)
         total += j.checked
         left = j.left
-        setMsg({ ok: true, text: `Проверено сайтов: ${total}${left ? `, осталось ${left}…` : '. Готово — сортировка по оценке: сверху самые «горячие».'}` })
+        setMsg({ ok: true, text: `Проверено сайтов: ${total}${left ? `, осталось ${left}…` : '. Считаю потенциал…'}` })
         router.refresh()
         if (!j.checked) break
       }
+      const rs = await call(`${API}/rescore`)
+      setMsg({ ok: true, text: `Готово. Проверено сайтов: ${total}. Дублей отсеяно: ${rs.dups}. Сверху — те, кому стоит написать в первую очередь.` })
+      router.refresh()
     } catch (e: any) {
       setMsg({ ok: false, text: e.message })
     } finally {
@@ -60,15 +71,24 @@ export function ProspectsToolbar() {
 
   const BASE = '/admin/collections/prospects'
   const filters: [string, string][] = [
-    ['🔥 Горячие (нет сайта / не работает)', `${BASE}?where[siteStatus][in]=none,social,down&sort=-score`],
-    ['Устаревшие сайты', `${BASE}?where[siteStatus][equals]=old&sort=-score`],
-    ['С телефоном', `${BASE}?where[phone][exists]=true&sort=-score`],
-    ['В работе', `${BASE}?where[status][in]=contacted,interested,offer`],
+    ['🔥 Звонить первыми', `${BASE}?where[potential][greater_than_equal]=70&where[status][equals]=new&sort=-potential`],
+    ['Можно попробовать', `${BASE}?where[potential][greater_than_equal]=50&where[potential][less_than]=70&where[status][equals]=new&sort=-potential`],
+    ['Написали — ждём', `${BASE}?where[status][in]=contacted,offer&sort=nextAt`],
+    ['👁 Открыли КП', `${BASE}?where[kpViewedAt][exists]=true&sort=-kpViewedAt`],
+    ['Интересно / клиенты', `${BASE}?where[status][in]=interested,client`],
+    ['Отсеяно', `${BASE}?where[status][equals]=skip`],
     ['Все', BASE],
   ]
 
   return (
     <div className="gb-pr">
+      <ol className="gb-pr__how">
+        <li><b>Найдите компании</b> — город и сфера ниже</li>
+        <li><b>Сайты проверятся сами</b>, сети, дубли и компании без контактов отсеются</li>
+        <li><b>Откройте «🔥 Звонить первыми»</b> — там самые выгодные</li>
+        <li><b>«Написать»</b> — готовый текст со ссылкой на КП, отправьте в WhatsApp или на почту</li>
+        <li><b>«👁 Открыли КП»</b> — кто посмотрел предложение: им звоните</li>
+      </ol>
       <div className="gb-pr__form">
         <label>
           <span>Источник</span>

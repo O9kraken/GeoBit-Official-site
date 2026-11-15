@@ -104,3 +104,17 @@ export function ContactsField() {
     </div>
   )
 }
+
+/** Потенциал: стоит ли тратить время на компанию */
+export function PotentialCell({ cellData, rowData }: { cellData?: number; rowData?: any }) {
+  if (cellData == null || cellData < 0) return <span className="gb-pot gb-pot--na">считается…</span>
+  const [label, mod] = cellData >= 70 ? ['Звонить первым', 'hot'] : cellData >= 50 ? ['Можно попробовать', 'maybe'] : ['Не тратить время', 'cold']
+  return (
+    <span className={`gb-pot gb-pot--${mod}`} title={rowData?.potentialWhy || ''}>
+      <span className="gb-pot__top">
+        <b>{cellData}</b> {label}
+      </span>
+      {rowData?.potentialWhy && <small>{rowData.potentialWhy}</small>}
+    </span>
+  )
+}

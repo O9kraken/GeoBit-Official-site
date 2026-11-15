@@ -188,13 +188,18 @@ export interface Subscriber {
   createdAt: string;
 }
 /**
- * Компании из OpenStreetMap и 2ГИС (официальный API). Сайт каждой проверяется автоматически: чем выше оценка, тем нужнее компании новый сайт. Звоните и пишите лично — массовые рассылки без согласия запрещены законом о рекламе.
+ * Компании из OpenStreetMap и 2ГИС, у каждой автоматически проверен сайт и посчитан потенциал. Пишите лично и по одному — массовые рекламные рассылки без согласия запрещены законом о рекламе.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "prospects".
  */
 export interface Prospect {
   id: number;
+  /**
+   * Считается сам: сфера × контакты × состояние сайта. От 70 — звонить в первую очередь, ниже 50 — не тратить время
+   */
+  potential?: number | null;
+  potentialWhy?: string | null;
   name: string;
   niche?: string | null;
   category?: string | null;
@@ -216,6 +221,11 @@ export interface Prospect {
   siteMs?: number | null;
   siteCheckedAt?: string | null;
   status?: ('new' | 'contacted' | 'interested' | 'offer' | 'client' | 'rejected' | 'skip') | null;
+  contactedAt?: string | null;
+  /**
+   * Ставится сама, когда клиент впервые открывает ссылку на КП
+   */
+  kpViewedAt?: string | null;
   nextAt?: string | null;
   /**
    * Что обсуждали, кто ЛПР, что предложить
@@ -223,6 +233,8 @@ export interface Prospect {
   note?: string | null;
   source?: ('osm' | '2gis' | 'manual') | null;
   sourceKey?: string | null;
+  nicheKey?: string | null;
+  kpToken?: string | null;
   lat?: number | null;
   lon?: number | null;
   updatedAt: string;
@@ -1349,6 +1361,8 @@ export interface SubscribersSelect<T extends boolean = true> {
  * via the `definition` "prospects_select".
  */
 export interface ProspectsSelect<T extends boolean = true> {
+  potential?: T;
+  potentialWhy?: T;
   name?: T;
   niche?: T;
   category?: T;
@@ -1367,10 +1381,14 @@ export interface ProspectsSelect<T extends boolean = true> {
   siteMs?: T;
   siteCheckedAt?: T;
   status?: T;
+  contactedAt?: T;
+  kpViewedAt?: T;
   nextAt?: T;
   note?: T;
   source?: T;
   sourceKey?: T;
+  nicheKey?: T;
+  kpToken?: T;
   lat?: T;
   lon?: T;
   updatedAt?: T;

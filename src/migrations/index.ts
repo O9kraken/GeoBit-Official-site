@@ -29,6 +29,7 @@ import * as migration_20261115_110000_home_texts from './20261115_110000_home_te
 import * as migration_20261115_120000_posts_list_columns from './20261115_120000_posts_list_columns';
 import * as migration_20261115_130000_prospects from './20261115_130000_prospects';
 import * as migration_20261115_140000_roles from './20261115_140000_roles';
+import * as migration_20261115_150000_prospects_offer from './20261115_150000_prospects_offer';
 
 export const migrations = [
   {
@@ -179,11 +180,16 @@ export const migrations = [
   {
     up: migration_20261115_130000_prospects.up,
     down: migration_20261115_130000_prospects.down,
-    name: '20261115_130000_prospects'
+    name: '20261115_130000_prospects',
   },
   {
     up: migration_20261115_140000_roles.up,
     down: migration_20261115_140000_roles.down,
-    name: '20261115_140000_roles',
+    name: '20261115_140000_roles'
+  },
+  {
+    up: migration_20261115_150000_prospects_offer.up,
+    down: migration_20261115_150000_prospects_offer.down,
+    name: '20261115_150000_prospects_offer',
   },
 ];

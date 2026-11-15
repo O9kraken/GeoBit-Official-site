@@ -349,3 +349,39 @@ td.cell-actions { width: 1%; }
 .collection-list--prospects td.cell-status, .collection-list--prospects th#heading-status { white-space: nowrap; }
 .collection-list--prospects .table { overflow-x: auto; }
 .gb-nav-extras__role { display: block; padding: 2px 4px 6px; font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--theme-elevation-500); }
+
+/* поиск клиентов: подсказка, потенциал, «Написать» */
+.gb-pr__how { list-style: none; counter-reset: s; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin: 0; padding: 0; }
+.gb-pr__how li { counter-increment: s; position: relative; padding: 10px 12px 10px 40px; border-radius: 12px; background: var(--theme-elevation-50); border: 1px solid var(--theme-elevation-100); font-size: 12.5px; line-height: 1.4; color: var(--theme-elevation-700); }
+.gb-pr__how li::before { content: counter(s); position: absolute; left: 12px; top: 10px; width: 20px; height: 20px; border-radius: 50%; background: var(--gb-grad); color: #fff; font-weight: 800; font-size: 11px; display: grid; place-items: center; }
+.gb-pr__how b { color: var(--theme-text); }
+.gb-pot { display: grid; gap: 2px; max-width: 260px; }
+.gb-pot__top { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+.gb-pot__top b { min-width: 32px; padding: 2px 7px; border-radius: 7px; text-align: center; color: #fff; background: var(--theme-elevation-400); }
+.gb-pot--hot .gb-pot__top b { background: linear-gradient(90deg, #f5a524, #f31260); }
+.gb-pot--maybe .gb-pot__top b { background: #c98a00; }
+.gb-pot--cold { opacity: .6; }
+.gb-pot small { font-size: 11.5px; color: var(--theme-elevation-500); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.gb-pot--na { font-size: 12px; color: var(--theme-elevation-400); }
+.gb-act--pr { position: relative; }
+.gb-write { position: absolute; right: 0; top: 38px; z-index: 50; width: min(520px, 80vw); display: grid; gap: 10px; padding: 16px; border-radius: 14px; background: var(--theme-elevation-0); border: 1px solid var(--theme-elevation-200); box-shadow: 0 20px 60px rgba(0,0,0,.35); text-align: left; white-space: normal; }
+.gb-write--inline { position: static; width: auto; box-shadow: none; background: var(--gb-accent-soft); border-color: transparent; }
+.gb-write-field { margin-bottom: 20px; }
+.gb-write__x { position: absolute; right: 8px; top: 6px; border: 0; background: none; color: var(--theme-elevation-500); font-size: 22px; cursor: pointer; }
+.gb-write__head { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 13px; }
+.gb-write__head a { font-weight: 700; color: var(--gb-accent) !important; text-decoration: none; }
+.gb-write__seen { font-size: 12px; color: #17c964; font-weight: 600; }
+.gb-write textarea { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--theme-elevation-200); background: var(--theme-elevation-50); color: var(--theme-text); font: inherit; font-size: 13px; line-height: 1.5; resize: vertical; }
+.gb-write__btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.gb-write__foot { display: flex; justify-content: space-between; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 11.5px; color: var(--theme-elevation-500); }
+.gb-write__err { color: #f31260; }
+.collection-list--prospects td.cell-actions { width: 1%; white-space: nowrap; }
+.collection-list--prospects td.cell-potential { min-width: 200px; }
+.gb-write-bg { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 20px; background: rgba(0,0,0,.55); backdrop-filter: blur(3px); }
+.gb-write-bg > div { position: relative; width: min(600px, 100%); }
+.gb-write-bg .gb-write { position: relative; top: auto; right: auto; width: 100%; max-height: 85vh; overflow: auto; padding: 20px; }
+.gb-write-title { margin: 0 0 8px; font-size: 18px; font-weight: 800; color: #fff; }
+.gb-write textarea { min-height: 190px; }
+.collection-list--prospects td.cell-potential { min-width: 180px; max-width: 230px; }
+.collection-list--prospects td.cell-name { min-width: 150px; }
+.collection-list--prospects td.cell-contacts { max-width: 230px; }

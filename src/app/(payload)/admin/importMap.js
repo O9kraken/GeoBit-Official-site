@@ -1,5 +1,8 @@
 import { LeadContact as LeadContact_448a6558e52cc5280b1a16bca57b9944 } from '../../../components/admin/LeadContact'
 import { StatusCell as StatusCell_4da1f90de99340c8531cff72a46c36b2 } from '../../../components/admin/StatusCell'
+import { ActionsCell as ActionsCell_af942db2a4b2800ecf754a25de8e2808 } from '../../../components/admin/prospects/Actions'
+import { ActionsField as ActionsField_af942db2a4b2800ecf754a25de8e2808 } from '../../../components/admin/prospects/Actions'
+import { PotentialCell as PotentialCell_8447fdd0f192ca93adc0423340337254 } from '../../../components/admin/prospects/Cells'
 import { ContactsCell as ContactsCell_8447fdd0f192ca93adc0423340337254 } from '../../../components/admin/prospects/Cells'
 import { ContactsField as ContactsField_8447fdd0f192ca93adc0423340337254 } from '../../../components/admin/prospects/Cells'
 import { SiteCell as SiteCell_8447fdd0f192ca93adc0423340337254 } from '../../../components/admin/prospects/Cells'
@@ -50,6 +53,9 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 export const importMap = {
   "/components/admin/LeadContact#LeadContact": LeadContact_448a6558e52cc5280b1a16bca57b9944,
   "/components/admin/StatusCell#StatusCell": StatusCell_4da1f90de99340c8531cff72a46c36b2,
+  "/components/admin/prospects/Actions#ActionsCell": ActionsCell_af942db2a4b2800ecf754a25de8e2808,
+  "/components/admin/prospects/Actions#ActionsField": ActionsField_af942db2a4b2800ecf754a25de8e2808,
+  "/components/admin/prospects/Cells#PotentialCell": PotentialCell_8447fdd0f192ca93adc0423340337254,
   "/components/admin/prospects/Cells#ContactsCell": ContactsCell_8447fdd0f192ca93adc0423340337254,
   "/components/admin/prospects/Cells#ContactsField": ContactsField_8447fdd0f192ca93adc0423340337254,
   "/components/admin/prospects/Cells#SiteCell": SiteCell_8447fdd0f192ca93adc0423340337254,
