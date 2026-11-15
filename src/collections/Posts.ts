@@ -73,7 +73,8 @@ export const Posts: CollectionConfig = {
   endpoints: [quickEndpoint],
   defaultSort: '-publishedAt',
   // «Запланировать публикацию» в админке: статья опубликуется сама в выбранное время (очередь задач — payload.config.ts → jobs)
-  versions: { drafts: { schedulePublish: true } },
+  // автосохранение черновика раз в 3 секунды после правки; храним 30 последних версий статьи
+  versions: { drafts: { schedulePublish: true, autosave: { interval: 3000 } }, maxPerDoc: 30 },
   hooks: {
     beforeChange: [
       // Дата публикации = момент первой публикации (вручную или по расписанию), если раньше не задали дату позже

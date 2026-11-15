@@ -1,13 +1,14 @@
 import type { CollectionConfig, PayloadRequest } from 'payload'
 import { can } from '../access/roles'
 import { CITIES, NICHES } from '../lib/prospects/presets'
-import { domainOf, type Found } from '../lib/prospects/normalize'
+import { domainOf, normSite, type Found } from '../lib/prospects/normalize'
 import { searchOsm } from '../lib/prospects/osm'
 import { search2gis } from '../lib/prospects/dgis'
 import { checkSite } from '../lib/prospects/sitecheck'
 import { computePotential } from '../lib/prospects/potential'
 import { buildOffer } from '../lib/prospects/offer'
 import { randomBytes } from 'node:crypto'
+import { audit } from './AuditLog'
 
 const deny = (msg = 'Нужно войти в админку', status = 401) => Response.json({ error: msg }, { status })
 
@@ -86,9 +87,11 @@ async function runSearch(req: PayloadRequest) {
         status: 'new',
         siteStatus: 'unchecked',
       } as any,
+      context: { skipAudit: true },
     })
     created++
   }
+  await audit(req, { action: 'bulk', target: 'prospects', targetLabel: 'Поиск клиентов', docTitle: `Поиск: ${CITIES[city]?.label || city}, ${nicheLabel || '—'}`, note: `найдено ${found.length}, добавлено ${created}, дублей ${dup} (${source === '2gis' ? '2ГИС' : 'OpenStreetMap'})` })
   return Response.json({ ok: true, found: found.length, created, dup })
 }
 
@@ -110,7 +113,7 @@ async function runCheck(req: PayloadRequest) {
     while (i < docs.length) {
       const d = docs[i++]
       const res = await checkSite(d.website, Boolean(d.socials)).catch((e) => ({ siteStatus: 'down' as const, score: 85, siteNotes: `Ошибка проверки: ${e?.message}` }))
-      await req.payload.update({ collection: 'prospects', id: d.id, overrideAccess: true, req, data: { ...res, siteCheckedAt: new Date().toISOString() } as any })
+      await req.payload.update({ collection: 'prospects', id: d.id, overrideAccess: true, req, data: { ...res, siteCheckedAt: new Date().toISOString() } as any, context: { skipAudit: true } })
     }
   }
   await Promise.all(Array.from({ length: 6 }, worker))
@@ -145,9 +148,10 @@ async function runRescore(req: PayloadRequest) {
       if (r.skip && d.status === 'new') data.status = 'skip'
       if (!r.skip && d.status === 'skip' && /^(Нет контактов|Сеть|Нормальный|Дубль)/.test(d.potentialWhy || '')) data.status = 'new'
     }
+    if (d.website && /xn--/.test(d.website)) data.website = normSite(d.website).website || d.website
     if (!d.kpToken) data.kpToken = randomBytes(12).toString('hex')
     else if (data.potential === d.potential && data.potentialWhy === d.potentialWhy && (!data.status || data.status === d.status)) continue
-    await req.payload.update({ collection: 'prospects', id: d.id, data, overrideAccess: true, req, context: { skipScore: true } })
+    await req.payload.update({ collection: 'prospects', id: d.id, data, overrideAccess: true, req, context: { skipScore: true, skipAudit: true } })
     updated++
   }
   return Response.json({ ok: true, updated, dups })
@@ -193,6 +197,28 @@ async function runContacted(req: PayloadRequest) {
   return Response.json({ ok: true })
 }
 
+/** Массовые действия с выделенными компаниями: сменить статус, перепроверить сайты */
+async function runBulk(req: PayloadRequest) {
+  if (!req.user) return deny()
+  if (!can(req.user, 'admin', 'manager')) return deny('Нет доступа', 403)
+  const ids = (req.searchParams.get('ids') || '').split(',').map((x) => x.trim()).filter((x) => /^\d+$/.test(x)).slice(0, 1000)
+  if (!ids.length) return deny('Ничего не выбрано', 400)
+  const action = req.searchParams.get('action')
+  const to = req.searchParams.get('to') || ''
+  let data: any
+  let note = ''
+  if (action === 'status' && STATUS.some((x) => x.value === to)) {
+    data = { status: to, ...(to === 'contacted' ? { contactedAt: new Date().toISOString() } : {}) }
+    note = `статус «${STATUS.find((x) => x.value === to)?.label}»`
+  } else if (action === 'recheck') {
+    data = { siteStatus: 'unchecked' }
+    note = 'перепроверка сайтов'
+  } else return deny('Неизвестное действие', 400)
+  const r = await req.payload.update({ collection: 'prospects', where: { id: { in: ids } }, data, overrideAccess: true, req, context: { skipAudit: true } })
+  await audit(req, { action: 'bulk', target: 'prospects', targetLabel: 'Поиск клиентов', docTitle: `Выбрано компаний: ${ids.length}`, note })
+  return Response.json({ ok: true, updated: r.docs.length, errors: r.errors?.length || 0 })
+}
+
 /** Выгрузка в CSV (Excel открывает: UTF-8 с BOM, разделитель «;») — с теми же фильтрами, что в списке */
 async function runExport(req: PayloadRequest) {
   if (!req.user) return deny()
@@ -200,7 +226,9 @@ async function runExport(req: PayloadRequest) {
   const where: any = {}
   const st = req.searchParams.get('status')
   if (st) where.status = { equals: st }
-  if (!st) where.status = { not_equals: 'skip' }
+  const ids = (req.searchParams.get('ids') || '').split(',').filter((x) => /^\d+$/.test(x))
+  if (ids.length) where.id = { in: ids }
+  if (!st && !ids.length) where.status = { not_equals: 'skip' }
   const r = await req.payload.find({ collection: 'prospects', where, limit: 20000, pagination: false, depth: 0, sort: '-potential', overrideAccess: true })
   const cols: [string, string][] = [
     ['name', 'Название'], ['niche', 'Сфера'], ['city', 'Город'], ['address', 'Адрес'], ['phone', 'Телефон'], ['email', 'Email'],
@@ -273,6 +301,7 @@ export const Prospects: CollectionConfig = {
     { path: '/check-sites', method: 'post', handler: runCheck },
     { path: '/export', method: 'get', handler: runExport },
     { path: '/rescore', method: 'post', handler: runRescore },
+    { path: '/bulk', method: 'post', handler: runBulk },
     { path: '/:id/offer', method: 'post', handler: runOffer },
     { path: '/:id/contacted', method: 'post', handler: runContacted },
   ],

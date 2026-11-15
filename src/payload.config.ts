@@ -17,6 +17,8 @@ import { fileURLToPath } from 'url'
 
 import { Leads, Subscribers } from './collections/Leads'
 import { Prospects } from './collections/Prospects'
+import { housekeepingTask } from './jobs/housekeeping'
+import { AuditLog, withAuditCollection, withAuditGlobal } from './collections/AuditLog'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Team, Testimonials } from './collections/People'
@@ -52,6 +54,8 @@ export default buildConfig({
       providers: ['/components/admin/AdminLook#AdminLook'],
       views: {
         seoAudit: { Component: '/components/admin/SeoAudit#SeoAudit', path: '/seo' },
+        // своя страница входа: пароль, затем код из приложения (2FA)
+        login: { Component: '/components/admin/LoginView#LoginView' } as any,
       },
     },
     // Предпросмотр рядом с формой; страница обновляется после каждого «Сохранить»
@@ -79,7 +83,7 @@ export default buildConfig({
   },
   // порядок здесь = порядок групп в меню админки: заявки — первыми
   collections: [
-    Leads, Subscribers, Prospects,
+    Leads, Subscribers, Prospects, AuditLog,
     Pages,
     Services, Landings, Projects, Posts, Team, Testimonials, Media,
     ServiceCategories, PortfolioCategories, Categories, Tags,
@@ -87,8 +91,9 @@ export default buildConfig({
   ]
     .map(polishCollection)
     .map(withRolesCollection)
+    .map(withAuditCollection)
     .map(withIndexNow),
-  globals: [HomePage, ServicesPage, AboutPage, ContactsPage, PortfolioPage, BlogPage, FaqPage, SiteSettings, SeoSettings, Navigation, Calculator].map(polishGlobal).map(withRolesGlobal),
+  globals: [HomePage, ServicesPage, AboutPage, ContactsPage, PortfolioPage, BlogPage, FaqPage, SiteSettings, SeoSettings, Navigation, Calculator].map(polishGlobal).map(withRolesGlobal).map(withAuditGlobal),
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [...defaultFeatures, EXPERIMENTAL_TableFeature()],
   }),
@@ -97,6 +102,7 @@ export default buildConfig({
     autoRun: [{ allQueues: true, cron: '0 */5 * * * *', limit: 20 }],
     shouldAutoRun: () => process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE !== 'phase-production-build',
     deleteJobOnComplete: true,
+    tasks: [housekeepingTask],
   },
   // Защита от CSRF: cookie админки принимаются только с запросов с этого сайта
   csrf: [...new Set(['https://getgeobit.ru', (process.env.SERVER_URL || process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000').replace(/\/$/, '')])],

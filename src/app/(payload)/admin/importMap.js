@@ -11,6 +11,7 @@ import { SiteCell as SiteCell_8447fdd0f192ca93adc0423340337254 } from '../../../
 import { ScoreCell as ScoreCell_8447fdd0f192ca93adc0423340337254 } from '../../../components/admin/prospects/Cells'
 import { WorkCell as WorkCell_8447fdd0f192ca93adc0423340337254 } from '../../../components/admin/prospects/Cells'
 import { ProspectsToolbar as ProspectsToolbar_90f3eb109e886766e5c6e377df6d6781 } from '../../../components/admin/prospects/Toolbar'
+import { DocCell as DocCell_f7a52f1a35dbe86a9413badad9a62ae8 } from '../../../components/admin/AuditCells'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { LexicalDiffComponent as LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -40,6 +41,7 @@ import { AuthorCell as AuthorCell_16b8c86bd93ffff46e138effca2db2a6 } from '../..
 import { ReleaseCell as ReleaseCell_3ba76ba6087e9f608ef8ccbb1d5ebde6 } from '../../../components/admin/posts/ReleaseCell'
 import { ActionsCell as ActionsCell_d184a076b02376c12ef1b28f6dd3bbbd } from '../../../components/admin/posts/ActionsCell'
 import { PostsToolbar as PostsToolbar_9b74e65272c8f2ba5792e41a6c9ff096 } from '../../../components/admin/posts/Toolbar'
+import { TwoFactorField as TwoFactorField_ec5ad3e68a8d3607f431737845532f4c } from '../../../components/admin/TwoFactor'
 import { UserCardCell as UserCardCell_6a46a03b91cb7869532ad6c5b0fc38d7 } from '../../../components/admin/UserCard'
 import { RoleCell as RoleCell_4bb4e82c1ae104f685e1d6fd4ad1e504 } from '../../../components/admin/RoleCell'
 import { AvatarCell as AvatarCell_6a46a03b91cb7869532ad6c5b0fc38d7 } from '../../../components/admin/UserCard'
@@ -51,6 +53,7 @@ import { Dashboard as Dashboard_16b88e9b8c48e393fa86591406efd08f } from '../../.
 import { NavExtras as NavExtras_fd61ce14885ed107a3ad7877f371f5d6 } from '../../../components/admin/NavExtras'
 import { AdminLook as AdminLook_13159b6ee258a69a1a07dc316af10022 } from '../../../components/admin/AdminLook'
 import { SeoAudit as SeoAudit_c33c77a78ab917a008d1d46c7cf6f38c } from '../../../components/admin/SeoAudit'
+import { LoginView as LoginView_853b7d6ada75aa2253ade7b1d734aa13 } from '../../../components/admin/LoginView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -68,6 +71,7 @@ export const importMap = {
   "/components/admin/prospects/Cells#ScoreCell": ScoreCell_8447fdd0f192ca93adc0423340337254,
   "/components/admin/prospects/Cells#WorkCell": WorkCell_8447fdd0f192ca93adc0423340337254,
   "/components/admin/prospects/Toolbar#ProspectsToolbar": ProspectsToolbar_90f3eb109e886766e5c6e377df6d6781,
+  "/components/admin/AuditCells#DocCell": DocCell_f7a52f1a35dbe86a9413badad9a62ae8,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#LexicalDiffComponent": LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -97,6 +101,7 @@ export const importMap = {
   "/components/admin/posts/ReleaseCell#ReleaseCell": ReleaseCell_3ba76ba6087e9f608ef8ccbb1d5ebde6,
   "/components/admin/posts/ActionsCell#ActionsCell": ActionsCell_d184a076b02376c12ef1b28f6dd3bbbd,
   "/components/admin/posts/Toolbar#PostsToolbar": PostsToolbar_9b74e65272c8f2ba5792e41a6c9ff096,
+  "/components/admin/TwoFactor#TwoFactorField": TwoFactorField_ec5ad3e68a8d3607f431737845532f4c,
   "/components/admin/UserCard#UserCardCell": UserCardCell_6a46a03b91cb7869532ad6c5b0fc38d7,
   "/components/admin/RoleCell#RoleCell": RoleCell_4bb4e82c1ae104f685e1d6fd4ad1e504,
   "/components/admin/UserCard#AvatarCell": AvatarCell_6a46a03b91cb7869532ad6c5b0fc38d7,
@@ -108,5 +113,6 @@ export const importMap = {
   "/components/admin/NavExtras#NavExtras": NavExtras_fd61ce14885ed107a3ad7877f371f5d6,
   "/components/admin/AdminLook#AdminLook": AdminLook_13159b6ee258a69a1a07dc316af10022,
   "/components/admin/SeoAudit#SeoAudit": SeoAudit_c33c77a78ab917a008d1d46c7cf6f38c,
+  "/components/admin/LoginView#LoginView": LoginView_853b7d6ada75aa2253ade7b1d734aa13,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

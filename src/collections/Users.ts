@@ -2,6 +2,8 @@ import { APIError, type CollectionConfig } from 'payload'
 import { emailLayout, SITE } from '../lib/email-layout'
 import { authenticated } from '../access'
 import { isAdmin, ROLE_OPTIONS, rolesField } from '../access/roles'
+import { audit } from './AuditLog'
+import { afterOperation2fa, beforeLogin2fa, twofaEndpoints } from '../lib/twofa'
 import { clientIpFrom, overLimit } from '../lib/rate-limit'
 
 // Ограничения с одного IP: подбор пароля и рассылка писем сброса
@@ -59,7 +61,15 @@ export const Users: CollectionConfig = {
     delete: ({ req, id }) => isAdmin(req.user) && String(req.user?.id) !== String(id),
     admin: ({ req }) => Boolean(req.user),
   },
+  endpoints: twofaEndpoints,
   hooks: {
+    beforeLogin: [beforeLogin2fa],
+    afterOperation: [afterOperation2fa],
+    afterLogin: [
+      async ({ req, user }) => {
+        await audit(req, { action: 'login', target: 'users', targetLabel: 'Пользователи', docId: String(user.id), docTitle: user.name || user.email }, user)
+      },
+    ],
     beforeOperation: [
       ({ operation, req, args }) => {
         const lim = AUTH_LIMITS[operation as string]
@@ -99,6 +109,14 @@ export const Users: CollectionConfig = {
     ],
   },
   fields: [
+    { name: 'twofa', label: 'Вход с кодом', type: 'ui', admin: { components: { Field: '/components/admin/TwoFactor#TwoFactorField' } } },
+    // 2FA: секреты не отдаются через API (hidden), меняются только через /api/users/2fa/*
+    { name: 'totpEnabled', label: 'Вход с кодом включён', type: 'checkbox', defaultValue: false, access: { update: () => false, create: () => false }, admin: { hidden: true } },
+    { name: 'totpSecret', type: 'text', hidden: true },
+    { name: 'totpPending', type: 'text', hidden: true },
+    { name: 'totpRecovery', type: 'json', hidden: true },
+    { name: 'totpFails', type: 'number', hidden: true },
+    { name: 'totpLockUntil', type: 'date', hidden: true },
     { name: 'card', label: 'Пользователь', type: 'ui', admin: { disableBulkEdit: true, components: { Cell: '/components/admin/UserCard#UserCardCell' } } },
     { name: 'name', label: 'Имя', type: 'text', admin: { description: 'Показывается как автор статей в блоге' } },
     {

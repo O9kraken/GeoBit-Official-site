@@ -23,6 +23,7 @@ export interface Config {
     leads: Lead;
     subscribers: Subscriber;
     prospects: Prospect;
+    'audit-log': AuditLog;
     pages: Page;
     services: Service;
     landings: Landing;
@@ -52,6 +53,7 @@ export interface Config {
     leads: LeadsSelect<false> | LeadsSelect<true>;
     subscribers: SubscribersSelect<false> | SubscribersSelect<true>;
     prospects: ProspectsSelect<false> | ProspectsSelect<true>;
+    'audit-log': AuditLogSelect<false> | AuditLogSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     landings: LandingsSelect<false> | LandingsSelect<true>;
@@ -88,6 +90,7 @@ export interface Config {
     'seo-settings': SeoSetting;
     navigation: Navigation;
     calculator: Calculator;
+    'payload-jobs-stats': PayloadJobsStat;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
@@ -101,6 +104,7 @@ export interface Config {
     'seo-settings': SeoSettingsSelect<false> | SeoSettingsSelect<true>;
     navigation: NavigationSelect<false> | NavigationSelect<true>;
     calculator: CalculatorSelect<false> | CalculatorSelect<true>;
+    'payload-jobs-stats': PayloadJobsStatsSelect<false> | PayloadJobsStatsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -109,6 +113,7 @@ export interface Config {
   user: User;
   jobs: {
     tasks: {
+      gbHousekeeping: TaskGbHousekeeping;
       schedulePublish: TaskSchedulePublish;
       inline: {
         input: unknown;
@@ -168,6 +173,7 @@ export interface Lead {
     | number
     | boolean
     | null;
+  remindedAt?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -241,6 +247,139 @@ export interface Prospect {
   createdAt: string;
 }
 /**
+ * Кто и что менял в админке. Хранится 180 дней. Сами значения не сохраняются — только какие поля менялись.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audit-log".
+ */
+export interface AuditLog {
+  id: number;
+  user?: (number | null) | User;
+  userName?: string | null;
+  action?: ('create' | 'update' | 'publish' | 'unpublish' | 'delete' | 'login' | 'bulk') | null;
+  target?: string | null;
+  targetLabel?: string | null;
+  docId?: string | null;
+  docTitle?: string | null;
+  changed?: string | null;
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Кто может входить в админку. Имя и аватар из профиля показываются как автор статей.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  totpEnabled?: boolean | null;
+  totpSecret?: string | null;
+  totpPending?: string | null;
+  totpRecovery?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  totpFails?: number | null;
+  totpLockUntil?: string | null;
+  /**
+   * Показывается как автор статей в блоге
+   */
+  name?: string | null;
+  /**
+   * Администратор — всё. Редактор — контент сайта без заявок и настроек. Менеджер — заявки, подписчики и поиск клиентов без правки сайта.
+   */
+  role: 'admin' | 'editor' | 'manager';
+  /**
+   * Квадратное фото. Показывается у автора в блоге и в шапке админки.
+   */
+  avatar?: (number | null) | Media;
+  /**
+   * Например: «Основатель GeoBit, дизайнер и разработчик»
+   */
+  about?: string | null;
+  uiAccent?: ('geobit' | 'pink' | 'blue' | 'cyan' | 'green' | 'orange') | null;
+  uiDensity?: ('compact' | 'normal' | 'comfy') | null;
+  uiFontSize?: ('s' | 'm' | 'l') | null;
+  uiIcons?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
+}
+/**
+ * Все картинки сайта. Сжатые версии делаются сами при загрузке; подпись «Alt» нужна для поиска и незрячих.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt?: string | null;
+  wpId?: number | null;
+  wpPath?: string | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumb?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    wide?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
  * Отдельные страницы: юридические документы, согласия, оферта. Адрес — /<slug>/.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -307,57 +446,6 @@ export interface Page {
   };
   updatedAt: string;
   createdAt: string;
-}
-/**
- * Все картинки сайта. Сжатые версии делаются сами при загрузке; подпись «Alt» нужна для поиска и незрячих.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt?: string | null;
-  wpId?: number | null;
-  wpPath?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-  sizes?: {
-    thumb?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    card?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    wide?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
 }
 /**
  * Услуги и цены: карточки на /services/ и отдельные страницы /services/<slug>/. Порядок — поле «Порядок».
@@ -920,54 +1008,6 @@ export interface Post {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Кто может входить в админку. Имя и аватар из профиля показываются как автор статей.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  /**
-   * Показывается как автор статей в блоге
-   */
-  name?: string | null;
-  /**
-   * Администратор — всё. Редактор — контент сайта без заявок и настроек. Менеджер — заявки, подписчики и поиск клиентов без правки сайта.
-   */
-  role: 'admin' | 'editor' | 'manager';
-  /**
-   * Квадратное фото. Показывается у автора в блоге и в шапке админки.
-   */
-  avatar?: (number | null) | Media;
-  /**
-   * Например: «Основатель GeoBit, дизайнер и разработчик»
-   */
-  about?: string | null;
-  uiAccent?: ('geobit' | 'pink' | 'blue' | 'cyan' | 'green' | 'orange') | null;
-  uiDensity?: ('compact' | 'normal' | 'comfy') | null;
-  uiFontSize?: ('s' | 'm' | 'l') | null;
-  uiIcons?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  resetPasswordRequestedAt?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
-}
-/**
  * Рубрики блога — фильтр на /blog/ и страницы /category/<slug>/.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1162,7 +1202,7 @@ export interface PayloadJob {
     | {
         executedAt: string;
         completedAt: string;
-        taskSlug: 'inline' | 'schedulePublish';
+        taskSlug: 'inline' | 'gbHousekeeping' | 'schedulePublish';
         taskID: string;
         input?:
           | {
@@ -1195,10 +1235,19 @@ export interface PayloadJob {
         id?: string | null;
       }[]
     | null;
-  taskSlug?: ('inline' | 'schedulePublish') | null;
+  taskSlug?: ('inline' | 'gbHousekeeping' | 'schedulePublish') | null;
   queue?: string | null;
   waitUntil?: string | null;
   processing?: boolean | null;
+  meta?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1220,6 +1269,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'prospects';
         value: number | Prospect;
+      } | null)
+    | ({
+        relationTo: 'audit-log';
+        value: number | AuditLog;
       } | null)
     | ({
         relationTo: 'pages';
@@ -1340,6 +1393,7 @@ export interface LeadsSelect<T extends boolean = true> {
   consentAt?: T;
   consentDoc?: T;
   notify?: T;
+  remindedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1391,6 +1445,23 @@ export interface ProspectsSelect<T extends boolean = true> {
   kpToken?: T;
   lat?: T;
   lon?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audit-log_select".
+ */
+export interface AuditLogSelect<T extends boolean = true> {
+  user?: T;
+  userName?: T;
+  action?: T;
+  target?: T;
+  targetLabel?: T;
+  docId?: T;
+  docTitle?: T;
+  changed?: T;
+  note?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1895,6 +1966,12 @@ export interface TagsSelect<T extends boolean = true> {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  totpEnabled?: T;
+  totpSecret?: T;
+  totpPending?: T;
+  totpRecovery?: T;
+  totpFails?: T;
+  totpLockUntil?: T;
   name?: T;
   role?: T;
   avatar?: T;
@@ -1973,6 +2050,7 @@ export interface PayloadJobsSelect<T extends boolean = true> {
   queue?: T;
   waitUntil?: T;
   processing?: T;
+  meta?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2720,6 +2798,24 @@ export interface Calculator {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs-stats".
+ */
+export interface PayloadJobsStat {
+  id: number;
+  stats?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
@@ -3230,6 +3326,16 @@ export interface CalculatorSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs-stats_select".
+ */
+export interface PayloadJobsStatsSelect<T extends boolean = true> {
+  stats?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "collections_widget".
  */
 export interface CollectionsWidget {
@@ -3237,6 +3343,14 @@ export interface CollectionsWidget {
     [k: string]: unknown;
   };
   width: 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskGbHousekeeping".
+ */
+export interface TaskGbHousekeeping {
+  input?: unknown;
+  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

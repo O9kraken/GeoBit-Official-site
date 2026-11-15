@@ -1,6 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { useSelection } from '@payloadcms/ui'
 import { CITIES, NICHES } from '@/lib/prospects/presets'
 
 const API = '/api/prospects'
@@ -69,6 +70,23 @@ export function ProspectsToolbar() {
     }
   }
 
+  const sel = useSelection()
+  const ids = sel?.selectedIDs || []
+  const bulk = async (action: string, to = '', label = '') => {
+    if (label && !window.confirm(`${label}: ${ids.length} шт.?`)) return
+    setBusy('bulk')
+    try {
+      const j = await call(`${API}/bulk?action=${action}&to=${to}&ids=${ids.join(',')}`)
+      setMsg({ ok: true, text: `Готово: обновлено ${j.updated}.` })
+      router.refresh()
+      if (action === 'recheck') await check()
+    } catch (e: any) {
+      setMsg({ ok: false, text: e.message })
+    } finally {
+      setBusy(null)
+    }
+  }
+
   const BASE = '/admin/collections/prospects'
   const filters: [string, string][] = [
     ['🔥 Звонить первыми', `${BASE}?where[potential][greater_than_equal]=70&where[status][equals]=new&sort=-potential`],
@@ -127,6 +145,26 @@ export function ProspectsToolbar() {
         </button>
       </div>
       {msg && <div className={`gb-pr__msg${msg.ok ? '' : ' is-err'}`}>{msg.text}</div>}
+      {ids.length > 0 && (
+        <div className="gb-pr__bulk">
+          <b>Выбрано: {ids.length}</b>
+          <button type="button" className="gb-tb__btn" disabled={!!busy} onClick={() => bulk('status', 'skip', 'Отметить «Не подходит»')}>
+            Не подходит
+          </button>
+          <button type="button" className="gb-tb__btn" disabled={!!busy} onClick={() => bulk('status', 'contacted')}>
+            Связались
+          </button>
+          <button type="button" className="gb-tb__btn" disabled={!!busy} onClick={() => bulk('status', 'new')}>
+            Вернуть в «Новые»
+          </button>
+          <button type="button" className="gb-tb__btn" disabled={!!busy} onClick={() => bulk('recheck')}>
+            Перепроверить сайты
+          </button>
+          <a className="gb-tb__btn" href={`${API}/export?ids=${ids.join(',')}`}>
+            Скачать выбранные
+          </a>
+        </div>
+      )}
       <div className="gb-pr__bar">
         <div className="gb-tb__chips">
           {filters.map(([l, h]) => (

@@ -74,6 +74,7 @@ export const Leads: CollectionConfig = {
         { name: 'consentAt', label: 'Согласие на ПД получено', type: 'date', admin: { readOnly: true, date: { pickerAppearance: 'dayAndTime' } } },
         { name: 'consentDoc', label: 'Редакция согласия', type: 'text', admin: { readOnly: true } },
         { name: 'notify', label: 'Доставка уведомлений', type: 'json', admin: { readOnly: true } },
+        { name: 'remindedAt', label: 'Напоминание «заявка ждёт» отправлено', type: 'date', admin: { readOnly: true, date: { pickerAppearance: 'dayAndTime' } } },
       ],
     },
   ],

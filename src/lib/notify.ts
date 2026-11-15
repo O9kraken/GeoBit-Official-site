@@ -143,3 +143,9 @@ export async function notifyLead(payload: Payload, lead: Lead, leadEmail?: strin
   const [e, t, m, cl] = await Promise.all([email(payload, leadEmail, lead), telegram(esc(short)), max(short), confirmClient(payload, lead, contacts)])
   return { email: e, telegram: t, max: m, client: cl }
 }
+
+/** Служебное сообщение команде в Telegram и MAX — без персональных данных */
+export async function notifyStaff(text: string): Promise<Result> {
+  const [t, m] = await Promise.all([telegram(esc(text)), max(text)])
+  return { telegram: t, max: m }
+}

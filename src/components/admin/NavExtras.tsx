@@ -1,5 +1,6 @@
 import type { Payload } from 'payload'
 import { can, ROLE_LABEL, roleOf } from '@/access/roles'
+import { CommandK } from './CommandK'
 
 /** Верх боковой панели: панель, новые заявки, SEO-аудит, сайт и личное оформление */
 export async function NavExtras({ payload, user }: { payload?: Payload; user?: any }) {
@@ -13,6 +14,7 @@ export async function NavExtras({ payload, user }: { payload?: Payload; user?: a
   return (
     <div className="gb-nav-extras">
       {user && roleOf(user) !== 'admin' && <span className="gb-nav-extras__role">Роль: {ROLE_LABEL[roleOf(user)!]}</span>}
+      <CommandK />
       <a href="/admin" className="gb-nav-extras__home">
         {ic('grid')} Панель
       </a>

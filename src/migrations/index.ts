@@ -31,6 +31,7 @@ import * as migration_20261115_130000_prospects from './20261115_130000_prospect
 import * as migration_20261115_140000_roles from './20261115_140000_roles';
 import * as migration_20261115_150000_prospects_offer from './20261115_150000_prospects_offer';
 import * as migration_20261115_160000_users_leads_columns from './20261115_160000_users_leads_columns';
+import * as migration_20261115_170000_admin_pack from './20261115_170000_admin_pack';
 
 export const migrations = [
   {
@@ -186,7 +187,7 @@ export const migrations = [
   {
     up: migration_20261115_140000_roles.up,
     down: migration_20261115_140000_roles.down,
-    name: '20261115_140000_roles'
+    name: '20261115_140000_roles',
   },
   {
     up: migration_20261115_150000_prospects_offer.up,
@@ -196,6 +197,11 @@ export const migrations = [
   {
     up: migration_20261115_160000_users_leads_columns.up,
     down: migration_20261115_160000_users_leads_columns.down,
-    name: '20261115_160000_users_leads_columns',
+    name: '20261115_160000_users_leads_columns'
+  },
+  {
+    up: migration_20261115_170000_admin_pack.up,
+    down: migration_20261115_170000_admin_pack.down,
+    name: '20261115_170000_admin_pack',
   },
 ];

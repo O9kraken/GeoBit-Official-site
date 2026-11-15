@@ -1,5 +1,6 @@
 import type { Payload } from 'payload'
 import { can, type Role } from '@/access/roles'
+import { DashSources, DashToday } from './DashToday'
 
 type Props = { payload: Payload; user?: any }
 
@@ -73,6 +74,8 @@ export async function Dashboard({ payload, user }: Props) {
       </div>
       )}
 
+      {sales && <DashToday payload={payload} />}
+
       <h3 className="gb-dash__title">Быстрые действия</h3>
       <div className="gb-dash__quick">
         {quick.map(([t, href, d]) => (
@@ -82,6 +85,8 @@ export async function Dashboard({ payload, user }: Props) {
           </a>
         ))}
       </div>
+
+      {sales && <DashSources payload={payload} />}
     </div>
   )
 }
