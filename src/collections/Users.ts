@@ -20,7 +20,8 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
     group: 'Система',
-    defaultColumns: ['avatar', 'name', 'email', 'role'],
+    defaultColumns: ['card', 'role', 'updatedAt'],
+    listSearchableFields: ['name', 'email'],
     hidden: ({ user }) => !isAdmin(user),
   },
   auth: {
@@ -98,6 +99,7 @@ export const Users: CollectionConfig = {
     ],
   },
   fields: [
+    { name: 'card', label: 'Пользователь', type: 'ui', admin: { disableBulkEdit: true, components: { Cell: '/components/admin/UserCard#UserCardCell' } } },
     { name: 'name', label: 'Имя', type: 'text', admin: { description: 'Показывается как автор статей в блоге' } },
     {
       name: 'role',
@@ -119,7 +121,7 @@ export const Users: CollectionConfig = {
       label: 'Аватар',
       type: 'upload',
       relationTo: 'media',
-      admin: { description: 'Квадратное фото. Показывается у автора в блоге и в шапке админки.' },
+      admin: { description: 'Квадратное фото. Показывается у автора в блоге и в шапке админки.', components: { Cell: '/components/admin/UserCard#AvatarCell' } },
     },
     { name: 'about', label: 'Подпись под именем', type: 'text', admin: { description: 'Например: «Основатель GeoBit, дизайнер и разработчик»' } },
     {

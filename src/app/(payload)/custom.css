@@ -385,3 +385,23 @@ td.cell-actions { width: 1%; }
 .collection-list--prospects td.cell-potential { min-width: 180px; max-width: 230px; }
 .collection-list--prospects td.cell-name { min-width: 150px; }
 .collection-list--prospects td.cell-contacts { max-width: 230px; }
+
+/* пользователи: круглые аватары */
+.gb-user { display: inline-flex; align-items: center; gap: 12px; text-decoration: none !important; color: var(--theme-text) !important; }
+.gb-user img, .gb-user__av { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 2px var(--theme-elevation-150); }
+.gb-user__ini { width: 40px; height: 40px; border-radius: 50%; flex: none; display: grid; place-items: center; background: var(--gb-grad); color: #fff; font-weight: 800; font-size: 14px; }
+.gb-user b { display: block; font-weight: 700; }
+.gb-user small { display: block; font-size: 12px; color: var(--theme-elevation-500); }
+.gb-user:hover b { color: var(--gb-accent); }
+
+/* заявки: быстрые действия */
+.gb-act--lead { align-items: center; }
+.gb-lead-wait { font-size: 12px; font-weight: 700; color: var(--theme-elevation-500); margin-right: 4px; white-space: nowrap; }
+.gb-lead-wait.is-late { color: #f31260; }
+.gb-tb__chip--hot { border-color: #f31260; }
+.gb-tb__chip--hot b { background: #f31260; color: #fff; }
+.gb-tb__next--stat { border-style: solid; }
+.collection-list--leads td.cell-quick { width: 1%; white-space: nowrap; }
+.gb-act--lead { gap: 4px; }
+.gb-act--lead .gb-act__b { height: 28px; padding: 0 9px; font-size: 12px; }
+.gb-act--lead .gb-act__b--icon { width: 28px; padding: 0; font-size: 13px; }

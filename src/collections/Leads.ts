@@ -1,5 +1,22 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, PayloadRequest } from 'payload'
 import { authenticated } from '../access'
+import { can } from '../access/roles'
+
+const LEAD_STATUSES = ['new', 'progress', 'won', 'lost', 'spam']
+
+/** Быстрая смена статуса заявки из списка */
+async function setLeadStatus(req: PayloadRequest) {
+  if (!req.user) return Response.json({ error: 'Нужно войти в админку' }, { status: 401 })
+  if (!can(req.user, 'admin', 'manager')) return Response.json({ error: 'Нет доступа' }, { status: 403 })
+  const to = req.searchParams.get('to') || ''
+  if (!LEAD_STATUSES.includes(to)) return Response.json({ error: 'Неизвестный статус' }, { status: 400 })
+  try {
+    await req.payload.update({ collection: 'leads', id: String(req.routeParams?.id), data: { status: to } as any, req, overrideAccess: false, user: req.user })
+    return Response.json({ ok: true })
+  } catch (e: any) {
+    return Response.json({ error: e?.message || String(e) }, { status: 400 })
+  }
+}
 
 const nobody = () => false
 
@@ -10,12 +27,15 @@ export const Leads: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     group: 'Заявки',
-    defaultColumns: ['name', 'phone', 'method', 'service', 'status', 'createdAt'],
+    defaultColumns: ['name', 'phone', 'method', 'service', 'status', 'createdAt', 'quick'],
     listSearchableFields: ['name', 'phone', 'email', 'service'],
+    components: { beforeListTable: ['/components/admin/leads/LeadsToolbar#LeadsToolbar'] },
   },
+  endpoints: [{ path: '/:id/status', method: 'post', handler: setLeadStatus }],
   defaultSort: '-createdAt',
   access: { read: authenticated, create: nobody, update: authenticated, delete: authenticated },
   fields: [
+    { name: 'quick', label: 'Действия', type: 'ui', admin: { disableBulkEdit: true, components: { Cell: '/components/admin/leads/LeadActions#LeadActions' } } },
     { name: 'contactActions', type: 'ui', admin: { components: { Field: '/components/admin/LeadContact#LeadContact' } } },
     { type: 'row', fields: [
       { name: 'name', label: 'Имя', type: 'text', required: true },
