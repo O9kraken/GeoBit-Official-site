@@ -523,3 +523,8 @@ td.cell-actions { width: 1%; }
 .gb-q__nav .gb-btn--accent { align-self: center; }
 .gb-q__nav .gb-btn:disabled { opacity: .5; cursor: not-allowed; }
 @media (max-width: 640px) { .gb-q { padding: 16px; } .gb-q__sum dl { grid-template-columns: 1fr; } }
+.gb-actp { flex: 1 1 100%; width: 100%; box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr); justify-items: stretch; gap: 10px; margin-top: 6px; padding: 14px; border-radius: 12px; background: var(--theme-elevation-50); border: 1px solid var(--theme-elevation-150); }
+.gb-actp .gb-btn--accent { justify-self: start; }
+.gb-cact .gb-btn.is-on { border-color: var(--gb-accent); }
+.gb-actp .gb-q__grid { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.gb-actp .gb-q__f { margin: 0; }

@@ -3,7 +3,9 @@ import { randomBytes } from 'node:crypto'
 import { can } from '../access/roles'
 import { SEEDS, KIND_FALLBACK, kindOfSlug } from '../lib/contracts/defaults'
 import { buildContext, buildModel, fillVars, sectionFromTemplate } from '../lib/contracts/render'
-import { contractDocx } from '../lib/contracts/docx'
+import { actDocx, contractDocx } from '../lib/contracts/docx'
+import { rubFull } from '../lib/contracts/money'
+import { dateRu } from '../lib/contracts/render'
 
 const deny = (msg = 'Нужно войти в админку', status = 401) => Response.json({ error: msg }, { status })
 const sales = (req: PayloadRequest) => req.user && can(req.user, 'admin', 'manager')
@@ -218,6 +220,58 @@ async function docxByToken(req: PayloadRequest) {
   return sendDocx(got.c, got.model)
 }
 
+/** Акт сдачи-приёмки: номер, дата, сумма и (для SEO) период берутся из запроса, остальное — из договора */
+async function actById(req: PayloadRequest) {
+  if (!sales(req)) return deny()
+  const got = await loadModel(req, { id: { equals: req.routeParams?.id } })
+  if (!got) return deny('Договор не найден', 404)
+  const { c, model } = got
+  const sp = req.searchParams
+  const kind = c.kind || 'dev'
+  const amount = Math.max(0, Number(String(sp.get('amount') || c.terms?.price || 0).replace(/\s/g, '').replace(',', '.')) || 0)
+  const n = (sp.get('n') || '1').replace(/[^\p{L}\p{N}\-/]/gu, '').slice(0, 20) || '1'
+  const date = sp.get('date') ? new Date(String(sp.get('date'))) : new Date()
+  const ru = (d: Date) => d.toLocaleDateString('ru-RU', { timeZone: 'Europe/Moscow' })
+  const from = sp.get('from') ? new Date(String(sp.get('from'))) : null
+  const to = sp.get('to') ? new Date(String(sp.get('to'))) : null
+  const plan = c.terms?.plan ? ` (тариф «${c.terms.plan}»)` : ''
+  const site = c.terms?.site ? ` ${c.terms.site}` : ''
+  const subject = String(model.subtitle || '').replace(/^на /, '').replace(/ и отчуждение.*$/, '') || 'выполнение работ'
+  const name =
+    (sp.get('name') || '').trim().slice(0, 300) ||
+    (kind === 'seo'
+      ? `Услуги по поисковому продвижению сайта${site}${plan}${from && to ? ` за период с ${ru(from)} по ${ru(to)}` : ''}`
+      : `Работы по договору: ${subject}${plan}`)
+  const statement =
+    kind === 'seo'
+      ? [
+          `Услуги оказаны в полном объёме${from && to ? ` за период с ${ru(from)} по ${ru(to)}` : ''}. Отчёт о выполненных работах передан Заказчику.`,
+          'Заказчик претензий по объёму, качеству и срокам оказания услуг не имеет.',
+          'Акт составлен в двух экземплярах, по одному для каждой Стороны.',
+        ]
+      : [
+          'Работы выполнены в полном объёме в соответствии с Договором и Техническим заданием (Приложение № 1). Заказчик претензий по объёму, качеству и срокам выполнения работ не имеет.',
+          `Исключительное право на результат работ переходит к Заказчику с даты полной оплаты в соответствии с Договором.`,
+          'Акт составлен в двух экземплярах, по одному для каждой Стороны.',
+        ]
+  const buf = await actDocx(model, {
+    number: n,
+    date: dateRu(date),
+    rows: [{ name, qty: 1, unit: kind === 'seo' ? 'мес.' : 'усл.', price: amount }],
+    total: String(amount),
+    totalWords: rubFull(amount),
+    statement,
+  })
+  const file = `Акт_${n}_к_договору_${String(c.number || c.id)}`.replace(/[^\p{L}\p{N}-]+/gu, '_') + '.docx'
+  return new Response(new Uint8Array(buf), {
+    headers: {
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'Content-Disposition': `attachment; filename="act.docx"; filename*=UTF-8''${encodeURIComponent(file)}`,
+      'Cache-Control': 'no-store',
+    },
+  })
+}
+
 export const STATUSES = [
   { label: 'Черновик', value: 'draft' },
   { label: 'Отправлен клиенту', value: 'sent' },
@@ -243,6 +297,7 @@ export const Contracts: CollectionConfig = {
     { path: '/quiz', method: 'post', handler: quizCreate },
     { path: '/:id/regenerate', method: 'post', handler: regenerate },
     { path: '/:id/docx', method: 'get', handler: docxById },
+    { path: '/:id/act', method: 'get', handler: actById },
     { path: '/doc/:token/docx', method: 'get', handler: docxByToken },
   ],
   hooks: {

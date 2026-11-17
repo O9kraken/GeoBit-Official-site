@@ -144,3 +144,76 @@ export async function contractDocx(m: DocModel): Promise<Buffer> {
   })
   return Packer.toBuffer(doc)
 }
+
+/* ----------------------------- Акт ----------------------------- */
+
+export type ActInput = {
+  number: string
+  date: string
+  rows: { name: string; qty: number; unit: string; price: number }[]
+  totalWords: string
+  total: string
+  statement: string[]
+}
+
+export async function actDocx(m: DocModel, a: ActInput): Promise<Buffer> {
+  const W = [560, 4962, 900, 900, 1300, 1300]
+  const cell = (text: string, w: number, o: { bold?: boolean; align?: (typeof AlignmentType)[keyof typeof AlignmentType] } = {}) =>
+    new TableCell({ width: { size: w, type: WidthType.DXA }, margins: { top: 60, bottom: 60, left: 80, right: 80 }, children: [para([t(text, { bold: o.bold, size: 22 })], { align: o.align ?? AlignmentType.LEFT, after: 0 })] })
+  const money = (n: number) => `${Math.round(n).toLocaleString('ru-RU').replace(/ /g, ' ')},00`
+  const head = ['№', 'Наименование работ (услуг)', 'Кол-во', 'Ед.', 'Цена, ₽', 'Сумма, ₽']
+  const table = new Table({
+    width: { size: TEXT_W, type: WidthType.DXA },
+    columnWidths: W,
+    rows: [
+      new TableRow({ tableHeader: true, children: head.map((h, i) => cell(h, W[i], { bold: true, align: AlignmentType.CENTER })) }),
+      ...a.rows.map(
+        (r, i) =>
+          new TableRow({
+            cantSplit: true,
+            children: [
+              cell(String(i + 1), W[0], { align: AlignmentType.CENTER }),
+              cell(r.name, W[1]),
+              cell(String(r.qty), W[2], { align: AlignmentType.CENTER }),
+              cell(r.unit, W[3], { align: AlignmentType.CENTER }),
+              cell(money(r.price), W[4], { align: AlignmentType.RIGHT }),
+              cell(money(r.price * r.qty), W[5], { align: AlignmentType.RIGHT }),
+            ],
+          }),
+      ),
+    ],
+  })
+  const body: (Paragraph | Table)[] = [
+    para([t(`АКТ № ${a.number}`, { bold: true, size: 28 })], { align: AlignmentType.CENTER, after: 40 }),
+    para([t('сдачи-приёмки выполненных работ (оказанных услуг)', { bold: true })], { align: AlignmentType.CENTER, after: 40 }),
+    para([t(`по Договору № ${m.number} от ${m.date}`)], { align: AlignmentType.CENTER, after: 240 }),
+    new Table({
+      width: { size: TEXT_W, type: WidthType.DXA },
+      columnWidths: [COL, COL],
+      borders: noBorders,
+      rows: [
+        new TableRow({
+          children: [
+            new TableCell({ width: { size: COL, type: WidthType.DXA }, children: [para([t(`г. ${m.city}`)], { align: AlignmentType.LEFT, after: 0 })] }),
+            new TableCell({ width: { size: COL, type: WidthType.DXA }, children: [para([t(a.date)], { align: AlignmentType.RIGHT, after: 0 })] }),
+          ],
+        }),
+      ],
+    }),
+    para([t(m.preamble.replace(/заключили настоящий договор[\s\S]*$/, 'составили настоящий Акт о нижеследующем:'))], { before: 240, after: 160 }),
+    para([t('1. Исполнитель выполнил (оказал), а Заказчик принял следующие работы (услуги):')], { after: 120 }),
+    table,
+    para([t('Итого: ', { bold: true }), t(a.totalWords)], { before: 160 }),
+    para([t('НДС не облагается: Исполнитель применяет специальный налоговый режим «Налог на профессиональный доход».')]),
+    ...a.statement.map((s, i) => para([t(`${i + 2}. ${s}`)])),
+    para([t('Подписи Сторон', { bold: true })], { align: AlignmentType.CENTER, before: 360, after: 120, keepNext: true }),
+    partiesTable(m, true),
+  ]
+  const doc = new Document({
+    creator: m.parties.executor.title,
+    title: `Акт № ${a.number} к Договору № ${m.number}`,
+    styles: { default: { document: { run: { font: F, size: SZ } } } },
+    sections: [{ properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 1134, bottom: 1134, left: 1134, right: 850 } } }, children: body }],
+  })
+  return Packer.toBuffer(doc)
+}
