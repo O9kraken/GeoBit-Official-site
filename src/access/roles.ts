@@ -25,7 +25,7 @@ export const rolesField = (...rs: Role[]): FieldAccess => ({ req }) => can(req.u
 /** Зоны админки: кто работает с какими разделами */
 type Area = 'sales' | 'content' | 'system'
 const AREA: Record<string, Area> = {
-  leads: 'sales', subscribers: 'sales', prospects: 'sales',
+  leads: 'sales', subscribers: 'sales', prospects: 'sales', contracts: 'sales', 'contract-templates': 'sales', 'contract-settings': 'system',
   pages: 'content', services: 'content', landings: 'content', projects: 'content', posts: 'content', team: 'content',
   testimonials: 'content', media: 'content', categories: 'content', tags: 'content', 'service-categories': 'content', 'portfolio-categories': 'content',
   home: 'content', 'services-page': 'content', 'about-page': 'content', 'contacts-page': 'content', 'portfolio-page': 'content', 'blog-page': 'content', 'faq-page': 'content',

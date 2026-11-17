@@ -17,6 +17,8 @@ import { fileURLToPath } from 'url'
 
 import { Leads, Subscribers } from './collections/Leads'
 import { Prospects } from './collections/Prospects'
+import { Contracts, ContractTemplates } from './collections/Contracts'
+import { ContractSettings } from './globals/ContractSettings'
 import { housekeepingTask } from './jobs/housekeeping'
 import { AuditLog, withAuditCollection, withAuditGlobal } from './collections/AuditLog'
 import { Media } from './collections/Media'
@@ -83,7 +85,7 @@ export default buildConfig({
   },
   // порядок здесь = порядок групп в меню админки: заявки — первыми
   collections: [
-    Leads, Subscribers, Prospects, AuditLog,
+    Leads, Subscribers, Prospects, Contracts, ContractTemplates, AuditLog,
     Pages,
     Services, Landings, Projects, Posts, Team, Testimonials, Media,
     ServiceCategories, PortfolioCategories, Categories, Tags,
@@ -93,7 +95,7 @@ export default buildConfig({
     .map(withRolesCollection)
     .map(withAuditCollection)
     .map(withIndexNow),
-  globals: [HomePage, ServicesPage, AboutPage, ContactsPage, PortfolioPage, BlogPage, FaqPage, SiteSettings, SeoSettings, Navigation, Calculator].map(polishGlobal).map(withRolesGlobal).map(withAuditGlobal),
+  globals: [HomePage, ServicesPage, AboutPage, ContactsPage, PortfolioPage, BlogPage, FaqPage, SiteSettings, SeoSettings, Navigation, Calculator, ContractSettings].map(polishGlobal).map(withRolesGlobal).map(withAuditGlobal),
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [...defaultFeatures, EXPERIMENTAL_TableFeature()],
   }),

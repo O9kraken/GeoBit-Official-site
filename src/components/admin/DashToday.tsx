@@ -23,7 +23,7 @@ export async function DashToday({ payload }: { payload: Payload }) {
         <ul>
           {items.map((i) => (
             <li key={i.href}>
-              <a href={i.href}>{i.name}</a>
+              <a href={i.href} title={i.name}>{i.name}</a>
               <span className={i.late ? 'is-late' : ''}>{i.meta}</span>
             </li>
           ))}

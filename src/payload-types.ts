@@ -23,6 +23,8 @@ export interface Config {
     leads: Lead;
     subscribers: Subscriber;
     prospects: Prospect;
+    contracts: Contract;
+    'contract-templates': ContractTemplate;
     'audit-log': AuditLog;
     pages: Page;
     services: Service;
@@ -53,6 +55,8 @@ export interface Config {
     leads: LeadsSelect<false> | LeadsSelect<true>;
     subscribers: SubscribersSelect<false> | SubscribersSelect<true>;
     prospects: ProspectsSelect<false> | ProspectsSelect<true>;
+    contracts: ContractsSelect<false> | ContractsSelect<true>;
+    'contract-templates': ContractTemplatesSelect<false> | ContractTemplatesSelect<true>;
     'audit-log': AuditLogSelect<false> | AuditLogSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
@@ -90,6 +94,7 @@ export interface Config {
     'seo-settings': SeoSetting;
     navigation: Navigation;
     calculator: Calculator;
+    'contract-settings': ContractSetting;
     'payload-jobs-stats': PayloadJobsStat;
   };
   globalsSelect: {
@@ -104,6 +109,7 @@ export interface Config {
     'seo-settings': SeoSettingsSelect<false> | SeoSettingsSelect<true>;
     navigation: NavigationSelect<false> | NavigationSelect<true>;
     calculator: CalculatorSelect<false> | CalculatorSelect<true>;
+    'contract-settings': ContractSettingsSelect<false> | ContractSettingsSelect<true>;
     'payload-jobs-stats': PayloadJobsStatsSelect<false> | PayloadJobsStatsSelect<true>;
   };
   locale: null;
@@ -247,203 +253,108 @@ export interface Prospect {
   createdAt: string;
 }
 /**
- * Кто и что менял в админке. Хранится 180 дней. Сами значения не сохраняются — только какие поля менялись.
+ * Договоры с клиентами. Новый договор удобнее всего составлять кнопкой «Составить договор» — квиз задаст вопросы и подставит нужный шаблон.
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "audit-log".
+ * via the `definition` "contracts".
  */
-export interface AuditLog {
+export interface Contract {
   id: number;
-  user?: (number | null) | User;
-  userName?: string | null;
-  action?: ('create' | 'update' | 'publish' | 'unpublish' | 'delete' | 'login' | 'bulk') | null;
-  target?: string | null;
-  targetLabel?: string | null;
-  docId?: string | null;
+  /**
+   * Ставится сам: ГБ-год-порядковый
+   */
+  number?: string | null;
+  date?: string | null;
+  customer?: string | null;
+  /**
+   * После смены типа нажмите «Пересобрать из шаблона»: для физлица в договоре другие условия (защита прав потребителей)
+   */
+  clientType?: ('company' | 'ip' | 'person') | null;
+  client?: {
+    /**
+     * ООО «Ромашка» или Иванов Иван Иванович
+     */
+    name?: string | null;
+    inn?: string | null;
+    kpp?: string | null;
+    ogrn?: string | null;
+    /**
+     * Иванов Иван Иванович
+     */
+    signer?: string | null;
+    /**
+     * Генерального директора Иванова Ивана Ивановича
+     */
+    signerGen?: string | null;
+    /**
+     * Устава / доверенности № … от …
+     */
+    basis?: string | null;
+    /**
+     * Юридический адрес или адрес регистрации
+     */
+    address?: string | null;
+    /**
+     * Необязательно. Если не нужен — оставьте пустым
+     */
+    passport?: string | null;
+    bankAccount?: string | null;
+    bankName?: string | null;
+    bik?: string | null;
+    corrAccount?: string | null;
+    phone?: string | null;
+    email?: string | null;
+  };
+  terms?: {
+    plan?: string | null;
+    /**
+     * Для SEO — в месяц
+     */
+    price?: number | null;
+    payment?: ('prepay100' | 'half' | 'thirds' | 'monthly') | null;
+    days?: number | null;
+    revisions?: number | null;
+    warrantyDays?: number | null;
+    concepts?: number | null;
+    minMonths?: number | null;
+    hosting?: ('client' | 'executor') | null;
+    content?: ('client' | 'executor') | null;
+    supportMonths?: number | null;
+    /**
+     * example.ru — для SEO обязательно
+     */
+    site?: string | null;
+    credit?: boolean | null;
+    /**
+     * Попадут отдельным абзацем в «Заключительные положения»
+     */
+    extra?: string | null;
+  };
   docTitle?: string | null;
-  changed?: string | null;
-  note?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Кто может входить в админку. Имя и аватар из профиля показываются как автор статей.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  totpEnabled?: boolean | null;
-  totpSecret?: string | null;
-  totpPending?: string | null;
-  totpRecovery?:
+  /**
+   * Каждая строка — пункт технического задания
+   */
+  scope?: string | null;
+  sections?:
     | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  totpFails?: number | null;
-  totpLockUntil?: string | null;
-  /**
-   * Показывается как автор статей в блоге
-   */
-  name?: string | null;
-  /**
-   * Администратор — всё. Редактор — контент сайта без заявок и настроек. Менеджер — заявки, подписчики и поиск клиентов без правки сайта.
-   */
-  role: 'admin' | 'editor' | 'manager';
-  /**
-   * Квадратное фото. Показывается у автора в блоге и в шапке админки.
-   */
-  avatar?: (number | null) | Media;
-  /**
-   * Например: «Основатель GeoBit, дизайнер и разработчик»
-   */
-  about?: string | null;
-  uiAccent?: ('geobit' | 'pink' | 'blue' | 'cyan' | 'green' | 'orange') | null;
-  uiDensity?: ('compact' | 'normal' | 'comfy') | null;
-  uiFontSize?: ('s' | 'm' | 'l') | null;
-  uiIcons?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  resetPasswordRequestedAt?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
+        title: string;
+        /**
+         * Каждая строка — пункт (номер ставится сам), «- » в начале — подпункт списка, «> » — абзац без номера. Подстановки: {{price}}, {{priceFull}}, {{part1}}–{{part3}}, {{days}}, {{revisions}} {{revisionsWord}}, {{warranty}}, {{acceptDays}}, {{penalty}}, {{penaltyCap}}, {{concepts}}, {{minMonths}}, {{site}}, {{plan}}, {{support}}, {{city}}. Условия: {{#person}}…{{/person}} (физлицо), {{#biz}}…{{/biz}} (юрлицо или ИП), {{#company}}, {{#ip}}, {{#prepay100}}, {{#half}}, {{#thirds}}, {{#clientHosting}}, {{#execHosting}}, {{#contentClient}}, {{#contentExec}}, {{^условие}} — «если нет».
+         */
+        body?: string | null;
+        id?: string | null;
       }[]
     | null;
-  password?: string | null;
-  collection: 'users';
-}
-/**
- * Все картинки сайта. Сжатые версии делаются сами при загрузке; подпись «Alt» нужна для поиска и незрячих.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt?: string | null;
-  wpId?: number | null;
-  wpPath?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-  sizes?: {
-    thumb?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    card?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    wide?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
-}
-/**
- * Отдельные страницы: юридические документы, согласия, оферта. Адрес — /<slug>/.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pages".
- */
-export interface Page {
-  id: number;
-  title: string;
-  content?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  status?: ('draft' | 'sent' | 'signed' | 'done' | 'cancelled') | null;
+  service?: (number | null) | Service;
+  template?: (number | null) | ContractTemplate;
+  kind?: ('dev' | 'seo' | 'design') | null;
+  lead?: (number | null) | Lead;
+  prospect?: (number | null) | Prospect;
   /**
-   * Часть URL. Латиница, цифры и дефис. Не меняйте у опубликованных страниц без редиректа.
+   * По ссылке /dogovor/… клиент видит договор и может скачать Word
    */
-  slug: string;
-  noindex?: boolean | null;
-  meta?: {
-    /**
-     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
-     */
-    focusKeyword?: string | null;
-    /**
-     * Через запятую — тоже засчитываются.
-     */
-    synonyms?: string | null;
-    title?: string | null;
-    description?: string | null;
-    /**
-     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
-     */
-    image?: (number | null) | Media;
-    /**
-     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
-     */
-    answer?: string | null;
-    /**
-     * Пишите вопросы так, как их задают люди. Выводятся в конце страницы и размечаются FAQPage.
-     */
-    faq?:
-      | {
-          q: string;
-          a: string;
-          id?: string | null;
-        }[]
-      | null;
-    noindex?: boolean | null;
-    nofollow?: boolean | null;
-    /**
-     * Только если эта страница — копия другой. Обычно оставляйте пустым.
-     */
-    canonical?: string | null;
-  };
+  token?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -567,6 +478,57 @@ export interface Service {
   createdAt: string;
 }
 /**
+ * Все картинки сайта. Сжатые версии делаются сами при загрузке; подпись «Alt» нужна для поиска и незрячих.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt?: string | null;
+  wpId?: number | null;
+  wpPath?: string | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumb?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    wide?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
  * Группы услуг для фильтра на странице услуг.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -580,6 +542,195 @@ export interface ServiceCategory {
    */
   slug: string;
   description?: string | null;
+  meta?: {
+    /**
+     * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
+     */
+    focusKeyword?: string | null;
+    /**
+     * Через запятую — тоже засчитываются.
+     */
+    synonyms?: string | null;
+    title?: string | null;
+    description?: string | null;
+    /**
+     * 1200×630. Если пусто — возьмётся обложка или картинка по умолчанию.
+     */
+    image?: (number | null) | Media;
+    /**
+     * 2–3 предложения (30–60 слов), которые прямо отвечают на главный вопрос страницы. Показывается вверху статьи блоком «Коротко», попадает в разметку и в llms.txt.
+     */
+    answer?: string | null;
+    /**
+     * Пишите вопросы так, как их задают люди. Выводятся в конце страницы и размечаются FAQPage.
+     */
+    faq?:
+      | {
+          q: string;
+          a: string;
+          id?: string | null;
+        }[]
+      | null;
+    noindex?: boolean | null;
+    nofollow?: boolean | null;
+    /**
+     * Только если эта страница — копия другой. Обычно оставляйте пустым.
+     */
+    canonical?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Тексты договоров под каждую услугу. Правки здесь попадут во все новые договоры; уже составленные договоры не меняются.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contract-templates".
+ */
+export interface ContractTemplate {
+  id: number;
+  title: string;
+  kind: 'dev' | 'seo' | 'design';
+  /**
+   * Квиз подберёт этот шаблон, когда выбрана одна из этих услуг
+   */
+  services?: (number | Service)[] | null;
+  /**
+   * Под «ДОГОВОР № …», например: «на разработку сайта»
+   */
+  docTitle?: string | null;
+  /**
+   * Например: «разработке корпоративного сайта»
+   */
+  subject?: string | null;
+  /**
+   * Каждая строка — пункт технического задания. В договоре его можно поправить под клиента.
+   */
+  scope?: string | null;
+  sections?:
+    | {
+        title: string;
+        /**
+         * Каждая строка — пункт (номер ставится сам), «- » в начале — подпункт списка, «> » — абзац без номера. Подстановки: {{price}}, {{priceFull}}, {{part1}}–{{part3}}, {{days}}, {{revisions}} {{revisionsWord}}, {{warranty}}, {{acceptDays}}, {{penalty}}, {{penaltyCap}}, {{concepts}}, {{minMonths}}, {{site}}, {{plan}}, {{support}}, {{city}}. Условия: {{#person}}…{{/person}} (физлицо), {{#biz}}…{{/biz}} (юрлицо или ИП), {{#company}}, {{#ip}}, {{#prepay100}}, {{#half}}, {{#thirds}}, {{#clientHosting}}, {{#execHosting}}, {{#contentClient}}, {{#contentExec}}, {{^условие}} — «если нет».
+         */
+        body?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Кто и что менял в админке. Хранится 180 дней. Сами значения не сохраняются — только какие поля менялись.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audit-log".
+ */
+export interface AuditLog {
+  id: number;
+  user?: (number | null) | User;
+  userName?: string | null;
+  action?: ('create' | 'update' | 'publish' | 'unpublish' | 'delete' | 'login' | 'bulk') | null;
+  target?: string | null;
+  targetLabel?: string | null;
+  docId?: string | null;
+  docTitle?: string | null;
+  changed?: string | null;
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Кто может входить в админку. Имя и аватар из профиля показываются как автор статей.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  totpEnabled?: boolean | null;
+  totpSecret?: string | null;
+  totpPending?: string | null;
+  totpRecovery?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  totpFails?: number | null;
+  totpLockUntil?: string | null;
+  /**
+   * Показывается как автор статей в блоге
+   */
+  name?: string | null;
+  /**
+   * Администратор — всё. Редактор — контент сайта без заявок и настроек. Менеджер — заявки, подписчики и поиск клиентов без правки сайта.
+   */
+  role: 'admin' | 'editor' | 'manager';
+  /**
+   * Квадратное фото. Показывается у автора в блоге и в шапке админки.
+   */
+  avatar?: (number | null) | Media;
+  /**
+   * Например: «Основатель GeoBit, дизайнер и разработчик»
+   */
+  about?: string | null;
+  uiAccent?: ('geobit' | 'pink' | 'blue' | 'cyan' | 'green' | 'orange') | null;
+  uiDensity?: ('compact' | 'normal' | 'comfy') | null;
+  uiFontSize?: ('s' | 'm' | 'l') | null;
+  uiIcons?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
+}
+/**
+ * Отдельные страницы: юридические документы, согласия, оферта. Адрес — /<slug>/.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Часть URL. Латиница, цифры и дефис. Не меняйте у опубликованных страниц без редиректа.
+   */
+  slug: string;
+  noindex?: boolean | null;
   meta?: {
     /**
      * Главный запрос, по которому страницу должны находить. Одна фраза на страницу.
@@ -1271,6 +1422,14 @@ export interface PayloadLockedDocument {
         value: number | Prospect;
       } | null)
     | ({
+        relationTo: 'contracts';
+        value: number | Contract;
+      } | null)
+    | ({
+        relationTo: 'contract-templates';
+        value: number | ContractTemplate;
+      } | null)
+    | ({
         relationTo: 'audit-log';
         value: number | AuditLog;
       } | null)
@@ -1445,6 +1604,92 @@ export interface ProspectsSelect<T extends boolean = true> {
   kpToken?: T;
   lat?: T;
   lon?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contracts_select".
+ */
+export interface ContractsSelect<T extends boolean = true> {
+  number?: T;
+  date?: T;
+  customer?: T;
+  clientType?: T;
+  client?:
+    | T
+    | {
+        name?: T;
+        inn?: T;
+        kpp?: T;
+        ogrn?: T;
+        signer?: T;
+        signerGen?: T;
+        basis?: T;
+        address?: T;
+        passport?: T;
+        bankAccount?: T;
+        bankName?: T;
+        bik?: T;
+        corrAccount?: T;
+        phone?: T;
+        email?: T;
+      };
+  terms?:
+    | T
+    | {
+        plan?: T;
+        price?: T;
+        payment?: T;
+        days?: T;
+        revisions?: T;
+        warrantyDays?: T;
+        concepts?: T;
+        minMonths?: T;
+        hosting?: T;
+        content?: T;
+        supportMonths?: T;
+        site?: T;
+        credit?: T;
+        extra?: T;
+      };
+  docTitle?: T;
+  scope?: T;
+  sections?:
+    | T
+    | {
+        title?: T;
+        body?: T;
+        id?: T;
+      };
+  status?: T;
+  service?: T;
+  template?: T;
+  kind?: T;
+  lead?: T;
+  prospect?: T;
+  token?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contract-templates_select".
+ */
+export interface ContractTemplatesSelect<T extends boolean = true> {
+  title?: T;
+  kind?: T;
+  services?: T;
+  docTitle?: T;
+  subject?: T;
+  scope?: T;
+  sections?:
+    | T
+    | {
+        title?: T;
+        body?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2797,6 +3042,36 @@ export interface Calculator {
   createdAt?: string | null;
 }
 /**
+ * Эти данные подставляются в каждый договор: шапка, раздел «Реквизиты и подписи», условия по умолчанию.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contract-settings".
+ */
+export interface ContractSetting {
+  id: number;
+  /**
+   * Как в паспорте: Фамилия Имя Отчество
+   */
+  fio?: string | null;
+  inn?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  site?: string | null;
+  bankAccount?: string | null;
+  bankName?: string | null;
+  bik?: string | null;
+  corrAccount?: string | null;
+  city?: string | null;
+  revisions?: number | null;
+  warrantyDays?: number | null;
+  acceptDays?: number | null;
+  penalty?: number | null;
+  penaltyCap?: number | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-jobs-stats".
  */
@@ -3320,6 +3595,31 @@ export interface CalculatorSelect<T extends boolean = true> {
         icon?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contract-settings_select".
+ */
+export interface ContractSettingsSelect<T extends boolean = true> {
+  fio?: T;
+  inn?: T;
+  address?: T;
+  phone?: T;
+  email?: T;
+  site?: T;
+  bankAccount?: T;
+  bankName?: T;
+  bik?: T;
+  corrAccount?: T;
+  city?: T;
+  revisions?: T;
+  warrantyDays?: T;
+  acceptDays?: T;
+  penalty?: T;
+  penaltyCap?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

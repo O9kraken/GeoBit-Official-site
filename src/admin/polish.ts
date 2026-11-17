@@ -28,7 +28,7 @@ function walk(fields: Field[]): Field[] {
 
 /** Группы боковой панели: от частых действий к редким */
 const GROUP: Record<string, string> = {
-  leads: 'Заявки', subscribers: 'Заявки', prospects: 'Заявки',
+  leads: 'Заявки', subscribers: 'Заявки', prospects: 'Заявки', contracts: 'Заявки', 'contract-templates': 'Заявки', 'contract-settings': 'Заявки',
   pages: 'Страницы сайта',
   home: 'Страницы сайта', 'services-page': 'Страницы сайта', 'about-page': 'Страницы сайта', 'contacts-page': 'Страницы сайта',
   'portfolio-page': 'Страницы сайта', 'blog-page': 'Страницы сайта', 'faq-page': 'Страницы сайта',
